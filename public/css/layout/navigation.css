@@ -1,14 +1,23 @@
 /* --- 4. NAVIGATION --- */
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 5%;
+
+/* Le header global (peut servir de conteneur de fond ou pour le sticky) */
+header {
     position: relative;
     z-index: 100;
 }
 
-.logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 5%;
+}
+
+.logo { 
+    font-weight: 800; 
+    font-size: 1.5rem; 
+    letter-spacing: -1px; 
+}
 
 .nav-links {
     display: flex;
@@ -17,4 +26,9 @@ nav {
     color: var(--text-gray);
 }
 
-.nav-links li:hover { color: #fff; cursor: pointer; }
+.nav-links li:hover { 
+    color: #fff; 
+    cursor: pointer; 
+}
+
+/* Vous pouvez ajouter ici les styles pour le menu burger ou les menus déroulants */
