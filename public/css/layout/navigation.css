@@ -1,0 +1,20 @@
+/* --- 4. NAVIGATION --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 5%;
+    position: relative;
+    z-index: 100;
+}
+
+.logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+    font-size: 0.95rem;
+    color: var(--text-gray);
+}
+
+.nav-links li:hover { color: #fff; cursor: pointer; }

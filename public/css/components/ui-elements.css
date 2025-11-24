@@ -1,0 +1,36 @@
+/* --- 3. UI ELEMENTS (Boutons, titres de sections, etc.) --- */
+.btn-gradient {
+    background: var(--gradient-orange-purple);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-gradient:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(95, 39, 205, 0.4);
+}
+
+.section-title { 
+    margin-bottom: 30px; 
+    font-size: 2rem; 
+    font-weight: 300;
+}
+
+.sub-title { 
+    font-size: 0.8rem; 
+    color: var(--text-gray); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    margin-bottom: 5px; 
+}
+
+/* Styles spécifiques déplacés du HTML */
+.sub-title-light { color: rgba(255,255,255,0.7); }
+.btn-black { background: black !important; color: white; }
+.btn-info { background: #333 !important; box-shadow: none !important; }

@@ -1,0 +1,21 @@
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+    nav { display: none; /* Simplifié pour l'exemple */ }
+    
+    h1 { font-size: 3rem; }
+    
+    .hero { flex-direction: column; text-align: center; padding-top: 100px; }
+    .hero-text { padding-right: 0; margin-bottom: 50px; }
+    .hero-visuals { flex-direction: column; align-items: center; }
+    
+    .grid-section { grid-template-columns: 1fr; }
+    .item-large { grid-column: span 1; flex-direction: column; text-align: center; gap: 20px; }
+    
+    .gallery-grid { grid-template-columns: 1fr; height: auto; }
+    .stacked-items { flex-direction: row; height: 200px; }
+    
+    .event-row { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .event-row button { width: 100%; margin-top: 10px; }
+    
+    .footer-content { flex-direction: column; gap: 30px; }
+}
