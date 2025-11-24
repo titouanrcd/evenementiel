@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion & Inscription - Creative Design</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* --- CSS Page Connexion --- */
+        
+        .auth-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            background: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-bg-gradient {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(100, 50, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Tabs */
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .auth-tab.active {
+            color: white;
+            font-weight: bold;
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b6b, #6b6bff);
+        }
+
+        /* Forms */
+        .auth-form {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Input styling */
+        .input-group input, 
+        .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #6b6bff;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Dropdown options styling */
+        .input-group select option {
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        /* Date picker icon styling */
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-options a {
+            color: #6b6bff;
+            text-decoration: none;
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            background: linear-gradient(90deg, #ff6b6b, #556aff);
+            transition: transform 0.2s;
+        }
+
+        .btn-full:hover {
+            transform: scale(1.02);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Logo:</div>
+            <ul class="nav-links">
+                <li><a href="index.html" style="text-decoration:none; color:inherit;">Home</a></li>
+                <li><a href="evenement.html" style="text-decoration:none; color:inherit;">Événements</a></li>
+                <li>Artistes</li>
+                <li>Contact</li>
+            </ul>
+            <a href="index.html" class="btn-gradient" style="text-decoration:none; display:inline-block; padding: 10px 20px;">Retour</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="auth-section">
+            <div class="auth-bg-gradient"></div>
+            
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
+                    <button class="auth-tab" onclick="switchTab('register')">Inscription</button>
+                </div>
+
+                <div id="login-form" class="auth-form active">
+                    <form>
+                        <div class="input-group">
+                            <label for="login-identifier">Email ou Numéro de téléphone</label>
+                            <input type="text" id="login-identifier" placeholder="email@exemple.com ou 0612345678" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="login-password">Mot de passe</label>
+                            <input type="password" id="login-password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-options">
+                            <label><input type="checkbox"> Se souvenir de moi</label>
+                            <a href="#">Mot de passe oublié ?</a>
+                        </div>
+                        <button type="submit" class="btn-full">Se connecter</button>
+                    </form>
+                </div>
+
+                <div id="register-form" class="auth-form">
+                    <form>
+                        <div class="input-group">
+                            <label for="reg-name">Nom complet *</label>
+                            <input type="text" id="reg-name" placeholder="Jean Dupont" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="reg-dob">Date de naissance *</label>
+                            <input type="date" id="reg-dob" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="reg-gender">Sexe *</label>
+                            <select id="reg-gender" required>
+                                <option value="" disabled selected>Sélectionnez votre sexe</option>
+                                <option value="homme">Homme</option>
+                                <option value="femme">Femme</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="reg-phone">Numéro de téléphone (Optionnel)</label>
+                            <input type="tel" id="reg-phone" placeholder="06 12 34 56 78">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="reg-email">Email *</label>
+                            <input type="email" id="reg-email" placeholder="votre@email.com" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="reg-password">Mot de passe *</label>
+                            <input type="password" id="reg-password" placeholder="Créer un mot de passe" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="reg-confirm">Confirmer le mot de passe *</label>
+                            <input type="password" id="reg-confirm" placeholder="Répéter le mot de passe" required>
+                        </div>
+
+                        <button type="submit" class="btn-full">Créer un compte</button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col footer-col-main">
+                <div class="logo">Logo:</div>
+                <p class="footer-description">
+                    Rejoignez la communauté des créateurs numériques.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h5>Navigation</h5>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Artistes</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Support</h5>
+                <ul>
+                    <li><a href="#">Aide</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Social</h5>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Creative Particles. Tous droits réservés.
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const tabs = document.querySelectorAll('.auth-tab');
+            
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
