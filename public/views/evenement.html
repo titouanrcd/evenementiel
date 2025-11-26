@@ -37,152 +37,102 @@
         <section class="events-filter-section">
             <div class="events-container">
                 <aside class="events-filters">
-                    <div class="filter-header">
-                        <h3>Filtrer par</h3>
-                        <button class="filter-reset">Réinitialiser</button>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Catégories</h4>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="checkbox" name="category" value="corporate" checked>
-                                <span class="checkmark"></span>
-                                Corporate / Business
-                            </label>
-                            <label class="filter-option">
-                                <input type="checkbox" name="category" value="festivals">
-                                <span class="checkmark"></span>
-                                Festivals / Concerts
-                            </label>
-                            <label class="filter-option">
-                                <input type="checkbox" name="category" value="private">
-                                <span class="checkmark"></span>
-                                Événements Privés
-                            </label>
-                            <label class="filter-option">
-                                <input type="checkbox" name="category" value="culture">
-                                <span class="checkmark"></span>
-                                Culture & Arts
-                            </label>
+                    <form id="filtersForm" class="filters-form">
+                        <div class="filter-header">
+                            <h3>Rechercher un événement</h3>
+                            <button type="button" id="resetFilters" class="filter-reset">Réinitialiser</button>
                         </div>
-                    </div>
 
-                    <div class="filter-group">
-                        <h4>Prix Maximum</h4>
-                        <div class="price-range">
-                            <input type="range" class="price-slider" min="0" max="200" value="130">
-                            <div class="price-labels">
-                                <span>Gratuit</span>
-                                <span class="price-value">130€</span>
+                        <div class="filter-group">
+                            <label for="searchInput" class="filter-label">Nom de l'événement</label>
+                            <input type="text" id="searchInput" class="filter-input" placeholder="Rechercher un événement...">
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="locationSelect" class="filter-label">Lieu</label>
+                            <select id="locationSelect" class="filter-select">
+                                <option value="">Toutes les villes</option>
+                                <option value="Paris">Paris</option>
+                                <option value="Lyon">Lyon</option>
+                                <option value="Marseille">Marseille</option>
+                                <option value="Bordeaux">Bordeaux</option>
+                                <option value="Lille">Lille</option>
+                                <option value="Toulouse">Toulouse</option>
+                                <option value="Nice">Nice</option>
+                                <option value="Nantes">Nantes</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Période</label>
+                            <div class="date-range">
+                                <div class="date-input-group">
+                                    <label for="dateFrom" class="date-label">Du</label>
+                                    <input type="date" id="dateFrom" class="filter-input">
+                                </div>
+                                <div class="date-input-group">
+                                    <label for="dateTo" class="date-label">Au</label>
+                                    <input type="date" id="dateTo" class="filter-input">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="filter-group">
-                        <h4>Lieu</h4>
-                        <select class="location-select">
-                            <option value="">Toutes les villes</option>
-                            <option value="paris">Paris</option>
-                            <option value="lyon">Lyon</option>
-                            <option value="marseille">Marseille</option>
-                            <option value="bordeaux">Bordeaux</option>
-                            <option value="lille">Lille</option>
-                        </select>
-                    </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Prix Maximum</label>
+                            <div class="price-range">
+                                <input type="range" id="priceRange" class="price-slider" min="0" max="200" value="200">
+                                <div class="price-labels">
+                                    <span>Gratuit</span>
+                                    <span id="priceDisplay" class="price-value">200€+</span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="filter-group">
-                        <h4>À partir du</h4>
-                        <input type="date" class="date-input" value="2025-01-01">
-                    </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Catégories</label>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="concert">
+                                    <span class="checkmark"></span>
+                                    Concerts & Spectacles
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="conference">
+                                    <span class="checkmark"></span>
+                                    Conférences & Séminaires
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="festival">
+                                    <span class="checkmark"></span>
+                                    Festivals
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="exposition">
+                                    <span class="checkmark"></span>
+                                    Expositions
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="category" value="sport">
+                                    <span class="checkmark"></span>
+                                    Sports & Loisirs
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <button type="button" class="btn-gradient filter-apply-btn" onclick="NOVA_EVENTS.applyFilters()">
+                                Rechercher
+                            </button>
+                        </div>
+                    </form>
                 </aside>
 
                 <main class="events-content">
-                    <div class="events-grid">
-                        <article class="event-card featured">
-                            <div class="event-image">
-                                <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Neon Festival">
-                                <div class="event-status">Bientôt disponible</div>
-                            </div>
-                            <div class="event-info">
-                                <h3 class="event-title">Neon Festival 2025</h3>
-                                <p class="event-location">Paris • La Défense Arena</p>
-                                <div class="event-details">
-                                    <span class="event-price">45€</span>
-                                    <button class="event-btn">Voir</button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="event-card">
-                            <div class="event-image">
-                                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Tech Summit">
-                            </div>
-                            <div class="event-info">
-                                <h3 class="event-title">Tech Innovation Summit</h3>
-                                <p class="event-location">Lyon • Centre de Congrès</p>
-                                <div class="event-details">
-                                    <span class="event-price">85€</span>
-                                    <button class="event-btn">Voir</button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="event-card">
-                            <div class="event-image">
-                                <img src="https://images.unsplash.com/photo-1566737236500-c8ac43014a67?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Gala">
-                            </div>
-                            <div class="event-info">
-                                <h3 class="event-title">Gala de Charité Premium</h3>
-                                <p class="event-location">Marseille • Palais du Pharo</p>
-                                <div class="event-details">
-                                    <span class="event-price">120€</span>
-                                    <button class="event-btn">Voir</button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="event-card">
-                            <div class="event-image">
-                                <img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Electronic">
-                            </div>
-                            <div class="event-info">
-                                <h3 class="event-title">Electronic Waves</h3>
-                                <p class="event-location">Bordeaux • Base Sous-Marine</p>
-                                <div class="event-details">
-                                    <span class="event-price">32€</span>
-                                    <button class="event-btn">Voir</button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="event-card">
-                            <div class="event-image">
-                                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Concert">
-                            </div>
-                            <div class="event-info">
-                                <h3 class="event-title">Symphonie Moderne</h3>
-                                <p class="event-location">Paris • Opéra Bastille</p>
-                                <div class="event-details">
-                                    <span class="event-price">65€</span>
-                                    <button class="event-btn">Voir</button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="event-card">
-                            <div class="event-image">
-                                <img src="https://images.unsplash.com/photo-1519671482502-9759101d4561?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Luxury">
-                            </div>
-                            <div class="event-info">
-                                <h3 class="event-title">Soirée Luxe & Prestige</h3>
-                                <p class="event-location">Monaco • Casino Monte-Carlo</p>
-                                <div class="event-details">
-                                    <span class="event-price">180€</span>
-                                    <button class="event-btn">Voir</button>
-                                </div>
-                            </div>
-                        </article>
+                    <div class="loading" id="loadingSpinner">
+                        <p>Chargement des événements...</p>
+                    </div>
+                    <div class="events-grid" id="eventsContainer">
+                        <!-- Les événements seront chargés ici dynamiquement -->
                     </div>
                 </main>
             </div>
@@ -231,5 +181,7 @@
             © 2025 NOVA ÉVÉNEMENTS. Tous droits réservés.
         </div>
     </footer>
+
+    <script src="../js/api.js"></script>
 </body>
 </html>

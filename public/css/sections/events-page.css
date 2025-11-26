@@ -58,27 +58,33 @@
     backdrop-filter: blur(10px);
 }
 
+.filters-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
 .filter-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .filter-header h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    text-transform: uppercase;
+    font-size: 1.2rem;
+    font-weight: 600;
     color: white;
+    margin: 0;
 }
 
 .filter-reset {
     background: none;
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: rgba(255, 255, 255, 0.7);
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.8rem;
     cursor: pointer;
@@ -91,16 +97,67 @@
 }
 
 .filter-group {
-    margin-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.filter-group h4 {
-    font-size: 1rem;
+.filter-label {
+    font-size: 0.9rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 15px;
+    margin-bottom: 8px;
+}
+
+/* Form inputs */
+.filter-input,
+.filter-select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: #FF00CC;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 0, 204, 0.1);
+}
+
+.filter-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.filter-select option {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 8px;
+}
+
+/* Date range */
+.date-range {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.date-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.date-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
 }
 
 .filter-options {
@@ -197,34 +254,150 @@
     font-weight: 600;
 }
 
-/* Location and Date inputs */
-.location-select,
-.date-input {
+/* Price Range Slider */
+.price-range {
+    margin-top: 10px;
+}
+
+.price-slider {
     width: 100%;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: white;
-    font-size: 0.9rem;
-    font-family: inherit;
-}
-
-.location-select:focus,
-.date-input:focus {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
     outline: none;
-    border-color: #FF00CC;
-    background: rgba(0, 0, 0, 0.5);
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-.location-select option {
-    background-color: #1a1a1a;
+.price-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--nova-gradient);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.price-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--nova-gradient);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.price-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.price-value {
+    color: #FF9900;
+    font-weight: 600;
+}
+
+/* Apply button */
+.filter-apply-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.filter-apply-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Enhanced event cards */
+.event-date-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.8);
     color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(5px);
+}
+
+.event-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+/* Error message */
+.error-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #ff6b6b;
+    font-size: 1.1rem;
+}
+
+.error-message p {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 0;
 }
 
 /* Events Grid */
 .events-content {
     min-height: 600px;
+}
+
+/* Loading spinner */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-gray);
+    font-size: 1.1rem;
+}
+
+.loading p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.loading p::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid #FF00CC;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.no-events {
+    text-align: center;
+    color: var(--text-gray);
+    font-size: 1.2rem;
+    padding: 60px 20px;
+    grid-column: 1 / -1;
 }
 
 .events-grid {
@@ -394,5 +567,30 @@
     
     .event-card.featured .event-title {
         font-size: 1.3rem;
+    }
+    
+    .date-range {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .date-input-group {
+        flex: 1;
+    }
+    
+    .filter-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .filter-header h3 {
+        order: 1;
+    }
+    
+    .filter-reset {
+        order: 2;
+        align-self: center;
     }
 }
