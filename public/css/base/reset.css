@@ -1,4 +1,4 @@
-/* --- 1. RESET & BASE STYLES (migré depuis design.css) --- */
+/* --- 1. RESET & BASE STYLES --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background-color: #050505; color: #ffffff; font-family: 'Roboto', sans-serif; overflow-x: hidden; line-height: 1.6; }
 h1, h2, h3, h4, h5, .logo, .btn-gradient { font-family: 'Montserrat', sans-serif; }

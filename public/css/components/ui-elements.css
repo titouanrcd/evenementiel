@@ -1,4 +1,4 @@
-/* --- 3. UI ELEMENTS & ANIMATIONS (Migré depuis design.css) --- */
+/* --- 3. UI ELEMENTS & ANIMATIONS --- */
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -10,6 +10,7 @@
     background: linear-gradient(270deg, #FF00CC, #FF9900, #FF00CC);
     background-size: 200% auto;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientShift 5s ease infinite;
 }
@@ -43,4 +44,30 @@
 /* Utilitaires et variantes */
 .sub-title-light { color: rgba(255,255,255,0.7); }
 .btn-black { background: black !important; color: white; }
-.btn-info { background: #333 !important; box-shadow: none !important; }
+.btn-info { background: transparent !important; border: 1px solid #555 !important; box-shadow: none !important; }
+.btn-transparent { background: transparent !important; border: 1px solid rgba(255,255,255,0.3) !important; }
+.btn-small { padding: 10px 20px !important; font-size: 0.8rem !important; margin-top: 25px; }
+.btn-event { padding: 10px 30px !important; font-size: 0.8rem !important; }
+
+/* Navigation buttons */
+.nav-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid #333;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.nav-btn-prev {
+    background: #222;
+}
+
+.nav-btn-next {
+    background: linear-gradient(90deg, #FF00CC, #FF9900);
+}

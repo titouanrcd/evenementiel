@@ -18,5 +18,6 @@
 @import url('sections/artists.css');
 @import url('sections/gallery.css');
 @import url('sections/events.css');
+@import url('sections/auth.css');
 
 @import url('responsive.css');

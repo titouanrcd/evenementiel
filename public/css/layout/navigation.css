@@ -1,9 +1,15 @@
-/* --- 4. NAVIGATION (migré depuis design.css — design.css est source de vérité) --- */
-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 5%;
-    position: relative; z-index: 100;
+/* --- 4. NAVIGATION --- */
+header {
+    position: relative;
+    z-index: 100;
     border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+nav {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 20px 5%;
 }
 
 /* MODIFICATION: Logo agrandi et stylisé */

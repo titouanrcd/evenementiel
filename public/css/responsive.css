@@ -1,4 +1,4 @@
-/* --- RESPONSIVE (migré depuis design.css) --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
     nav { flex-direction: column; gap: 20px; padding: 30px 5%; } 
     .header-logo { font-size: 36px; }
@@ -16,4 +16,10 @@
     .event-row { flex-direction: column; align-items: flex-start; gap: 15px; }
     .event-row button { width: 100%; margin-top: 10px; }
     .footer-content { flex-direction: column; gap: 30px; }
+    .hero-buttons { justify-content: center; }
+    .artists-header { flex-direction: column; gap: 20px; text-align: center; }
+    .navigation-buttons { justify-content: center; }
+    .gallery-header { flex-direction: column; gap: 20px; text-align: center; }
+    .nova-circle { margin-right: 0; }
+    .social-links { justify-content: center; }
 }

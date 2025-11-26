@@ -1,4 +1,4 @@
-/* --- 8. GALLERY SECTION (migré depuis design.css) --- */
+/* --- 8. GALLERY SECTION --- */
 .gallery-section { padding: 80px 5%; }
 .gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
 .gallery-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; height: 500px; }
@@ -16,3 +16,67 @@
 }
 .gallery-item:hover .play-btn { background: var(--nova-gradient); transform: translate(-50%, -50%) scale(1.1); border:none; box-shadow: 0 0 30px rgba(255,0,204,0.5); }
 .stacked-items { display: flex; flex-direction: column; gap: 20px; }
+
+/* Gallery header styles */
+.gallery-title {
+    margin-bottom: 0;
+}
+
+.gallery-link {
+    font-size: 0.9rem;
+    color: #fff;
+    border-bottom: 2px solid #FF00CC;
+    padding-bottom: 5px;
+    transition: 0.3s;
+}
+
+/* Gallery item styles */
+.gallery-item-main .gallery-item-info {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    z-index: 2;
+}
+
+.gallery-item-title {
+    font-size: 2rem;
+    text-transform: uppercase;
+}
+
+.gallery-item-location {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 5px;
+    color: #FF9900;
+}
+
+.gallery-item-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+
+.gallery-item-overlay-light {
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+}
+
+.gallery-item-small {
+    flex: 1;
+}
+
+.play-btn-small {
+    width: 50px;
+    height: 50px;
+    font-size: 1rem;
+}
+
+.gallery-item-label {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-weight: 700;
+    z-index: 2;
+}

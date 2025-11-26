@@ -1,0 +1,181 @@
+/* --- CSS PAGE CONNEXION --- */
+
+.auth-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    background: #0a0a0a;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-bg-gradient {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(100, 50, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.auth-container {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* Tabs with radio buttons */
+.tab-radio {
+    display: none;
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 15px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    text-align: center;
+}
+
+.tab-radio:checked + .auth-tab {
+    color: white;
+    font-weight: bold;
+}
+
+.tab-radio:checked + .auth-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #ff6b6b, #6b6bff);
+}
+
+/* Forms */
+.auth-form {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+#tab-login:checked ~ #login-form,
+#tab-register:checked ~ #register-form {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+/* Input styling */
+.input-group input, 
+.input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: #6b6bff;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Dropdown options styling */
+.input-group select option {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+/* Date picker icon styling */
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-options a {
+    color: #6b6bff;
+    text-decoration: none;
+}
+
+.btn-full {
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    color: white;
+    background: linear-gradient(90deg, #ff6b6b, #556aff);
+    transition: transform 0.2s;
+}
+
+.btn-full:hover {
+    transform: scale(1.02);
+}
+
+/* Responsive auth page */
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 30px 20px;
+        margin: 20px;
+    }
+    
+    .auth-bg-gradient {
+        width: 400px;
+        height: 400px;
+    }
+}

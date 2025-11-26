@@ -11,64 +11,67 @@
 </head>
 <body>
 
-    <nav>
-        <div class="logo header-logo">NOVA<span>.</span></div>
-        <ul class="nav-links">
-            <li>Accueil</li>
-            <li>Services</li>
-            <li><a href="evenement.html">Evenement</li>
-            <li>Contact</li>
-        </ul>
-        <button class="btn-gradient">Connection</button>
-    </nav>
+    <header>
+        <nav>
+            <div class="logo header-logo">NOVA<span>.</span></div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="evenement.html">Evenement</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="connexion.html" class="btn-gradient">Connexion</a>
+        </nav>
+    </header>
 
-    <header class="hero">
+    <main>
+        <section class="hero">
         <div class="hero-text">
             <h1>L'étincelle de vos <br><span class="text-gradient">plus grands moments</span></h1>
             <p class="hero-desc">
                 Agence événementielle 360°. Nous transformons vos idées en expériences spectaculaires, du concept à la réalité. Corporate, Privé, Festival.
             </p>
-            <div style="display:flex; gap: 15px; flex-wrap:wrap; justify-content: center; @media(min-width:768px){justify-content: flex-start;}">
+            <div class="hero-buttons">
                 <button class="btn-gradient">Organiser un événement</button>
-                <button class="btn-gradient" style="background:transparent; border:1px solid rgba(255,255,255,0.3);">Voir le Showreel</button>
+                <button class="btn-gradient btn-transparent">Voir le Showreel</button>
             </div>
         </div>
         
         <div class="hero-visuals">
-            <img src="file:///Users/mariloubernard/Desktop/Guardia/UE2-2_CDC_De%CC%81veloppement%20se%CC%81curise%CC%81%20web%20full%20stack/Gemini_Generated_Image_ra6wd8ra6wd8ra6w.png" class="arch-img" alt="Concert Crowd">
+            <img src="../img/hero.png" class="arch-img" alt="Concert Crowd">
         </div>
-    </header>
+    </section>
 
     <section class="grid-section">
-        <div class="grid-item">
-             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.4; z-index:1;" alt="Tech">
-             <div style="position:relative; z-index:2;">
+        <div class="grid-item grid-item-corporate">
+             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="grid-item-bg" alt="Tech">
+             <div class="grid-item-content">
                  <h3>CORPORATE</h3>
                  <p class="sub-title">Séminaires & Tech</p>
              </div>
         </div>
         
-        <div class="grid-item item-large">
-            <div style="z-index: 2; padding-left: 10px;">
-                <p class="sub-title" style="color: #FF00CC;">NOVA AGENCY</p>
+        <div class="grid-item item-large grid-item-nova">
+            <div class="grid-item-content">
+                <p class="sub-title nova-subtitle">NOVA AGENCY</p>
                 <h3>CRÉATIVITÉ <br>EXPLOSIVE</h3>
             </div>
-            <div style="width: 200px; height: 200px; border-radius: 50%; border: 1px solid #333; margin-right: -50px; display:flex; align-items:center; justify-content:center; z-index: 2;">
-                <div class="text-gradient" style="width: 80%; height: 80%; border-radius:50%; filter: blur(40px); opacity:0.6;"></div>
+            <div class="nova-circle">
+                <div class="nova-circle-glow text-gradient"></div>
             </div>
         </div>
 
-        <div class="grid-item item-large" style="background: linear-gradient(to right, #222, #111);">
-            <div style="padding: 10px; z-index: 2;">
+        <div class="grid-item item-large grid-item-services">
+            <div class="grid-item-content">
                 <h3 class="text-gradient">NOS SERVICES</h3>
-                <p style="margin-top:15px; font-size: 1rem; opacity: 0.8; max-width: 400px;">Une logistique militaire pour une créativité sans limite. Son, lumière, scénographie et gestion des invités.</p>
-                <button class="btn-gradient" style="margin-top:25px; padding: 10px 20px; font-size: 0.8rem;">Découvrir l'offre</button>
+                <p class="services-description">Une logistique militaire pour une créativité sans limite. Son, lumière, scénographie et gestion des invités.</p>
+                <button class="btn-gradient btn-small">Découvrir l'offre</button>
             </div>
         </div>
 
-        <div class="grid-item">
-            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.5; z-index:1;" alt="Party">
-            <div style="position:relative; z-index:2;">
+        <div class="grid-item grid-item-prive">
+            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="grid-item-bg" alt="Party">
+            <div class="grid-item-content">
                 <h3>PRIVÉ</h3>
                 <p class="sub-title">Galas & Soirées</p>
             </div>
@@ -76,11 +79,11 @@
     </section>
 
     <section class="artists-section">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="artists-header">
             <h2 class="section-title">Nos Univers</h2>
-            <div style="display:flex; gap:10px;">
-                <button style="background:#222; color:white; border:1px solid #333; width:50px; height:50px; border-radius:50%; cursor:pointer; transition:0.3s;">&lt;</button>
-                <button class="btn-gradient" style="width:50px; height:50px; border-radius:50%; padding:0; display:flex; align-items:center; justify-content:center;">&gt;</button>
+            <div class="navigation-buttons">
+                <button class="nav-btn nav-btn-prev">&lt;</button>
+                <button class="nav-btn nav-btn-next btn-gradient">&gt;</button>
             </div>
         </div>
         
@@ -95,7 +98,7 @@
 
             <div class="artist-card">
                 <div class="artist-img-container">
-                    <div class="abstract-s text-gradient" style="-webkit-text-fill-color: initial; color: rgba(255,255,255,0.2);">N</div>
+                    <div class="abstract-s branding-logo">N</div>
                 </div>
                 <h3>BRANDING</h3>
                 <p class="sub-title">Lancements de marque</p>
@@ -110,9 +113,9 @@
             </div>
 
              <div class="artist-card">
-                <div class="artist-img-container" style="background: #111;">
-                    <div class="text-gradient" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; opacity: 0.8;">
-                        <span style="font-size:3rem; font-weight:900;">360°</span>
+                <div class="artist-img-container scenographie-card">
+                    <div class="text-gradient scenographie-text">
+                        <span class="degree-360">360°</span>
                     </div>
                 </div>
                 <h3>SCÉNOGRAPHIE</h3>
@@ -123,33 +126,33 @@
 
     <section class="gallery-section">
         <div class="gallery-header">
-            <h2 class="section-title" style="margin-bottom:0;">Showreel 2024</h2>
-            <a href="#" style="font-size:0.9rem; color:#fff; border-bottom:2px solid #FF00CC; padding-bottom: 5px; transition: 0.3s;">Voir tous les projets</a>
+            <h2 class="section-title gallery-title">Showreel 2024</h2>
+            <a href="#" class="gallery-link">Voir tous les projets</a>
         </div>
 
         <div class="gallery-grid">
-            <div class="gallery-item">
+            <div class="gallery-item gallery-item-main">
                 <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Main Event">
                 <div class="play-btn">▶</div>
-                <div style="position:absolute; bottom:30px; left:30px; z-index: 2;">
-                    <h3 style="font-size: 2rem; text-transform:uppercase;">Neon Festival</h3>
-                    <p style="font-size:1rem; opacity:0.9; margin-top: 5px; color:#FF9900;">Lyon • 5000 Personnes</p>
+                <div class="gallery-item-info">
+                    <h3 class="gallery-item-title">Neon Festival</h3>
+                    <p class="gallery-item-location">Lyon • 5000 Personnes</p>
                 </div>
-                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);"></div>
+                <div class="gallery-item-overlay"></div>
             </div>
 
             <div class="stacked-items">
-                <div class="gallery-item" style="flex:1;">
+                <div class="gallery-item gallery-item-small">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Corporate">
-                    <div class="play-btn" style="width:50px; height:50px; font-size:1rem;">▶</div>
-                    <div style="position:absolute; bottom:15px; left:15px; font-weight:700; z-index:2;">TECH SUMMIT</div>
-                     <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
+                    <div class="play-btn play-btn-small">▶</div>
+                    <div class="gallery-item-label">TECH SUMMIT</div>
+                    <div class="gallery-item-overlay gallery-item-overlay-light"></div>
                 </div>
-                <div class="gallery-item" style="flex:1;">
+                <div class="gallery-item gallery-item-small">
                     <img src="https://images.unsplash.com/photo-1566737236500-c8ac43014a67?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Gala">
-                    <div class="play-btn" style="width:50px; height:50px; font-size:1rem;">▶</div>
-                    <div style="position:absolute; bottom:15px; left:15px; font-weight:700; z-index:2;">GALA CHARITÉ</div>
-                     <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
+                    <div class="play-btn play-btn-small">▶</div>
+                    <div class="gallery-item-label">GALA CHARITÉ</div>
+                    <div class="gallery-item-overlay gallery-item-overlay-light"></div>
                 </div>
             </div>
         </div>
@@ -164,7 +167,7 @@
                 <h4>FUTURE SOUND PARIS</h4>
                 <p>Paris, France • La Défense Arena</p>
             </div>
-            <button class="btn-gradient" style="padding: 10px 30px; font-size:0.8rem;">Réserver</button>
+            <button class="btn-gradient btn-event">Réserver</button>
         </div>
 
         <div class="event-row">
@@ -173,7 +176,7 @@
                 <h4>TECH INNOVATORS NIGHT</h4>
                 <p>Berlin, Germany • Kraftwerk</p>
             </div>
-            <button class="btn-gradient" style="padding: 10px 30px; font-size:0.8rem; background: transparent; border: 1px solid #555;">Info</button>
+            <button class="btn-gradient btn-event btn-info">Info</button>
         </div>
 
         <div class="event-row">
@@ -182,15 +185,15 @@
                 <h4>SUMMER VIBES OPENING</h4>
                 <p>Marseille • Rooftop des Terrasses</p>
             </div>
-             <button class="btn-gradient" style="padding: 10px 30px; font-size:0.8rem; background: transparent; border: 1px solid #555;">Info</button>
+            <button class="btn-gradient btn-event btn-info">Info</button>
         </div>
     </section>
 
     <footer>
         <div class="footer-content">
-            <div class="footer-col" style="flex: 2; min-width: 250px;">
-                <div class="logo footer-logo" style="margin-bottom: 20px;">NOVA<span>.</span></div>
-                <p style="color: #888; max-width: 350px; line-height: 1.6; font-size: 0.9rem;">
+            <div class="footer-col footer-col-main">
+                <div class="logo footer-logo">NOVA<span>.</span></div>
+                <p class="footer-description">
                     Agence événementielle nouvelle génération. Nous créons l'inattendu, nous gérons l'impossible, nous illuminons vos instants.
                 </p>
             </div>
@@ -217,10 +220,10 @@
 
             <div class="footer-col">
                 <h5>SUIVEZ-NOUS</h5>
-                <div style="display:flex; gap:20px; margin-top:10px;">
-                    <a href="#" style="color:#fff; font-size:0.9rem; transition:0.3s; hover:color:#FF00CC;">INSTAGRAM</a>
-                    <a href="#" style="color:#fff; font-size:0.9rem; transition:0.3s; hover:color:#FF00CC;">LINKEDIN</a>
-                    <a href="#" style="color:#fff; font-size:0.9rem; transition:0.3s; hover:color:#FF00CC;">TIKTOK</a>
+                <div class="social-links">
+                    <a href="#" class="social-link">INSTAGRAM</a>
+                    <a href="#" class="social-link">LINKEDIN</a>
+                    <a href="#" class="social-link">TIKTOK</a>
                 </div>
             </div>
         </div>
@@ -228,6 +231,7 @@
             © 2025 NOVA ÉVÉNEMENTS. Tous droits réservés.
         </div>
     </footer>
+    </main>
 
 </body>
 </html>
