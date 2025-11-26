@@ -1,82 +1,16 @@
-/* --- 7. ARTISTS SECTION --- */
-.artists-section {
-    padding: 80px 5%;
-}
-
-.artists-header {
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center;
-}
-
-.carousel-controls {
-    display:flex; 
-    gap:10px;
-}
-
-.btn-carousel {
-    background:#222; 
-    color:white; 
-    border:none; 
-    width:40px; 
-    height:40px; 
-    border-radius:50%; 
-    cursor:pointer;
-}
-
-.artist-row {
-    display: flex;
-    gap: 30px;
-    overflow-x: auto;
-    padding-bottom: 30px;
-    scrollbar-width: none; /* Firefox */
-}
-.artist-row::-webkit-scrollbar { display: none; } /* Chrome */
-
-.artist-card {
-    min-width: 240px;
-    cursor: pointer;
-}
-
+.artists-section { padding: 80px 5%; background: linear-gradient(to bottom, #050505, #0a0a0a); }
+.artist-row { display: flex; gap: 30px; overflow-x: auto; padding-bottom: 30px; scrollbar-width: none; }
+.artist-row::-webkit-scrollbar { display: none; }
+.artist-card { min-width: 280px; cursor: pointer; }
+        
 .artist-img-container {
-    height: 300px;
-    width: 100%;
-    margin-bottom: 20px;
-    border-radius: 120px 120px 0 0; /* Forme arche */
-    overflow: hidden;
-    position: relative;
-    background: #222;
+    height: 350px; width: 100%; margin-bottom: 20px; border-radius: 150px 150px 0 0; overflow: hidden; position: relative; background: #222; border: 1px solid #333;
+    transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
+.artist-img-container img { width: 100%; height: 100%; object-fit: cover; transition: inherit; filter: grayscale(100%); }
 
-.artist-img-container img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
+/* Amélioration du survol artiste */
+.artist-card:hover .artist-img-container { box-shadow: 0 10px 30px rgba(255, 0, 204, 0.3); border-color: #FF00CC; }
+.artist-card:hover img { transform: scale(1.1); filter: grayscale(0%); }
 
-.artist-card:hover img { transform: scale(1.1); }
-
-/* Forme abstraite S */
-.abstract-shape {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, rgba(255,107,107,0.5), rgba(95,39,205,0.5));
-}
-
-.artist-abstract-s { /* Conteneur de la forme S */
-    background: none;
-}
-
-.abstract-letter { /* Le 'S' */
-    display:flex; 
-    height:100%; 
-    align-items:center; 
-    justify-content:center; 
-    font-size:4rem; 
-    font-weight:bold; 
-    position:relative; 
-    z-index:2;
-}
-
-.artist-gradient-card {
-    background: var(--gradient-orange-purple);
-}
+.abstract-s { display: flex; height: 100%; width: 100%; align-items: center; justify-content: center; background: var(--nova-gradient); font-size: 8rem; font-weight: 900; color: rgba(255,255,255,0.2); }

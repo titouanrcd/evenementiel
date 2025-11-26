@@ -1,34 +1,28 @@
-/* --- 4. NAVIGATION --- */
-
-/* Le header global (peut servir de conteneur de fond ou pour le sticky) */
-header {
-    position: relative;
-    z-index: 100;
+/* --- 4. NAVIGATION (migré depuis design.css — design.css est source de vérité) --- */
+nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 5%;
+    position: relative; z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-header nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 5%;
+/* MODIFICATION: Logo agrandi et stylisé */
+.logo { font-weight: 900; letter-spacing: 1px; color: white; position: relative; }
+        
+/* Classe spécifique pour le logo du header */
+.header-logo {
+    font-size: 48px;
+    text-shadow: 0 0 20px rgba(255, 0, 204, 0.3);
 }
 
-.logo { 
-    font-weight: 800; 
-    font-size: 1.5rem; 
-    letter-spacing: -1px; 
-}
+.nav-links { display: flex; gap: 40px; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; color: var(--text-gray); }
 
-.nav-links {
-    display: flex;
-    gap: 40px;
-    font-size: 0.95rem;
-    color: var(--text-gray);
+/* Nouvel effet de survol des liens */
+.nav-links li { position: relative; padding: 5px 0; }
+.nav-links li::after {
+    content: ''; position: absolute; bottom: 0; left: 50%;
+    width: 0; height: 2px; background: var(--nova-gradient);
+    transition: all 0.3s ease-out;
 }
-
-.nav-links li:hover { 
-    color: #fff; 
-    cursor: pointer; 
-}
-
-/* Vous pouvez ajouter ici les styles pour le menu burger ou les menus déroulants */
+.nav-links li:hover { color: #fff; cursor: pointer; }
+.nav-links li:hover::after { width: 100%; left: 0; }

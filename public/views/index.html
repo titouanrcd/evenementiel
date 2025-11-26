@@ -3,227 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative Design Concept - Site Événementiel</title>
+    <title>NOVA ÉVÉNEMENTS - Agence 360°</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css"> 
 </head>
 <body>
 
-    <header>
-        <nav>
-            <div class="logo">Logo:</div>
-            <ul class="nav-links">
-                <li>Home</li>
-                <li><a href="evenement.html">Événements</a></li>
-                <li>Artistes</li>
-                <li>Contact</li>
-            </ul>
-            <button class="btn-gradient">Connexion</button>
+    <nav>
+        <div class="logo header-logo">NOVA<span>.</span></div>
+        <ul class="nav-links">
+            <li>Accueil</li>
+            <li>Services</li>
+            <li><a href="evenement.html">Evenement</li>
+            <li>Contact</li>
+        </ul>
+        <button class="btn-gradient">Connection</button>
+    </nav>
 
-<a href="connexion.html" class="btn-gradient" style="text-decoration:none; display:inline-block; padding: 10px 20px;">Connexion</a>
-        </nav>
+    <header class="hero">
+        <div class="hero-text">
+            <h1>L'étincelle de vos <br><span class="text-gradient">plus grands moments</span></h1>
+            <p class="hero-desc">
+                Agence événementielle 360°. Nous transformons vos idées en expériences spectaculaires, du concept à la réalité. Corporate, Privé, Festival.
+            </p>
+            <div style="display:flex; gap: 15px; flex-wrap:wrap; justify-content: center; @media(min-width:768px){justify-content: flex-start;}">
+                <button class="btn-gradient">Organiser un événement</button>
+                <button class="btn-gradient" style="background:transparent; border:1px solid rgba(255,255,255,0.3);">Voir le Showreel</button>
+            </div>
+        </div>
+        
+        <div class="hero-visuals">
+            <img src="file:///Users/mariloubernard/Desktop/Guardia/UE2-2_CDC_De%CC%81veloppement%20se%CC%81curise%CC%81%20web%20full%20stack/Gemini_Generated_Image_ra6wd8ra6wd8ra6w.png" class="arch-img" alt="Concert Crowd">
+        </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="hero-text">
-                <h1>Creative particles together</h1>
-                <p class="hero-desc">
-                    Explorez une nouvelle dimension du design numérique où les couleurs interagissent avec la matière. Une expérience visuelle unique pour vos projets créatifs.
-                </p>
-                <button class="btn-gradient">Explore Now</button>
+    <section class="grid-section">
+        <div class="grid-item">
+             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.4; z-index:1;" alt="Tech">
+             <div style="position:relative; z-index:2;">
+                 <h3>CORPORATE</h3>
+                 <p class="sub-title">Séminaires & Tech</p>
+             </div>
+        </div>
+        
+        <div class="grid-item item-large">
+            <div style="z-index: 2; padding-left: 10px;">
+                <p class="sub-title" style="color: #FF00CC;">NOVA AGENCY</p>
+                <h3>CRÉATIVITÉ <br>EXPLOSIVE</h3>
             </div>
-            
-            <div class="hero-visuals">
-                <img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="arch-img" alt="Model">
-                
-                <div class="arch-gradient">
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                    </svg>
-                </div>
+            <div style="width: 200px; height: 200px; border-radius: 50%; border: 1px solid #333; margin-right: -50px; display:flex; align-items:center; justify-content:center; z-index: 2;">
+                <div class="text-gradient" style="width: 80%; height: 80%; border-radius:50%; filter: blur(40px); opacity:0.6;"></div>
             </div>
-        </section>
+        </div>
 
-        <section class="grid-section">
-            <div class="grid-item grid-item-abstract">
-                 <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="grid-bg-img" alt="Abstract">
-                 <div class="grid-content-wrapper">
-                     <h3>Abstract</h3>
-                     <p class="sub-title">Concept Art</p>
-                 </div>
+        <div class="grid-item item-large" style="background: linear-gradient(to right, #222, #111);">
+            <div style="padding: 10px; z-index: 2;">
+                <h3 class="text-gradient">NOS SERVICES</h3>
+                <p style="margin-top:15px; font-size: 1rem; opacity: 0.8; max-width: 400px;">Une logistique militaire pour une créativité sans limite. Son, lumière, scénographie et gestion des invités.</p>
+                <button class="btn-gradient" style="margin-top:25px; padding: 10px 20px; font-size: 0.8rem;">Découvrir l'offre</button>
             </div>
-            
-            <div class="grid-item item-large">
-                <div class="grid-content-large">
-                    <p class="sub-title sub-title-light">35801 REF</p>
-                    <h3>Interactive colors gradients</h3>
-                </div>
-                <div class="grid-circle-design"></div>
+        </div>
+
+        <div class="grid-item">
+            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.5; z-index:1;" alt="Party">
+            <div style="position:relative; z-index:2;">
+                <h3>PRIVÉ</h3>
+                <p class="sub-title">Galas & Soirées</p>
             </div>
+        </div>
+    </section>
 
-            <div class="grid-item item-large item-warm">
-                <div class="grid-content-text">
-                    <h3>Dynamic Color Gradients</h3>
-                    <p class="grid-desc">Des transitions fluides et dynamiques pour captiver l'attention de vos utilisateurs.</p>
-                    <button class="btn-gradient btn-black">See More</button>
-                </div>
+    <section class="artists-section">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 class="section-title">Nos Univers</h2>
+            <div style="display:flex; gap:10px;">
+                <button style="background:#222; color:white; border:1px solid #333; width:50px; height:50px; border-radius:50%; cursor:pointer; transition:0.3s;">&lt;</button>
+                <button class="btn-gradient" style="width:50px; height:50px; border-radius:50%; padding:0; display:flex; align-items:center; justify-content:center;">&gt;</button>
             </div>
-
-            <div class="grid-item grid-item-play">
-                <div class="grid-play-btn">▶</div>
-            </div>
-        </section>
-
-        <section class="artists-section">
-            <div class="artists-header">
-                <h2 class="section-title">Artistes en Vedette</h2>
-                <div class="carousel-controls">
-                    <button class="btn-carousel btn-prev">&lt;</button>
-                    <button class="btn-carousel btn-next">&gt;</button>
+        </div>
+        
+        <div class="artist-row">
+            <div class="artist-card">
+                <div class="artist-img-container">
+                    <img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Artist">
                 </div>
-            </div>
-            
-            <div class="artist-row">
-                <div class="artist-card">
-                    <div class="artist-img-container">
-                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Artist">
-                    </div>
-                    <h3>Mar Inesboe</h3>
-                    <p class="sub-title">Designer Senior</p>
-                </div>
-
-                <div class="artist-card">
-                    <div class="artist-img-container artist-abstract-s">
-                        <div class="abstract-shape"></div>
-                        <div class="abstract-letter">S</div>
-                    </div>
-                    <h3>Mar Inesoe</h3>
-                    <p class="sub-title">Artist Visual</p>
-                </div>
-
-                <div class="artist-card">
-                    <div class="artist-img-container">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Artist">
-                    </div>
-                    <h3>Maels Siienn</h3>
-                    <p class="sub-title">Photographer</p>
-                </div>
-
-                <div class="artist-card">
-                    <div class="artist-img-container artist-gradient-card">
-                    </div>
-                    <h3>Colors Mix</h3>
-                    <p class="sub-title">Palette Studio</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="gallery-section">
-            <div class="gallery-header">
-                <h2 class="section-title" style="margin-bottom:0;">Galerie Interactive</h2>
-                <a href="#" class="view-all-link">Voir tout le catalogue</a>
+                <h3>ELECTRO</h3>
+                <p class="sub-title">Festivals & DJ Sets</p>
             </div>
 
-            <div class="gallery-grid">
-                <div class="gallery-item gallery-main">
-                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Event Main">
-                    <div class="play-btn">▶</div>
-                    <div class="gallery-info">
-                        <h3>Experience Design 2024</h3>
-                        <p class="gallery-duration">Highlights du festival • 4:30 min</p>
-                    </div>
-                    <div class="gallery-overlay"></div>
+            <div class="artist-card">
+                <div class="artist-img-container">
+                    <div class="abstract-s text-gradient" style="-webkit-text-fill-color: initial; color: rgba(255,255,255,0.2);">N</div>
                 </div>
+                <h3>BRANDING</h3>
+                <p class="sub-title">Lancements de marque</p>
+            </div>
 
-                <div class="stacked-items">
-                    <div class="gallery-item gallery-small">
-                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Tech">
-                        <div class="play-btn play-btn-small">▶</div>
-                    </div>
-                    <div class="gallery-item gallery-small">
-                        <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Neon">
-                        <div class="play-btn play-btn-small">▶</div>
+            <div class="artist-card">
+                <div class="artist-img-container">
+                    <img src="https://images.unsplash.com/photo-1519671482502-9759101d4561?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Artist">
+                </div>
+                <h3>LUXE</h3>
+                <p class="sub-title">Mariages & VIP</p>
+            </div>
+
+             <div class="artist-card">
+                <div class="artist-img-container" style="background: #111;">
+                    <div class="text-gradient" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; opacity: 0.8;">
+                        <span style="font-size:3rem; font-weight:900;">360°</span>
                     </div>
                 </div>
+                <h3>SCÉNOGRAPHIE</h3>
+                <p class="sub-title">Immersion Totale</p>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="events-section">
-            <h2 class="section-title">Prochains Événements</h2>
-            
-            <div class="event-row">
-                <div class="event-date">12 MARS 2024</div>
-                <div class="event-info">
-                    <h4>Digital Art Festival</h4>
-                    <p>Paris, France • Le Centre Pompidou</p>
+    <section class="gallery-section">
+        <div class="gallery-header">
+            <h2 class="section-title" style="margin-bottom:0;">Showreel 2024</h2>
+            <a href="#" style="font-size:0.9rem; color:#fff; border-bottom:2px solid #FF00CC; padding-bottom: 5px; transition: 0.3s;">Voir tous les projets</a>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Main Event">
+                <div class="play-btn">▶</div>
+                <div style="position:absolute; bottom:30px; left:30px; z-index: 2;">
+                    <h3 style="font-size: 2rem; text-transform:uppercase;">Neon Festival</h3>
+                    <p style="font-size:1rem; opacity:0.9; margin-top: 5px; color:#FF9900;">Lyon • 5000 Personnes</p>
                 </div>
-                <button class="btn-gradient btn-event">Tickets</button>
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);"></div>
             </div>
 
-            <div class="event-row">
-                <div class="event-date">24 AVRIL 2024</div>
-                <div class="event-info">
-                    <h4>Creative Coding Night</h4>
-                    <p>Berlin, Germany • Kraftwerk</p>
+            <div class="stacked-items">
+                <div class="gallery-item" style="flex:1;">
+                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Corporate">
+                    <div class="play-btn" style="width:50px; height:50px; font-size:1rem;">▶</div>
+                    <div style="position:absolute; bottom:15px; left:15px; font-weight:700; z-index:2;">TECH SUMMIT</div>
+                     <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
                 </div>
-                <button class="btn-gradient btn-event btn-info">Info</button>
-            </div>
-
-            <div class="event-row">
-                <div class="event-date">05 JUIN 2024</div>
-                <div class="event-info">
-                    <h4>UX/UI Masterclass</h4>
-                    <p>Online • Zoom Live</p>
+                <div class="gallery-item" style="flex:1;">
+                    <img src="https://images.unsplash.com/photo-1566737236500-c8ac43014a67?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Gala">
+                    <div class="play-btn" style="width:50px; height:50px; font-size:1rem;">▶</div>
+                    <div style="position:absolute; bottom:15px; left:15px; font-weight:700; z-index:2;">GALA CHARITÉ</div>
+                     <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
                 </div>
-                <button class="btn-gradient btn-event btn-info">Info</button>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </main>
+    <section class="events-section">
+        <h2 class="section-title">Prochains Événements</h2>
+        
+        <div class="event-row">
+            <div class="event-date">12 MARS <span>2025</span></div>
+            <div class="event-info">
+                <h4>FUTURE SOUND PARIS</h4>
+                <p>Paris, France • La Défense Arena</p>
+            </div>
+            <button class="btn-gradient" style="padding: 10px 30px; font-size:0.8rem;">Réserver</button>
+        </div>
+
+        <div class="event-row">
+            <div class="event-date">24 AVRIL <span>2025</span></div>
+            <div class="event-info">
+                <h4>TECH INNOVATORS NIGHT</h4>
+                <p>Berlin, Germany • Kraftwerk</p>
+            </div>
+            <button class="btn-gradient" style="padding: 10px 30px; font-size:0.8rem; background: transparent; border: 1px solid #555;">Info</button>
+        </div>
+
+        <div class="event-row">
+            <div class="event-date">05 JUIN <span>2025</span></div>
+            <div class="event-info">
+                <h4>SUMMER VIBES OPENING</h4>
+                <p>Marseille • Rooftop des Terrasses</p>
+            </div>
+             <button class="btn-gradient" style="padding: 10px 30px; font-size:0.8rem; background: transparent; border: 1px solid #555;">Info</button>
+        </div>
+    </section>
+
     <footer>
         <div class="footer-content">
-            <div class="footer-col footer-col-main">
-                <div class="logo">Logo:</div>
-                <p class="footer-description">
-                    Une plateforme créative dédiée à l'exploration des particules visuelles, des dégradés complexes et de l'art numérique de nouvelle génération.
+            <div class="footer-col" style="flex: 2; min-width: 250px;">
+                <div class="logo footer-logo" style="margin-bottom: 20px;">NOVA<span>.</span></div>
+                <p style="color: #888; max-width: 350px; line-height: 1.6; font-size: 0.9rem;">
+                    Agence événementielle nouvelle génération. Nous créons l'inattendu, nous gérons l'impossible, nous illuminons vos instants.
                 </p>
             </div>
             
             <div class="footer-col">
-                <h5>Navigation</h5>
+                <h5>AGENCE</h5>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Artistes</a></li>
-                    <li><a href="#">Galerie</a></li>
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="#">L'Équipe</a></li>
+                    <li><a href="#">Carrières</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h5>Ressources</h5>
+                <h5>EXPERTISE</h5>
                 <ul>
-                    <li><a href="#">Mentions Légales</a></li>
-                    <li><a href="#">Politique de Confidentialité</a></li>
-                    <li><a href="#">Gestion des Cookies</a></li>
-                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Corporate</a></li>
+                    <li><a href="#">Festivals</a></li>
+                    <li><a href="#">Mariages</a></li>
+                    <li><a href="#">Scénographie</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h5>Social</h5>
-                <div class="social-links">
-                    <a href="#">Instagram</a>
-                    <a href="#">Twitter</a>
-                    <a href="#">Behance</a>
+                <h5>SUIVEZ-NOUS</h5>
+                <div style="display:flex; gap:20px; margin-top:10px;">
+                    <a href="#" style="color:#fff; font-size:0.9rem; transition:0.3s; hover:color:#FF00CC;">INSTAGRAM</a>
+                    <a href="#" style="color:#fff; font-size:0.9rem; transition:0.3s; hover:color:#FF00CC;">LINKEDIN</a>
+                    <a href="#" style="color:#fff; font-size:0.9rem; transition:0.3s; hover:color:#FF00CC;">TIKTOK</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2024 Creative Particles. Tous droits réservés. Design Concept by Gemini.
+            © 2025 NOVA ÉVÉNEMENTS. Tous droits réservés.
         </div>
     </footer>
-    
-    <script src="js/app.js" defer></script> 
 
 </body>
 </html>

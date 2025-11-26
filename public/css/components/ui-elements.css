@@ -1,36 +1,46 @@
-/* --- 3. UI ELEMENTS (Boutons, titres de sections, etc.) --- */
+/* --- 3. UI ELEMENTS & ANIMATIONS (Migré depuis design.css) --- */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Highlight text gradient animé */
+.text-gradient, .logo span {
+    background: linear-gradient(270deg, #FF00CC, #FF9900, #FF00CC);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 5s ease infinite;
+}
+
+/* Boutons améliorés */
 .btn-gradient {
-    background: var(--gradient-orange-purple);
-    padding: 12px 24px;
-    border-radius: 30px;
+    background: linear-gradient(90deg, #FF00CC, #FF9900, #FF00CC);
+    background-size: 200% auto;
+    padding: 14px 30px;
+    border-radius: 4px;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     border: none;
     color: white;
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(255, 0, 204, 0.2);
 }
 
 .btn-gradient:hover { 
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(95, 39, 205, 0.4);
+    background-position: right center;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(255, 0, 204, 0.5);
 }
 
-.section-title { 
-    margin-bottom: 30px; 
-    font-size: 2rem; 
-    font-weight: 300;
-}
+.section-title { margin-bottom: 40px; font-size: 2.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: -1px; }
+.sub-title { font-size: 0.8rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 700; }
 
-.sub-title { 
-    font-size: 0.8rem; 
-    color: var(--text-gray); 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    margin-bottom: 5px; 
-}
-
-/* Styles spécifiques déplacés du HTML */
+/* Utilitaires et variantes */
 .sub-title-light { color: rgba(255,255,255,0.7); }
 .btn-black { background: black !important; color: white; }
 .btn-info { background: #333 !important; box-shadow: none !important; }

@@ -1,94 +1,18 @@
-/* --- 8. GALLERY SECTION --- */
-.gallery-section { padding: 50px 5%; }
-
-.gallery-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 30px;
-}
-
-.view-all-link {
-    font-size:0.9rem; 
-    color:#888; 
-    border-bottom:1px solid #444; 
-    padding-bottom: 2px;
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-    height: 450px;
-}
-
-.gallery-item {
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    background: #222;
-}
-
-.gallery-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s;
-    opacity: 0.85;
-}
-
+/* --- 8. GALLERY SECTION (migré depuis design.css) --- */
+.gallery-section { padding: 80px 5%; }
+.gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+.gallery-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; height: 500px; }
+.gallery-item { position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; background: #222; border: 1px solid #333; transition: 0.3s;}
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; opacity: 0.7; }
+.gallery-item:hover { border-color: #FF9900; box-shadow: 0 5px 20px rgba(255, 153, 0, 0.2); }
 .gallery-item:hover img { transform: scale(1.05); opacity: 1; }
 
 .play-btn {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70px; height: 70px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(5px);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid rgba(255,255,255,0.3);
-    transition: 0.3s;
-    font-size: 1.2rem;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px;
+    background: rgba(255, 0, 204, 0.1); backdrop-filter: blur(5px); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 0, 204, 0.5);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 1.5rem; color: white; z-index: 5;
 }
-
-.play-btn-small {
-    width:50px; 
-    height:50px; 
-    font-size:1rem;
-}
-
-.gallery-item:hover .play-btn {
-    background: white; color: black; transform: translate(-50%, -50%) scale(1.1);
-}
-
-.stacked-items {
-    display: flex; flex-direction: column; gap: 20px;
-}
-
-/* Styles pour les éléments HTML corrigés */
-.gallery-info {
-    position:absolute; 
-    bottom:30px; 
-    left:30px; 
-    z-index: 2;
-}
-
-.gallery-duration {
-    font-size:0.9rem; 
-    opacity:0.8; 
-    margin-top: 5px;
-}
-
-.gallery-overlay {
-    position:absolute; 
-    top:0; 
-    left:0; 
-    width:100%; 
-    height:100%; 
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-}
-
-.gallery-small {
-    flex:1;
-}
+.gallery-item:hover .play-btn { background: var(--nova-gradient); transform: translate(-50%, -50%) scale(1.1); border:none; box-shadow: 0 0 30px rgba(255,0,204,0.5); }
+.stacked-items { display: flex; flex-direction: column; gap: 20px; }
