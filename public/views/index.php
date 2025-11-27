@@ -17,7 +17,7 @@
             <ul class="nav-links">
                 <li><a href="#accueil">Accueil</a></li>
                 <li><a href="#services">Services</a></li>
-                <li><a href="evenement.html">Evenement</a></li>
+                <li><a href="evenement.php">Evenement</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <a href="connexion.html" class="btn-gradient">Connexion</a>

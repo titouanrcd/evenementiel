@@ -14,9 +14,9 @@
         <nav>
             <div class="logo header-logo">NOVA<span>.</span></div>
             <ul class="nav-links">
-                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.php">Accueil</a></li>
                 <li><a href="#services">Services</a></li>
-                <li><a href="evenement.html">Evenement</a></li>
+                <li><a href="evenement.php">Evenement</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <a href="connexion.html" class="btn-gradient">Connexion</a>
