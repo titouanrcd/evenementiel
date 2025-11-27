@@ -1,3 +1,9 @@
+<?php
+session_start();
+$is_logged_in = isset($_SESSION['user_email']);
+$user_name = $_SESSION['user_name'] ?? '';
+$user_role = $_SESSION['user_role'] ?? 'user';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,8 +25,21 @@
                 <li><a href="#services">Services</a></li>
                 <li><a href="evenement.php">Evenement</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <?php if ($is_logged_in): ?>
+                <li><a href="profil.php">Mon Profil</a></li>
+                <?php if ($user_role === 'organisateur' || $user_role === 'admin'): ?>
+                <li><a href="organisateur.php">Panel Orga</a></li>
+                <?php endif; ?>
+                <?php if ($user_role === 'admin'): ?>
+                <li><a href="admin.php">Panel Admin</a></li>
+                <?php endif; ?>
+                <?php endif; ?>
             </ul>
-            <a href="connexion.html" class="btn-gradient">Connexion</a>
+            <?php if ($is_logged_in): ?>
+                <a href="profil.php" class="btn-gradient">👤 <?php echo htmlspecialchars($user_name); ?></a>
+            <?php else: ?>
+                <a href="connexion.php" class="btn-gradient">Connexion</a>
+            <?php endif; ?>
         </nav>
     </header>
 

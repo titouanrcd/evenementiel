@@ -80,6 +80,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
             if ($user_data && password_verify($password_login, $user_data['password'])) {
                 $_SESSION['user_email'] = $user_data['email'];
                 $_SESSION['user_name'] = $user_data['user']; // La colonne s'appelle 'user'
+                $_SESSION['user_role'] = $user_data['role'] ?? 'user';
 
                 header('Location: index.php');
                 exit();

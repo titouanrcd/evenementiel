@@ -594,3 +594,239 @@
         align-self: center;
     }
 }
+
+/* ============================================
+   NOUVEAUX STYLES - Tags et Filtres
+   ============================================ */
+
+/* Alert Container */
+.alert-container {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 5%;
+}
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: rgba(0, 200, 83, 0.15);
+    border: 1px solid rgba(0, 200, 83, 0.3);
+    color: #00c853;
+}
+
+.alert-error {
+    background: rgba(255, 77, 77, 0.15);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    color: #ff4d4d;
+}
+
+/* Filter Tags */
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.tag-option input[type="radio"] {
+    display: none;
+}
+
+.tag-option span {
+    display: inline-block;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+.tag-option:hover span {
+    border-color: rgba(255, 0, 204, 0.5);
+    color: white;
+}
+
+.tag-option.active span,
+.tag-option input:checked + span {
+    background: var(--nova-gradient);
+    border-color: transparent;
+    color: white;
+    font-weight: 600;
+}
+
+/* Event Tags */
+.event-tag {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    z-index: 2;
+}
+
+.tag-sport { background: linear-gradient(135deg, #00b894, #00cec9); }
+.tag-culture { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+.tag-soiree { background: linear-gradient(135deg, #fd79a8, #e84393); }
+.tag-conference { background: linear-gradient(135deg, #0984e3, #74b9ff); }
+.tag-festival { background: linear-gradient(135deg, #fdcb6e, #f39c12); }
+.tag-autre { background: linear-gradient(135deg, #636e72, #b2bec3); }
+
+/* Event Date Badge Amélioration */
+.event-date-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    z-index: 2;
+}
+
+.event-date-badge .day {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 900;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1;
+}
+
+.event-date-badge .month {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    opacity: 0.8;
+}
+
+/* Event Time */
+.event-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.event-time svg {
+    opacity: 0.7;
+}
+
+/* Event Location amélioré */
+.event-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.event-location::before {
+    display: none;
+}
+
+.event-location svg {
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+/* Event Meta */
+.event-meta {
+    margin-bottom: 15px;
+}
+
+.event-capacity {
+    font-size: 0.85rem;
+    color: #00c853;
+}
+
+.event-capacity.full {
+    color: #ff4d4d;
+}
+
+.capacity-full {
+    background: rgba(255, 77, 77, 0.15);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Boutons d'inscription */
+.inscription-form {
+    display: inline-block;
+}
+
+.btn-registered {
+    display: inline-block;
+    padding: 10px 20px;
+    background: rgba(0, 200, 83, 0.15);
+    border: 1px solid rgba(0, 200, 83, 0.3);
+    border-radius: 6px;
+    color: #00c853;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.btn-full-event {
+    display: inline-block;
+    padding: 10px 20px;
+    background: rgba(255, 77, 77, 0.15);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    border-radius: 6px;
+    color: #ff4d4d;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Events Header Info */
+.events-header-info {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.events-count {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+}
+
+/* No Events State */
+.no-events {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-gray);
+}
+
+.no-events svg {
+    margin-bottom: 20px;
+    opacity: 0.3;
+}
+
+.no-events h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.no-events p {
+    margin-bottom: 25px;
+}

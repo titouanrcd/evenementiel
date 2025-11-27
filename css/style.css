@@ -20,5 +20,7 @@
 @import url('sections/events.css');
 @import url('sections/events-page.css');
 @import url('sections/auth.css');
+@import url('sections/profil.css');
+@import url('sections/admin.css');
 
 @import url('responsive.css');
