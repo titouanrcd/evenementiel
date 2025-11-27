@@ -25,17 +25,19 @@
     </header>
 
     <main>
-        <section class="auth-section">
-            <div class="auth-bg-gradient"></div>
+       <section class="auth-section">
+        <!-- Fond lumineux d'ambiance -->
+        <div class="auth-bg-gradient"></div>
+
+        <div class="auth-container">
+            <!-- Système d'onglets via Radio Buttons (Structure modifiée) -->
+            <input type="radio" id="tab-login" name="auth-tab" class="tab-radio" checked>
+            <input type="radio" id="tab-register" name="auth-tab" class="tab-radio">
             
-            <div class="auth-container">
-                <input type="radio" id="tab-login" name="auth-tab" class="tab-radio" checked>
-                <input type="radio" id="tab-register" name="auth-tab" class="tab-radio">
-                
-                <div class="auth-tabs">
-                    <label for="tab-login" class="auth-tab">Connexion</label>
-                    <label for="tab-register" class="auth-tab">Inscription</label>
-                </div>
+            <div class="auth-tabs">
+                <label for="tab-login" class="auth-tab">Connexion</label>
+                <label for="tab-register" class="auth-tab">Inscription</label>
+            </div>
 
                 <div id="login-form" class="auth-form">
                     <form>
