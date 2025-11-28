@@ -703,3 +703,315 @@
         height: 40px;
     }
 }
+
+/* ============================================
+   WIZARD STYLES FOR EVENT CREATION
+   ============================================ */
+
+.wizard-card-container {
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* PROGRESS BAR */
+.wizard-header {
+    padding: 30px 40px;
+    border-bottom: 1px solid #222;
+    background: #161616;
+}
+
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 20px;
+}
+
+.progress-line-bg {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #333;
+    z-index: 0;
+}
+
+.progress-line-fill {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 33%;
+    height: 2px;
+    background: var(--nova-gradient);
+    z-index: 0;
+    transition: width 0.4s ease;
+}
+
+.step-item {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    width: 33%;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    background: #222;
+    border: 2px solid #444;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #888;
+    transition: 0.3s;
+}
+
+.step-label {
+    font-size: 0.8rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* Active/Completed Step Styles */
+.step-item.active .step-circle {
+    border-color: var(--nova-pink);
+    color: white;
+    background: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 204, 0.4);
+}
+
+.step-item.active .step-label {
+    color: white;
+}
+
+.step-item.completed .step-circle {
+    background: var(--nova-gradient);
+    border: none;
+    color: black;
+}
+
+.step-item.completed .step-label {
+    color: var(--nova-pink);
+}
+
+/* FORM CONTENT */
+.wizard-body-form {
+    padding: 40px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.step-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.step-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.wizard-body h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.step-desc {
+    color: #888;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+}
+
+/* Type Selection Grid */
+.type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.type-grid label {
+    display: flex;
+    height: 100%;
+}
+
+.type-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.type-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--nova-pink);
+}
+
+.type-radio:checked + .type-card {
+    background: #222;
+    border-color: var(--nova-pink);
+    box-shadow: 0 10px 30px rgba(255, 0, 204, 0.15);
+}
+
+.type-radio:checked + .type-card h4 {
+    color: var(--nova-pink);
+}
+
+.type-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.type-card h4 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.type-card p {
+    margin: 5px 0 0 0;
+}
+
+.wizard-body-form .input-group label {
+    display: block;
+    color: #b0b0b0;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.wizard-body-form .input-group input,
+.wizard-body-form .input-group select,
+.wizard-body-form .input-group textarea {
+    width: 100%;
+    padding: 14px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    transition: 0.3s;
+    resize: vertical;
+}
+
+.wizard-body-form .input-group input:focus,
+.wizard-body-form .input-group select:focus,
+.wizard-body-form .input-group textarea:focus {
+    outline: none;
+    border-color: var(--nova-orange);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.wizard-body-form .input-group select option {
+    background: #1a1a1a;
+}
+
+/* FOOTER ACTIONS */
+.wizard-footer {
+    padding: 20px 40px;
+    background: #161616;
+    border-top: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-text:hover {
+    color: white;
+}
+
+.btn-next {
+    background: var(--nova-gradient);
+    color: white;
+    padding: 12px 35px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    letter-spacing: 1px;
+}
+
+.btn-next:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 204, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Responsive Wizard */
+@media (max-width: 768px) {
+    .wizard-header {
+        padding: 20px;
+    }
+    
+    .wizard-body {
+        padding: 20px;
+        min-height: 300px;
+    }
+    
+    .wizard-footer {
+        padding: 15px 20px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .type-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+    }
+    
+    .step-label {
+        display: none;
+    }
+    
+    .step-circle {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+}
