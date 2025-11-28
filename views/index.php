@@ -51,7 +51,7 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                 <?php if ($is_logged_in): ?>
                     <div class="sidebar-footer">
                         <div class="sidebar-user">
-                            <div class="sidebar-user-avatar">👤</div>
+                            <div class="sidebar-user-avatar">U</div>
                             <div class="sidebar-user-info">
                                 <h4><?php echo htmlspecialchars($user_name); ?></h4>
                                 <p><?php echo ucfirst($user_role); ?></p>

@@ -1,6 +1,5 @@
-/* --- EVENTS PAGE STYLES --- */
+/* EVENTS PAGE */
 
-/* Events Hero Section */
 .events-hero {
     background: linear-gradient(135deg, rgba(255, 0, 204, 0.1), rgba(255, 153, 0, 0.1)), #0a0a0a;
     padding: 100px 5% 80px;
@@ -29,11 +28,6 @@
     margin-right: auto;
 }
 
-.events-cta {
-    margin-top: 30px;
-}
-
-/* Events Filter Section */
 .events-filter-section {
     padding: 60px 0;
     background: #050505;
@@ -48,7 +42,6 @@
     gap: 60px;
 }
 
-/* Filters Sidebar */
 .events-filters {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -109,7 +102,6 @@
     margin-bottom: 8px;
 }
 
-/* Form inputs */
 .filter-input,
 .filter-select {
     width: 100%;
@@ -141,7 +133,6 @@
     padding: 8px;
 }
 
-/* Date range */
 .date-range {
     display: flex;
     flex-direction: column;
@@ -160,101 +151,6 @@
     font-weight: 500;
 }
 
-.filter-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.filter-option {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    transition: color 0.3s ease;
-}
-
-.filter-option:hover {
-    color: white;
-}
-
-.filter-option input[type="checkbox"] {
-    display: none;
-}
-
-.checkmark {
-    width: 18px;
-    height: 18px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.filter-option input[type="checkbox"]:checked + .checkmark {
-    background: var(--nova-gradient);
-    border-color: transparent;
-}
-
-.filter-option input[type="checkbox"]:checked + .checkmark::after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* Price Range */
-.price-range {
-    margin-top: 15px;
-}
-
-.price-slider {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.1);
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.price-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--nova-gradient);
-    cursor: pointer;
-}
-
-.price-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--nova-gradient);
-    cursor: pointer;
-    border: none;
-}
-
-.price-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.price-value {
-    color: #FF00CC;
-    font-weight: 600;
-}
-
-/* Price Range Slider */
 .price-range {
     margin-top: 10px;
 }
@@ -304,7 +200,6 @@
     font-weight: 600;
 }
 
-/* Apply button */
 .filter-apply-btn {
     width: 100%;
     margin-top: 10px;
@@ -319,85 +214,8 @@
     transform: translateY(-2px);
 }
 
-/* Enhanced event cards */
-.event-date-badge {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    backdrop-filter: blur(5px);
-}
-
-.event-description {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.4;
-    margin-bottom: 15px;
-}
-
-/* Error message */
-.error-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 60px 20px;
-    color: #ff6b6b;
-    font-size: 1.1rem;
-}
-
-.error-message p {
-    background: rgba(255, 107, 107, 0.1);
-    border: 1px solid rgba(255, 107, 107, 0.3);
-    border-radius: 8px;
-    padding: 20px;
-    margin: 0;
-}
-
-/* Events Grid */
 .events-content {
     min-height: 600px;
-}
-
-/* Loading spinner */
-.loading {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-gray);
-    font-size: 1.1rem;
-}
-
-.loading p {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.loading p::after {
-    content: '';
-    width: 20px;
-    height: 20px;
-    border: 2px solid transparent;
-    border-top: 2px solid #FF00CC;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.no-events {
-    text-align: center;
-    color: var(--text-gray);
-    font-size: 1.2rem;
-    padding: 60px 20px;
-    grid-column: 1 / -1;
 }
 
 .events-grid {
@@ -406,7 +224,6 @@
     gap: 30px;
 }
 
-/* Event Cards */
 .event-card {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -478,16 +295,37 @@
 }
 
 .event-location {
-    color: var(--text-gray);
-    font-size: 0.9rem;
-    margin-bottom: 20px;
     display: flex;
     align-items: center;
+    gap: 6px;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
 }
 
-.event-location::before {
-    content: '📍';
-    margin-right: 6px;
+.event-location svg {
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.event-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.event-time svg {
+    opacity: 0.7;
+}
+
+.event-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+    margin-bottom: 15px;
 }
 
 .event-details {
@@ -519,112 +357,12 @@
     box-shadow: 0 8px 20px rgba(255, 0, 204, 0.3);
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .events-container {
-        grid-template-columns: 280px 1fr;
-        gap: 40px;
-    }
-    
-    .events-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 25px;
-    }
-}
-
-@media (max-width: 768px) {
-    .events-hero-content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .events-container {
-        grid-template-columns: 1fr;
-        gap: 30px;
-        padding: 0 20px;
-    }
-    
-    .events-filters {
-        order: 2;
-        padding: 25px;
-    }
-    
-    .events-content {
-        order: 1;
-    }
-    
-    .events-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .event-card.featured {
-        grid-column: span 1;
-        grid-row: span 1;
-    }
-    
-    .event-card.featured .event-image {
-        height: 220px;
-    }
-    
-    .event-card.featured .event-title {
-        font-size: 1.3rem;
-    }
-    
-    .date-range {
-        flex-direction: row;
-        gap: 15px;
-    }
-    
-    .date-input-group {
-        flex: 1;
-    }
-    
-    .filter-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
-        text-align: center;
-    }
-    
-    .filter-header h3 {
-        order: 1;
-    }
-    
-    .filter-reset {
-        order: 2;
-        align-self: center;
-    }
-}
-
-/* ============================================
-   NOUVEAUX STYLES - Tags et Filtres
-   ============================================ */
-
-/* Alert Container */
 .alert-container {
     max-width: 1400px;
     margin: 20px auto;
     padding: 0 5%;
 }
 
-.alert {
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.alert-success {
-    background: rgba(0, 200, 83, 0.15);
-    border: 1px solid rgba(0, 200, 83, 0.3);
-    color: #00c853;
-}
-
-.alert-error {
-    background: rgba(255, 77, 77, 0.15);
-    border: 1px solid rgba(255, 77, 77, 0.3);
-    color: #ff4d4d;
-}
-
-/* Filter Tags */
 .filter-tags {
     display: flex;
     flex-wrap: wrap;
@@ -664,7 +402,6 @@
     font-weight: 600;
 }
 
-/* Event Tags */
 .event-tag {
     position: absolute;
     top: 15px;
@@ -684,7 +421,6 @@
 .tag-festival { background: linear-gradient(135deg, #fdcb6e, #f39c12); }
 .tag-autre { background: linear-gradient(135deg, #636e72, #b2bec3); }
 
-/* Event Date Badge Amélioration */
 .event-date-badge {
     position: absolute;
     top: 15px;
@@ -716,40 +452,6 @@
     opacity: 0.8;
 }
 
-/* Event Time */
-.event-time {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-gray);
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
-
-.event-time svg {
-    opacity: 0.7;
-}
-
-/* Event Location amélioré */
-.event-location {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-gray);
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-}
-
-.event-location::before {
-    display: none;
-}
-
-.event-location svg {
-    opacity: 0.7;
-    flex-shrink: 0;
-}
-
-/* Event Meta */
 .event-meta {
     margin-bottom: 15px;
 }
@@ -770,7 +472,6 @@
     font-weight: 600;
 }
 
-/* Boutons d'inscription */
 .inscription-form {
     display: inline-block;
 }
@@ -797,7 +498,6 @@
     font-size: 0.9rem;
 }
 
-/* Events Header Info */
 .events-header-info {
     margin-bottom: 25px;
     padding-bottom: 20px;
@@ -809,7 +509,6 @@
     font-size: 0.95rem;
 }
 
-/* No Events State */
 .no-events {
     text-align: center;
     padding: 80px 20px;

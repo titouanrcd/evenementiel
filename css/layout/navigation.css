@@ -1,4 +1,4 @@
-/* --- 4. NAVIGATION --- */
+/* --- NAVIGATION --- */
 header {
     position: fixed;
     top: 0;
@@ -17,7 +17,6 @@ nav {
     padding: 15px 30px;
 }
 
-/* MODIFICATION: Logo agrandi et stylisé */
 .logo {
     font-weight: 900;
     letter-spacing: 1px;
@@ -25,7 +24,6 @@ nav {
     position: relative;
 }
 
-/* Classe spécifique pour le logo du header */
 .header-logo {
     font-size: 28px;
     text-shadow: 0 0 20px rgba(255, 0, 204, 0.3);
@@ -37,9 +35,9 @@ nav {
     -webkit-text-fill-color: transparent;
 }
 
-/* ==================== HAMBURGER MENU ==================== */
+/* HAMBURGER MENU */
 .hamburger-btn {
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 6px;
     background: none;
@@ -58,7 +56,7 @@ nav {
 }
 
 .hamburger-btn.active span:nth-child(1) {
-    transform: rotate(45deg) translate(10px, 10px);
+    transform: rotate(45deg) translate(6px, 6px);
 }
 
 .hamburger-btn.active span:nth-child(2) {
@@ -66,10 +64,10 @@ nav {
 }
 
 .hamburger-btn.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
+    transform: rotate(-45deg) translate(6px, -6px);
 }
 
-/* ==================== SIDEBAR NAVIGATION ==================== */
+/* SIDEBAR NAVIGATION */
 .sidebar {
     position: fixed;
     top: 0;
@@ -141,11 +139,7 @@ nav {
     border-left-color: var(--nova-pink);
 }
 
-.nav-links li::after {
-    display: none;
-}
-
-/* Sidebar Footer - User Info */
+/* Sidebar Footer */
 .sidebar-footer {
     position: absolute;
     bottom: 0;
@@ -171,7 +165,9 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
 }
 
 .sidebar-user-info h4 {
@@ -214,7 +210,7 @@ nav {
     color: var(--nova-pink);
 }
 
-/* Overlay quand sidebar est ouverte */
+/* Overlay */
 .sidebar-overlay {
     position: fixed;
     top: 0;
@@ -231,114 +227,4 @@ nav {
 .sidebar-overlay.active {
     opacity: 1;
     visibility: visible;
-}
-
-/* ==================== DESKTOP - MASQUER LA SIDEBAR ==================== */
-@media (min-width: 1025px) {
-    .hamburger-btn {
-        display: none !important;
-    }
-    
-    .sidebar {
-        position: static;
-        width: auto;
-        height: auto;
-        background: none;
-        border: none;
-        backdrop-filter: none;
-        padding: 0;
-        left: 0;
-        transition: none;
-        overflow: visible;
-    }
-    
-    .sidebar.active {
-        left: 0;
-    }
-    
-    .sidebar-header {
-        display: none;
-    }
-    
-    .sidebar-overlay {
-        display: none;
-    }
-    
-    .nav-links {
-        flex-direction: row;
-        gap: 40px;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-    }
-    
-    .nav-links li a {
-        padding: 5px 0;
-        border-left: none;
-    }
-    
-    .nav-links li a:hover {
-        background: none;
-        border-left: none;
-    }
-    
-    .nav-links li a.active {
-        background: none;
-        border-left: none;
-    }
-    
-    .nav-links li::after {
-        display: block;
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        width: 0;
-        height: 2px;
-        background: var(--nova-gradient);
-        transition: all 0.3s ease-out;
-    }
-    
-    .nav-links li:hover::after {
-        width: 100%;
-        left: 0;
-    }
-    
-    .sidebar-footer {
-        display: none;
-    }
-}
-
-/* ==================== TABLET ==================== */
-@media (max-width: 1024px) and (min-width: 768px) {
-    .hamburger-btn {
-        display: flex;
-    }
-    
-    nav {
-        padding: 15px 20px;
-    }
-    
-    .header-logo {
-        font-size: 24px;
-    }
-}
-
-/* ==================== MOBILE ==================== */
-@media (max-width: 767px) {
-    .hamburger-btn {
-        display: flex;
-    }
-    
-    nav {
-        padding: 15px 15px;
-    }
-    
-    .header-logo {
-        font-size: 20px;
-    }
-    
-    .sidebar {
-        width: 75vw;
-        max-width: 280px;
-    }
 }

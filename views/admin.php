@@ -28,14 +28,13 @@ try {
 $message = '';
 $message_type = '';
 
-// Tags disponibles
 $tags = [
-    'sport' => '🏀 Sport',
-    'culture' => '🎭 Culture',
-    'soiree' => '🎉 Soirée',
-    'conference' => '🎤 Conférence',
-    'festival' => '🎪 Festival',
-    'autre' => '📌 Autre'
+    'sport' => 'Sport',
+    'culture' => 'Culture',
+    'soiree' => 'Soirée',
+    'conference' => 'Conférence',
+    'festival' => 'Festival',
+    'autre' => 'Autre'
 ];
 
 // =========================================================
@@ -183,7 +182,7 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                 
                 <div class="sidebar-footer">
                     <div class="sidebar-user">
-                        <div class="sidebar-user-avatar">👑</div>
+                        <div class="sidebar-user-avatar">A</div>
                         <div class="sidebar-user-info">
                             <h4><?php echo htmlspecialchars($user_name); ?></h4>
                             <p>Administrateur</p>
@@ -214,26 +213,26 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                 <!-- Sidebar -->
                 <aside class="admin-sidebar">
                     <div class="admin-profile">
-                        <div class="admin-avatar">👑</div>
+                        <div class="admin-avatar">A</div>
                         <h3><?php echo htmlspecialchars($user_name); ?></h3>
                         <span class="role-badge role-admin">Administrateur</span>
                     </div>
                     
                     <nav class="admin-nav">
                         <a href="admin.php?tab=dashboard" class="admin-nav-link <?php echo $active_tab == 'dashboard' ? 'active' : ''; ?>">
-                            <span class="nav-icon">📊</span>
+                            <span class="nav-icon">-</span>
                             Dashboard
                         </a>
                         <a href="admin.php?tab=users" class="admin-nav-link <?php echo $active_tab == 'users' ? 'active' : ''; ?>">
-                            <span class="nav-icon">👥</span>
+                            <span class="nav-icon">-</span>
                             Utilisateurs
                         </a>
                         <a href="admin.php?tab=events" class="admin-nav-link <?php echo $active_tab == 'events' ? 'active' : ''; ?>">
-                            <span class="nav-icon">📅</span>
+                            <span class="nav-icon">-</span>
                             Événements
                         </a>
                         <a href="admin.php?tab=pending" class="admin-nav-link <?php echo $active_tab == 'pending' ? 'active' : ''; ?>">
-                            <span class="nav-icon">⏳</span>
+                            <span class="nav-icon">-</span>
                             En attente
                             <?php if ($stats['events_pending'] > 0): ?>
                                 <span class="badge-count"><?php echo $stats['events_pending']; ?></span>
@@ -254,35 +253,35 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                         
                         <div class="dashboard-stats">
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">👥</div>
+                                <div class="stat-icon">U</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['users']; ?></span>
                                     <span class="stat-label">Utilisateurs</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">📅</div>
+                                <div class="stat-icon">E</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['events']; ?></span>
                                     <span class="stat-label">Événements</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">✅</div>
+                                <div class="stat-icon">P</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['events_published']; ?></span>
                                     <span class="stat-label">Publiés</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">⏳</div>
+                                <div class="stat-icon">A</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['events_pending']; ?></span>
                                     <span class="stat-label">En attente</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">🎫</div>
+                                <div class="stat-icon">I</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['inscriptions']; ?></span>
                                     <span class="stat-label">Inscriptions</span>
@@ -292,7 +291,7 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                         
                         <?php if ($stats['events_pending'] > 0): ?>
                         <div class="alert-info">
-                            <strong>⚠️ Attention :</strong> Vous avez <?php echo $stats['events_pending']; ?> événement(s) en attente de validation.
+                            <strong>Attention :</strong> Vous avez <?php echo $stats['events_pending']; ?> événement(s) en attente de validation.
                             <a href="admin.php?tab=pending">Voir les événements en attente →</a>
                         </div>
                         <?php endif; ?>
@@ -331,9 +330,9 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                                     <input type="hidden" name="user_email" value="<?php echo $u['email']; ?>">
                                                     <select name="new_role" onchange="this.form.submit()" 
                                                             <?php echo $u['email'] == $user_email ? 'disabled' : ''; ?>>
-                                                        <option value="user" <?php echo $u['role'] == 'user' ? 'selected' : ''; ?>>👤 User</option>
-                                                        <option value="organisateur" <?php echo $u['role'] == 'organisateur' ? 'selected' : ''; ?>>🎭 Organisateur</option>
-                                                        <option value="admin" <?php echo $u['role'] == 'admin' ? 'selected' : ''; ?>>👑 Admin</option>
+                                                        <option value="user" <?php echo $u['role'] == 'user' ? 'selected' : ''; ?>>User</option>
+                                                        <option value="organisateur" <?php echo $u['role'] == 'organisateur' ? 'selected' : ''; ?>>Organisateur</option>
+                                                        <option value="admin" <?php echo $u['role'] == 'admin' ? 'selected' : ''; ?>>Admin</option>
                                                     </select>
                                                 </form>
                                             </td>
@@ -344,7 +343,7 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                                           onsubmit="return confirm('Supprimer cet utilisateur ?');">
                                                         <input type="hidden" name="action" value="delete_user">
                                                         <input type="hidden" name="user_email" value="<?php echo $u['email']; ?>">
-                                                        <button type="submit" class="btn-action btn-delete">🗑️</button>
+                                                        <button type="submit" class="btn-action btn-delete">X</button>
                                                     </form>
                                                 <?php else: ?>
                                                     <span class="text-muted">Vous</span>
@@ -407,8 +406,8 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                                     <input type="hidden" name="action" value="change_event_status">
                                                     <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
                                                     <select name="new_status" onchange="this.form.submit()">
-                                                        <option value="publié" <?php echo $event['status'] == 'publié' ? 'selected' : ''; ?>>✅ Publié</option>
-                                                        <option value="en attente" <?php echo $event['status'] == 'en attente' ? 'selected' : ''; ?>>⏳ En attente</option>
+                                                        <option value="publié" <?php echo $event['status'] == 'publié' ? 'selected' : ''; ?>>Publié</option>
+                                                        <option value="en attente" <?php echo $event['status'] == 'en attente' ? 'selected' : ''; ?>>En attente</option>
                                                     </select>
                                                 </form>
                                             </td>
@@ -417,7 +416,7 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                                       onsubmit="return confirm('Supprimer cet événement ?');">
                                                     <input type="hidden" name="action" value="delete_event">
                                                     <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
-                                                    <button type="submit" class="btn-action btn-delete">🗑️</button>
+                                                    <button type="submit" class="btn-action btn-delete">X</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -441,7 +440,7 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                         
                         <?php if (empty($pending_events)): ?>
                             <div class="empty-state">
-                                <span class="empty-icon">✅</span>
+                                <span class="empty-icon">OK</span>
                                 <h3>Aucun événement en attente</h3>
                                 <p>Tous les événements ont été validés.</p>
                             </div>
@@ -453,15 +452,15 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                             <?php if ($event['image']): ?>
                                                 <img src="<?php echo (strpos($event['image'], 'http') === 0) ? $event['image'] : '../' . $event['image']; ?>" alt="">
                                             <?php else: ?>
-                                                <div class="no-image">📅</div>
+                                                <div class="no-image">-</div>
                                             <?php endif; ?>
                                         </div>
                                         <div class="pending-info">
                                             <h3><?php echo htmlspecialchars($event['name']); ?></h3>
                                             <p class="pending-meta">
-                                                <span>📅 <?php echo date('d/m/Y', strtotime($event['event_date'])); ?></span>
-                                                <span>📍 <?php echo htmlspecialchars($event['lieu']); ?></span>
-                                                <span>👤 <?php echo htmlspecialchars($event['owner_name'] ?? $event['owner_email']); ?></span>
+                                                <span><?php echo date('d/m/Y', strtotime($event['event_date'])); ?></span>
+                                                <span><?php echo htmlspecialchars($event['lieu']); ?></span>
+                                                <span><?php echo htmlspecialchars($event['owner_name'] ?? $event['owner_email']); ?></span>
                                             </p>
                                             <p class="pending-desc"><?php echo htmlspecialchars(substr($event['description'], 0, 200)); ?>...</p>
                                         </div>
@@ -470,12 +469,12 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                                 <input type="hidden" name="action" value="change_event_status">
                                                 <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
                                                 <input type="hidden" name="new_status" value="publié">
-                                                <button type="submit" class="btn-approve">✅ Approuver</button>
+                                                <button type="submit" class="btn-approve">Approuver</button>
                                             </form>
                                             <form method="POST" onsubmit="return confirm('Supprimer cet événement ?');">
                                                 <input type="hidden" name="action" value="delete_event">
                                                 <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
-                                                <button type="submit" class="btn-reject">❌ Rejeter</button>
+                                                <button type="submit" class="btn-reject">Rejeter</button>
                                             </form>
                                         </div>
                                     </div>

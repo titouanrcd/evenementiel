@@ -1,14 +1,41 @@
 /* --- RESPONSIVE --- */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    nav { padding: 15px 20px; }
+    .header-logo { font-size: 24px; }
+    
+    .admin-container { grid-template-columns: 1fr; }
+    .admin-sidebar { position: static; }
+    .admin-nav { flex-direction: row; flex-wrap: wrap; }
+    .admin-nav-link { flex: 1; min-width: 120px; justify-content: center; }
+    .pending-card { grid-template-columns: 1fr; }
+    .pending-image { width: 100%; height: 150px; }
+    .pending-actions { flex-direction: row; }
+    
+    .profil-container { grid-template-columns: 1fr; }
+    .profil-sidebar { position: static; }
+    .profil-nav { flex-direction: row; flex-wrap: wrap; }
+    .profil-nav-btn { flex: 1; justify-content: center; min-width: 150px; }
+    
+    .events-container { grid-template-columns: 280px 1fr; gap: 40px; }
+    .events-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-    nav { flex-direction: column; gap: 20px; padding: 30px 5%; } 
-    .header-logo { font-size: 36px; }
-    .nav-links { display: none; }
+    nav { flex-direction: column; gap: 20px; padding: 15px; } 
+    .header-logo { font-size: 20px; }
+    .sidebar { width: 75vw; max-width: 280px; }
+    
     h1 { font-size: 2.8rem; }
     .hero { flex-direction: column; text-align: center; padding-top: 60px; }
     .hero-text { padding-right: 0; margin-bottom: 50px; }
     .hero-desc { border-left: none; padding-left: 0; margin: 0 auto 30px; }
     .hero-visuals { width: 100%; justify-content: center; }
     .arch-img { width: 300px; height: 300px; }
+    .hero-buttons { justify-content: center; }
+    
     .grid-section { grid-template-columns: 1fr; }
     .item-large { grid-column: span 1; flex-direction: column; text-align: center; gap: 20px; }
     .gallery-grid { grid-template-columns: 1fr; height: auto; }
@@ -16,10 +43,47 @@
     .event-row { flex-direction: column; align-items: flex-start; gap: 15px; }
     .event-row button { width: 100%; margin-top: 10px; }
     .footer-content { flex-direction: column; gap: 30px; }
-    .hero-buttons { justify-content: center; }
     .artists-header { flex-direction: column; gap: 20px; text-align: center; }
     .navigation-buttons { justify-content: center; }
     .gallery-header { flex-direction: column; gap: 20px; text-align: center; }
     .nova-circle { margin-right: 0; }
     .social-links { justify-content: center; }
+    
+    .admin-section { padding: 20px 15px; }
+    .form-row { grid-template-columns: 1fr; }
+    .dashboard-stats { grid-template-columns: 1fr 1fr; }
+    .events-table th, .events-table td { padding: 10px; font-size: 0.85rem; }
+    .event-thumb { width: 40px; height: 40px; }
+    .wizard-header { padding: 20px; }
+    .wizard-body { padding: 20px; min-height: 300px; }
+    .wizard-footer { padding: 15px 20px; }
+    .type-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+    .step-label { display: none; }
+    .step-circle { width: 28px; height: 28px; font-size: 0.8rem; }
+    
+    .profil-section { padding: 20px 15px; }
+    .inscription-card { grid-template-columns: 1fr; text-align: center; }
+    .inscription-date-badge { margin: 0 auto; }
+    .inscription-header { justify-content: center; }
+    .inscription-details { justify-content: center; }
+    .inscription-actions { justify-content: center; margin-top: 15px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .profil-stats { grid-template-columns: 1fr; gap: 20px; }
+    
+    .events-hero-content h1 { font-size: 2.5rem; }
+    .events-container { grid-template-columns: 1fr; gap: 30px; padding: 0 20px; }
+    .events-filters { order: 2; padding: 25px; }
+    .events-content { order: 1; }
+    .events-grid { grid-template-columns: 1fr; }
+    .event-card.featured { grid-column: span 1; grid-row: span 1; }
+    .event-card.featured .event-image { height: 220px; }
+    .event-card.featured .event-title { font-size: 1.3rem; }
+    .date-range { flex-direction: row; gap: 15px; }
+    .date-input-group { flex: 1; }
+    .filter-header { flex-direction: column; gap: 15px; align-items: stretch; text-align: center; }
+    
+    .auth-container { padding: 30px 20px; }
+    .auth-bg-gradient { width: 400px; height: 400px; }
+    .nav-links { display: none; }
+    .back-link { display: block; color: white; font-size: 1.2rem; }
 }

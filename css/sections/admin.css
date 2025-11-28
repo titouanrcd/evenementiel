@@ -1,8 +1,5 @@
-/* ============================================
-   ADMIN & ORGANISATEUR PANEL STYLES
-   ============================================ */
+/* ADMIN & ORGANISATEUR PANEL */
 
-/* Section principale */
 .admin-section {
     min-height: calc(100vh - 80px);
     padding: 40px 5%;
@@ -21,7 +18,6 @@
     pointer-events: none;
 }
 
-/* Container principal */
 .admin-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -32,7 +28,6 @@
     z-index: 1;
 }
 
-/* Sidebar */
 .admin-sidebar {
     background: rgba(20, 20, 20, 0.8);
     backdrop-filter: blur(20px);
@@ -59,7 +54,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0 auto 15px;
     box-shadow: 0 10px 30px rgba(255, 0, 204, 0.3);
 }
@@ -87,7 +83,6 @@
     color: #FF00CC;
 }
 
-/* Navigation Admin */
 .admin-nav {
     display: flex;
     flex-direction: column;
@@ -132,7 +127,6 @@
     font-weight: 600;
 }
 
-/* Stats Sidebar */
 .admin-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -163,14 +157,12 @@
     text-transform: uppercase;
 }
 
-/* Contenu Admin */
 .admin-content {
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
-/* Cards */
 .admin-card {
     background: rgba(20, 20, 20, 0.6);
     backdrop-filter: blur(20px);
@@ -198,7 +190,6 @@
     font-size: 0.9rem;
 }
 
-/* Dashboard Stats */
 .dashboard-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -223,7 +214,7 @@
 }
 
 .stat-icon {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 
 .stat-info .stat-value {
@@ -242,7 +233,6 @@
     color: var(--text-gray);
 }
 
-/* Alert Info */
 .alert-info {
     background: rgba(255, 193, 7, 0.1);
     border: 1px solid rgba(255, 193, 7, 0.3);
@@ -257,7 +247,6 @@
     text-decoration: underline;
 }
 
-/* Table */
 .events-table-container {
     overflow-x: auto;
 }
@@ -334,7 +323,6 @@
     color: #ffc107;
 }
 
-/* Action Buttons */
 .action-buttons {
     display: flex;
     gap: 8px;
@@ -370,7 +358,6 @@
     background: rgba(255, 77, 77, 0.3);
 }
 
-/* Form Styles */
 .event-form {
     display: flex;
     flex-direction: column;
@@ -422,7 +409,6 @@
     min-height: 100px;
 }
 
-/* Image Upload */
 .image-upload-container {
     display: flex;
     align-items: center;
@@ -475,7 +461,6 @@
     margin-bottom: 8px;
 }
 
-/* Form Actions */
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -500,7 +485,6 @@
     border-color: white;
 }
 
-/* Empty State */
 .empty-state {
     text-align: center;
     padding: 60px 20px;
@@ -520,7 +504,6 @@
     color: white;
 }
 
-/* Role/Status Forms */
 .role-form select,
 .status-form select {
     padding: 6px 10px;
@@ -547,7 +530,6 @@
     font-size: 0.85rem;
 }
 
-/* Pending Events */
 .pending-events {
     display: flex;
     flex-direction: column;
@@ -644,70 +626,7 @@
     background: rgba(255, 77, 77, 0.25);
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-    .admin-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .admin-sidebar {
-        position: static;
-    }
-    
-    .admin-nav {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    
-    .admin-nav-link {
-        flex: 1;
-        min-width: 120px;
-        justify-content: center;
-    }
-    
-    .pending-card {
-        grid-template-columns: 1fr;
-    }
-    
-    .pending-image {
-        width: 100%;
-        height: 150px;
-    }
-    
-    .pending-actions {
-        flex-direction: row;
-    }
-}
-
-@media (max-width: 768px) {
-    .admin-section {
-        padding: 20px 15px;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .dashboard-stats {
-        grid-template-columns: 1fr 1fr;
-    }
-    
-    .events-table th,
-    .events-table td {
-        padding: 10px;
-        font-size: 0.85rem;
-    }
-    
-    .event-thumb {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-/* ============================================
-   WIZARD STYLES FOR EVENT CREATION
-   ============================================ */
-
+/* WIZARD STYLES */
 .wizard-card-container {
     padding: 0 !important;
     display: flex;
@@ -716,7 +635,6 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
 
-/* PROGRESS BAR */
 .wizard-header {
     padding: 30px 40px;
     border-bottom: 1px solid #222;
@@ -782,7 +700,6 @@
     font-weight: 700;
 }
 
-/* Active/Completed Step Styles */
 .step-item.active .step-circle {
     border-color: var(--nova-pink);
     color: white;
@@ -804,7 +721,6 @@
     color: var(--nova-pink);
 }
 
-/* FORM CONTENT */
 .wizard-body-form {
     padding: 40px;
     min-height: 400px;
@@ -823,14 +739,8 @@
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .wizard-body h2 {
@@ -844,7 +754,6 @@
     font-size: 0.95rem;
 }
 
-/* Type Selection Grid */
 .type-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -939,7 +848,6 @@
     background: #1a1a1a;
 }
 
-/* FOOTER ACTIONS */
 .wizard-footer {
     padding: 20px 40px;
     background: #161616;
@@ -979,39 +887,4 @@
 .btn-next:hover {
     box-shadow: 0 0 20px rgba(255, 0, 204, 0.4);
     transform: translateY(-2px);
-}
-
-/* Responsive Wizard */
-@media (max-width: 768px) {
-    .wizard-header {
-        padding: 20px;
-    }
-    
-    .wizard-body {
-        padding: 20px;
-        min-height: 300px;
-    }
-    
-    .wizard-footer {
-        padding: 15px 20px;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .type-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 15px;
-    }
-    
-    .step-label {
-        display: none;
-    }
-    
-    .step-circle {
-        width: 28px;
-        height: 28px;
-        font-size: 0.8rem;
-    }
 }

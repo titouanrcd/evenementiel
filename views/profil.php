@@ -149,7 +149,7 @@ function formatTime($time) {
                 
                 <div class="sidebar-footer">
                     <div class="sidebar-user">
-                        <div class="sidebar-user-avatar">👤</div>
+                        <div class="sidebar-user-avatar">U</div>
                         <div class="sidebar-user-info">
                             <h4><?php echo htmlspecialchars($user['user']); ?></h4>
                             <p><?php echo ucfirst($user['role'] ?? 'user'); ?></p>
@@ -254,9 +254,9 @@ function formatTime($time) {
                                                 <span class="inscription-status status-<?php echo $inscription['statut']; ?>">
                                                     <?php 
                                                         switch($inscription['statut']) {
-                                                            case 'confirmé': echo '✓ Confirmé'; break;
-                                                            case 'annulé': echo '✗ Annulé'; break;
-                                                            case 'en_attente': echo '⏳ En attente'; break;
+                                                            case 'confirmé': echo 'Confirmé'; break;
+                                                            case 'annulé': echo 'Annulé'; break;
+                                                            case 'en_attente': echo 'En attente'; break;
                                                         }
                                                     ?>
                                                 </span>

@@ -122,14 +122,13 @@ try {
     $lieux = [];
 }
 
-// Tags disponibles
 $tags = [
-    'sport' => '🏀 Sport',
-    'culture' => '🎭 Culture',
-    'soiree' => '🎉 Soirée',
-    'conference' => '🎤 Conférence',
-    'festival' => '🎪 Festival',
-    'autre' => '📌 Autre'
+    'sport' => 'Sport',
+    'culture' => 'Culture',
+    'soiree' => 'Soirée',
+    'conference' => 'Conférence',
+    'festival' => 'Festival',
+    'autre' => 'Autre'
 ];
 
 // Vérifier si l'utilisateur est inscrit à un événement
@@ -184,7 +183,7 @@ function isUserRegistered($pdo, $user_email, $id_event) {
                 <?php if ($is_logged_in): ?>
                     <div class="sidebar-footer">
                         <div class="sidebar-user">
-                            <div class="sidebar-user-avatar">👤</div>
+                            <div class="sidebar-user-avatar">U</div>
                             <div class="sidebar-user-info">
                                 <h4><?php echo htmlspecialchars($user_name); ?></h4>
                                 <p><?php echo ucfirst($user_role); ?></p>
@@ -391,7 +390,7 @@ function isUserRegistered($pdo, $user_email, $id_event) {
                                             
                                             <?php if ($is_logged_in): ?>
                                                 <?php if ($is_registered): ?>
-                                                    <span class="btn-registered">✓ Inscrit</span>
+                                                    <span class="btn-registered">Inscrit</span>
                                                 <?php elseif ($is_full): ?>
                                                     <span class="btn-full-event">Complet</span>
                                                 <?php else: ?>

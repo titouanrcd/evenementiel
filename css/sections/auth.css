@@ -1,39 +1,7 @@
-/* --- 1. RESET & BASE STYLES (Conservés de la Home) --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: #050505; color: #ffffff; font-family: 'Roboto', sans-serif; overflow-x: hidden; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
-h1, h2, h3, h4, h5, .logo, .btn-gradient, .auth-tab { font-family: 'Montserrat', sans-serif; }
-a { text-decoration: none; color: white; transition: 0.3s; }
-ul { list-style: none; }
+/* AUTH */
 
-/* --- 2. VARIABLES NOVA --- */
-:root {
-    --nova-gradient: linear-gradient(135deg, #FF00CC 0%, #FF9900 100%);
-    --nova-pink: #FF00CC;
-    --nova-orange: #FF9900;
-    --card-bg: #121212;
-    --border-color: #333;
-    --text-gray: #b0b0b0;
-}
-
-/* --- 3. NAVIGATION (Simplifiée) --- */
-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 5%; position: relative; z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.logo { font-weight: 900; letter-spacing: 1px; color: white; font-size: 28px; }
-.logo span { 
-    background: var(--nova-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.nav-links { display: flex; gap: 40px; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; color: var(--text-gray); }
-.nav-links li:hover { color: #fff; cursor: pointer; }
-
-/* Bouton retour accueil mobile */
-.back-link { display: none; }
-
-/* --- 4. AUTH SECTION (Votre CSS adapté NOVA) --- */
 .auth-section {
-    flex: 1; /* Prend toute la hauteur disponible */
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,9 +13,8 @@ nav {
 
 .auth-bg-gradient {
     position: absolute;
-    width: 800px; /* Agrandit un peu */
+    width: 800px;
     height: 800px;
-    /* ADAPTATION: Remplacement du bleu par le rose NOVA */
     background: radial-gradient(circle, rgba(255, 0, 204, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
     top: 50%;
     left: 50%;
@@ -57,10 +24,10 @@ nav {
 }
 
 .auth-container {
-    background: rgba(20, 20, 20, 0.6); /* Un peu plus foncé pour le contraste */
-    backdrop-filter: blur(20px); /* Blur plus fort */
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px; /* Coins NOVA (moins ronds) */
+    border-radius: 12px;
     padding: 50px 40px;
     width: 100%;
     max-width: 480px;
@@ -69,7 +36,6 @@ nav {
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-/* Tabs System */
 .tab-radio { display: none; }
 
 .auth-tabs {
@@ -94,7 +60,6 @@ nav {
 
 .auth-tab:hover { color: rgba(255, 255, 255, 0.8); }
 
-/* État actif - Adapté à la nouvelle structure HTML */
 #tab-login:checked ~ .auth-tabs .auth-tab[for="tab-login"],
 #tab-register:checked ~ .auth-tabs .auth-tab[for="tab-register"] {
     color: white;
@@ -108,18 +73,15 @@ nav {
     left: 0;
     width: 100%;
     height: 3px;
-    /* ADAPTATION: Gradient NOVA */
     background: var(--nova-gradient);
     box-shadow: 0 -2px 10px rgba(255, 0, 204, 0.5);
 }
 
-/* Forms Animation */
 .auth-form {
     display: none;
     animation: fadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Logique d'affichage basée sur les radios cochés */
 #tab-login:checked ~ #login-form,
 #tab-register:checked ~ #register-form {
     display: block;
@@ -130,7 +92,6 @@ nav {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Inputs */
 .input-group { margin-bottom: 25px; position: relative; }
 
 .input-group label {
@@ -148,7 +109,7 @@ nav {
     padding: 14px 15px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px; /* Coins carrés NOVA */
+    border-radius: 4px;
     color: white;
     font-size: 1rem;
     transition: 0.3s;
@@ -158,18 +119,16 @@ nav {
 .input-group input:focus,
 .input-group select:focus {
     outline: none;
-    border-color: var(--nova-pink); /* Bordure Rose */
+    border-color: var(--nova-pink);
     background: rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 15px rgba(255, 0, 204, 0.1);
 }
 
-/* Style spécifique pour les options du select sur fond sombre */
 .input-group select option {
     background-color: #1a1a1a;
     color: white;
 }
 
-/* Options (Mot de passe oublié, etc) */
 .form-options {
     display: flex;
     justify-content: space-between;
@@ -183,9 +142,9 @@ nav {
     color: var(--nova-pink);
     font-weight: 500;
 }
+
 .form-options a:hover { text-decoration: underline; }
 
-/* Bouton Principal (Style NOVA) */
 .btn-full {
     width: 100%;
     padding: 16px;
@@ -194,10 +153,9 @@ nav {
     text-transform: uppercase;
     letter-spacing: 1px;
     border: none;
-    border-radius: 4px; /* Coins carrés */
+    border-radius: 4px;
     color: white;
     cursor: pointer;
-    /* ADAPTATION: Gradient NOVA */
     background: var(--nova-gradient);
     background-size: 200% auto;
     transition: 0.4s;
@@ -210,19 +168,4 @@ nav {
     box-shadow: 0 10px 30px rgba(255, 0, 204, 0.5);
 }
 
-/* Footer simplifié pour la page de connexion */
-footer {
-    border-top: 1px solid #222;
-    padding: 30px;
-    text-align: center;
-    font-size: 0.8rem;
-    color: #444;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .nav-links { display: none; }
-    .back-link { display: block; color: white; font-size: 1.2rem;}
-    .auth-container { padding: 30px 20px; }
-    .auth-bg-gradient { width: 400px; height: 400px; }
-}
+.back-link { display: none; }

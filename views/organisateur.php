@@ -34,14 +34,13 @@ if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0777, true);
 }
 
-// Tags disponibles
 $tags = [
-    'sport' => '🏀 Sport',
-    'culture' => '🎭 Culture',
-    'soiree' => '🎉 Soirée',
-    'conference' => '🎤 Conférence',
-    'festival' => '🎪 Festival',
-    'autre' => '📌 Autre'
+    'sport' => 'Sport',
+    'culture' => 'Culture',
+    'soiree' => 'Soirée',
+    'conference' => 'Conférence',
+    'festival' => 'Festival',
+    'autre' => 'Autre'
 ];
 
 // =========================================================
@@ -228,7 +227,7 @@ if (isset($_GET['edit'])) {
                 
                 <div class="sidebar-footer">
                     <div class="sidebar-user">
-                        <div class="sidebar-user-avatar">🎭</div>
+                        <div class="sidebar-user-avatar">O</div>
                         <div class="sidebar-user-info">
                             <h4><?php echo htmlspecialchars($user_name); ?></h4>
                             <p>Organisateur</p>
@@ -259,22 +258,22 @@ if (isset($_GET['edit'])) {
                 <!-- Sidebar -->
                 <aside class="admin-sidebar">
                     <div class="admin-profile">
-                        <div class="admin-avatar">🎭</div>
+                        <div class="admin-avatar">O</div>
                         <h3><?php echo htmlspecialchars($user_name); ?></h3>
                         <span class="role-badge">Organisateur</span>
                     </div>
                     
                     <nav class="admin-nav">
                         <a href="organisateur.php" class="admin-nav-link active">
-                            <span class="nav-icon">📅</span>
+                            <span class="nav-icon">-</span>
                             Mes Événements
                         </a>
                         <a href="organisateur.php#create" class="admin-nav-link">
-                            <span class="nav-icon">➕</span>
+                            <span class="nav-icon">+</span>
                             Créer un événement
                         </a>
                         <a href="profil.php" class="admin-nav-link">
-                            <span class="nav-icon">👤</span>
+                            <span class="nav-icon">-</span>
                             Mon Profil
                         </a>
                     </nav>
@@ -333,7 +332,7 @@ if (isset($_GET['edit'])) {
                                     <label>
                                         <input type="radio" name="tag" value="sport" class="type-radio" hidden <?php echo (!$edit_event || $edit_event['tag'] == 'sport') ? 'checked' : ''; ?>>
                                         <div class="type-card">
-                                            <span class="type-icon">🏀</span>
+                                            <span class="type-icon">S</span>
                                             <h4>Sport</h4>
                                             <p style="font-size:0.8rem; color:#666; margin-top:5px;">Compétitions, matchs, tournois.</p>
                                         </div>
@@ -342,7 +341,7 @@ if (isset($_GET['edit'])) {
                                     <label>
                                         <input type="radio" name="tag" value="culture" class="type-radio" hidden <?php echo ($edit_event && $edit_event['tag'] == 'culture') ? 'checked' : ''; ?>>
                                         <div class="type-card">
-                                            <span class="type-icon">🎭</span>
+                                            <span class="type-icon">C</span>
                                             <h4>Culture</h4>
                                             <p style="font-size:0.8rem; color:#666; margin-top:5px;">Spectacles, expositions, théâtre.</p>
                                         </div>
@@ -351,7 +350,7 @@ if (isset($_GET['edit'])) {
                                     <label>
                                         <input type="radio" name="tag" value="soiree" class="type-radio" hidden <?php echo ($edit_event && $edit_event['tag'] == 'soiree') ? 'checked' : ''; ?>>
                                         <div class="type-card">
-                                            <span class="type-icon">🎉</span>
+                                            <span class="type-icon">G</span>
                                             <h4>Soirée / Gala</h4>
                                             <p style="font-size:0.8rem; color:#666; margin-top:5px;">Cocktails, dîners, célébrations.</p>
                                         </div>
@@ -360,7 +359,7 @@ if (isset($_GET['edit'])) {
                                     <label>
                                         <input type="radio" name="tag" value="conference" class="type-radio" hidden <?php echo ($edit_event && $edit_event['tag'] == 'conference') ? 'checked' : ''; ?>>
                                         <div class="type-card">
-                                            <span class="type-icon">🎤</span>
+                                            <span class="type-icon">K</span>
                                             <h4>Conférence</h4>
                                             <p style="font-size:0.8rem; color:#666; margin-top:5px;">Séminaires, présentations, talks.</p>
                                         </div>
@@ -369,7 +368,7 @@ if (isset($_GET['edit'])) {
                                     <label>
                                         <input type="radio" name="tag" value="festival" class="type-radio" hidden <?php echo ($edit_event && $edit_event['tag'] == 'festival') ? 'checked' : ''; ?>>
                                         <div class="type-card">
-                                            <span class="type-icon">🎪</span>
+                                            <span class="type-icon">F</span>
                                             <h4>Festival</h4>
                                             <p style="font-size:0.8rem; color:#666; margin-top:5px;">Concerts, public, outdoor.</p>
                                         </div>
@@ -378,7 +377,7 @@ if (isset($_GET['edit'])) {
                                     <label>
                                         <input type="radio" name="tag" value="autre" class="type-radio" hidden <?php echo ($edit_event && $edit_event['tag'] == 'autre') ? 'checked' : ''; ?>>
                                         <div class="type-card">
-                                            <span class="type-icon">📌</span>
+                                            <span class="type-icon">+</span>
                                             <h4>Autre</h4>
                                             <p style="font-size:0.8rem; color:#666; margin-top:5px;">Autre type d'événement.</p>
                                         </div>
@@ -487,7 +486,7 @@ if (isset($_GET['edit'])) {
                         
                         <?php if (empty($events)): ?>
                             <div class="empty-state">
-                                <span class="empty-icon">📅</span>
+                                <span class="empty-icon">-</span>
                                 <h3>Aucun événement</h3>
                                 <p>Créez votre premier événement ci-dessus !</p>
                             </div>
@@ -539,12 +538,12 @@ if (isset($_GET['edit'])) {
                                                 <td>
                                                     <div class="action-buttons">
                                                         <a href="organisateur.php?edit=<?php echo $event['id_event']; ?>#create" 
-                                                           class="btn-action btn-edit" title="Modifier">✏️</a>
+                                                           class="btn-action btn-edit" title="Modifier">Modifier</a>
                                                         <form method="POST" style="display: inline;" 
                                                               onsubmit="return confirm('Supprimer cet événement ?');">
                                                             <input type="hidden" name="action" value="delete_event">
                                                             <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
-                                                            <button type="submit" class="btn-action btn-delete" title="Supprimer">🗑️</button>
+                                                            <button type="submit" class="btn-action btn-delete" title="Supprimer">X</button>
                                                         </form>
                                                     </div>
                                                 </td>
