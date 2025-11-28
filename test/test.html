@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA ton projet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="test.css" rel="stylesheet">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">NOVA<span>.</span></div>
+        <div class="user-profile">
+            <!-- Simulated User -->
+            <span style="font-size:0.9rem; color:#888;">Projet</span>
+            <div class="user-avatar"></div>
+        </div>
+    </nav>
+
+    <section class="wizard-section">
+        <div class="bg-glow"></div>
+
+        <div class="wizard-card">
+            
+            <!-- PROGRESS HEADER -->
+            <div class="wizard-header">
+                <h3 style="margin-bottom: 20px; font-size: 1.2rem;">Initialisation du Projet</h3>
+                <div class="progress-container">
+                    <div class="progress-line-bg"></div>
+                    <div class="progress-line-fill" id="progress-fill"></div>
+                    
+                    <div class="step-item active" id="step-indicator-1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Univers</div>
+                    </div>
+                    <div class="step-item" id="step-indicator-2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Paramètres</div>
+                    </div>
+                    <div class="step-item" id="step-indicator-3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Vision</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORM BODY -->
+            <form class="wizard-body" id="project-form">
+                
+                <!-- STEP 1: TYPE -->
+                <div class="step-content active" id="step-1">
+                    <h2>Quel est votre univers ?</h2>
+                    <p class="step-desc">Sélectionnez le type d'événement qui correspond à votre projet.</p>
+                    
+                    <div class="type-grid">
+                        <label>
+                            <input type="radio" name="eventType" value="corporate" class="type-radio" hidden checked>
+                            <div class="type-card">
+                                <span class="type-icon">✨</span>
+                                <h4>Sur Mesure</h4>
+                                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Une demande spécifique hors normes.</p>
+                            </div>
+                            
+                        </label>
+
+                        <label>
+                            <input type="radio" name="eventType" value="party" class="type-radio" hidden>
+                            <div class="type-card">
+                                <span class="type-icon">🎉</span>
+                                <h4>Soirée / Gala</h4>
+                                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Cocktails, diners, célébrations.</p>
+                            </div>
+                        </label>
+
+                        <label>
+                            <input type="radio" name="eventType" value="festival" class="type-radio" hidden>
+                            <div class="type-card">
+                                <span class="type-icon">⚡</span>
+                                <h4>Festival / Public</h4>
+                                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Concerts, grand public, outdoor.</p>
+                            </div>
+                        </label>
+
+                        <label>
+                            <input type="radio" name="eventType" value="other" class="type-radio" hidden>
+                            <div class="type-card">
+                                <span class="type-icon">🏢</span>
+                                <h4>Corporate</h4>
+                                <p style="font-size:0.8rem; color:#666; margin-top:5px;">Séminaires, Tech, lancements produits.</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- STEP 2: DETAILS -->
+                <div class="step-content" id="step-2">
+                    <h2>Logistique & Cadre</h2>
+                    <p class="step-desc">Donnez-nous les grandes lignes pour calibrer l'échelle du projet.</p>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Nom du Projet (Optionnel)</label>
+                            <input type="text" placeholder="Ex: Launch Party 2025">
+                        </div>
+                        <div class="input-group">
+                            <label>Date Souhaitée</label>
+                            <input type="date">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Lieu / Ville</label>
+                            <select>
+                                <option>Paris & Île-de-France</option>
+                                <option>Sud de la France</option>
+                                <option>International</option>
+                                <option>À définir</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Nombre d'invités (Approx.)</label>
+                            <input type="number" placeholder="ex: 250">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label style="margin-bottom:15px;">Budget Estimatif</label>
+                        <div class="budget-options">
+                            <label><input type="radio" name="budget" class="budget-radio" hidden><span class="budget-tag">< 10k€</span></label>
+                            <label><input type="radio" name="budget" class="budget-radio" hidden checked><span class="budget-tag">10k€ - 50k€</span></label>
+                            <label><input type="radio" name="budget" class="budget-radio" hidden><span class="budget-tag">50k€ - 100k€</span></label>
+                            <label><input type="radio" name="budget" class="budget-radio" hidden><span class="budget-tag">100k€ +</span></label>
+                            <label><input type="radio" name="budget" class="budget-radio" hidden><span class="budget-tag">Non défini</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: VISION -->
+                <div class="step-content" id="step-3">
+                    <h2>Votre Vision</h2>
+                    <p class="step-desc">C'est le moment de nous faire rêver. Décrivez l'ambiance, les objectifs et les éléments clés.</p>
+
+                    <div class="input-group">
+                        <label>Brief Créatif</label>
+                        <textarea rows="6" placeholder="Décrivez l'ambiance souhaitée, le déroulé idéal, les contraintes techniques ou artistiques..."></textarea>
+                    </div>
+
+                    <div class="input-group" style="margin-top:20px;">
+                        <label>Lien d'inspiration (Pinterest, Drive, Site...)</label>
+                        <input type="url" placeholder="https://...">
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- FOOTER NAV -->
+            <div class="wizard-footer">
+                <button type="button" class="btn-text" id="btn-prev" style="visibility: hidden;">Retour</button>
+                <button type="button" class="btn-next" id="btn-next">Suivant</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Simple Script for Wizard Logic -->
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        const btnNext = document.getElementById('btn-next');
+        const btnPrev = document.getElementById('btn-prev');
+        const progressFill = document.getElementById('progress-fill');
+
+        function updateUI() {
+            // Update Form Visibility
+            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+
+            // Update Header Indicators
+            for(let i=1; i<=totalSteps; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                indicator.classList.remove('active', 'completed');
+                if(i < currentStep) indicator.classList.add('completed');
+                if(i === currentStep) indicator.classList.add('active');
+            }
+
+            // Update Progress Bar Line
+            // Step 1: 0%, Step 2: 50%, Step 3: 100%
+            const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.width = `${percentage}%`;
+
+            // Update Buttons
+            btnPrev.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            
+            if(currentStep === totalSteps) {
+                btnNext.textContent = 'Lancer le Projet';
+                btnNext.style.background = '#FF9900'; // Change color for final action
+            } else {
+                btnNext.textContent = 'Suivant';
+                btnNext.style.background = 'linear-gradient(135deg, #FF00CC 0%, #FF9900 100%)';
+            }
+        }
+
+        btnNext.addEventListener('click', () => {
+            if(currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            } else {
+                alert("Projet envoyé à l'équipe NOVA !");
+                // Here you would normally submit the form
+            }
+        });
+
+        btnPrev.addEventListener('click', () => {
+            if(currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        });
+    </script>
+</body>
+</html>
