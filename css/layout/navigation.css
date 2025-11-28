@@ -1,34 +1,344 @@
 /* --- 4. NAVIGATION --- */
 header {
-    position: relative;
-    z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 nav {
-    display: flex; 
-    justify-content: space-between; 
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 20px 5%;
+    padding: 15px 30px;
 }
 
 /* MODIFICATION: Logo agrandi et stylisé */
-.logo { font-weight: 900; letter-spacing: 1px; color: white; position: relative; }
-        
+.logo {
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: white;
+    position: relative;
+}
+
 /* Classe spécifique pour le logo du header */
 .header-logo {
-    font-size: 48px;
+    font-size: 28px;
     text-shadow: 0 0 20px rgba(255, 0, 204, 0.3);
 }
 
-.nav-links { display: flex; gap: 40px; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; color: var(--text-gray); }
-
-/* Nouvel effet de survol des liens */
-.nav-links li { position: relative; padding: 5px 0; }
-.nav-links li::after {
-    content: ''; position: absolute; bottom: 0; left: 50%;
-    width: 0; height: 2px; background: var(--nova-gradient);
-    transition: all 0.3s ease-out;
+.logo span {
+    background: var(--nova-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
-.nav-links li:hover { color: #fff; cursor: pointer; }
-.nav-links li:hover::after { width: 100%; left: 0; }
+
+/* ==================== HAMBURGER MENU ==================== */
+.hamburger-btn {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 210;
+}
+
+.hamburger-btn span {
+    width: 25px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.hamburger-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(10px, 10px);
+}
+
+.hamburger-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* ==================== SIDEBAR NAVIGATION ==================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.98) 0%, rgba(30, 10, 30, 0.95) 100%);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 190;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding-top: 80px;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.sidebar-header .logo {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.sidebar-header p {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-gray);
+}
+
+.nav-links li {
+    padding: 0;
+    position: relative;
+}
+
+.nav-links li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    color: var(--text-gray);
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-links li a:hover {
+    background: rgba(255, 0, 204, 0.1);
+    color: white;
+    border-left-color: var(--nova-pink);
+}
+
+.nav-links li a.active {
+    background: rgba(255, 0, 204, 0.15);
+    color: var(--nova-pink);
+    border-left-color: var(--nova-pink);
+}
+
+.nav-links li::after {
+    display: none;
+}
+
+/* Sidebar Footer - User Info */
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.sidebar-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--nova-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.sidebar-user-info h4 {
+    font-size: 0.9rem;
+    margin: 0;
+    color: white;
+}
+
+.sidebar-user-info p {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    margin: 0;
+}
+
+.sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-actions a,
+.sidebar-actions button {
+    padding: 10px 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 0, 204, 0.3);
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    background: rgba(255, 0, 204, 0.05);
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.sidebar-actions a:hover,
+.sidebar-actions button:hover {
+    background: rgba(255, 0, 204, 0.15);
+    border-color: var(--nova-pink);
+    color: var(--nova-pink);
+}
+
+/* Overlay quand sidebar est ouverte */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 180;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ==================== DESKTOP - MASQUER LA SIDEBAR ==================== */
+@media (min-width: 1025px) {
+    .hamburger-btn {
+        display: none !important;
+    }
+    
+    .sidebar {
+        position: static;
+        width: auto;
+        height: auto;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+        padding: 0;
+        left: 0;
+        transition: none;
+        overflow: visible;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .sidebar-header {
+        display: none;
+    }
+    
+    .sidebar-overlay {
+        display: none;
+    }
+    
+    .nav-links {
+        flex-direction: row;
+        gap: 40px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+    
+    .nav-links li a {
+        padding: 5px 0;
+        border-left: none;
+    }
+    
+    .nav-links li a:hover {
+        background: none;
+        border-left: none;
+    }
+    
+    .nav-links li a.active {
+        background: none;
+        border-left: none;
+    }
+    
+    .nav-links li::after {
+        display: block;
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--nova-gradient);
+        transition: all 0.3s ease-out;
+    }
+    
+    .nav-links li:hover::after {
+        width: 100%;
+        left: 0;
+    }
+    
+    .sidebar-footer {
+        display: none;
+    }
+}
+
+/* ==================== TABLET ==================== */
+@media (max-width: 1024px) and (min-width: 768px) {
+    .hamburger-btn {
+        display: flex;
+    }
+    
+    nav {
+        padding: 15px 20px;
+    }
+    
+    .header-logo {
+        font-size: 24px;
+    }
+}
+
+/* ==================== MOBILE ==================== */
+@media (max-width: 767px) {
+    .hamburger-btn {
+        display: flex;
+    }
+    
+    nav {
+        padding: 15px 15px;
+    }
+    
+    .header-logo {
+        font-size: 20px;
+    }
+    
+    .sidebar {
+        width: 75vw;
+        max-width: 280px;
+    }
+}

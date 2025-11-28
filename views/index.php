@@ -20,28 +20,60 @@ $user_role = $_SESSION['user_role'] ?? 'user';
     <header>
         <nav>
             <div class="logo header-logo">NOVA<span>.</span></div>
-            <ul class="nav-links">
-                <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="evenement.php">Evenement</a></li>
-                <li><a href="#contact">Contact</a></li>
+            <button class="hamburger-btn" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo" style="font-size: 32px;">NOVA<span>.</span></div>
+                    <p>Événements Spectaculaires</p>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="#accueil">Accueil</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="evenement.php">Événements</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <?php if ($is_logged_in): ?>
+                    <li><a href="profil.php">Mon Profil</a></li>
+                    <?php if ($user_role === 'organisateur' || $user_role === 'admin'): ?>
+                    <li><a href="organisateur.php">Panel Orga</a></li>
+                    <?php endif; ?>
+                    <?php if ($user_role === 'admin'): ?>
+                    <li><a href="admin.php">Panel Admin</a></li>
+                    <?php endif; ?>
+                    <?php endif; ?>
+                </ul>
+                
                 <?php if ($is_logged_in): ?>
-                <li><a href="profil.php">Mon Profil</a></li>
-                <?php if ($user_role === 'organisateur' || $user_role === 'admin'): ?>
-                <li><a href="organisateur.php">Panel Orga</a></li>
+                    <div class="sidebar-footer">
+                        <div class="sidebar-user">
+                            <div class="sidebar-user-avatar">👤</div>
+                            <div class="sidebar-user-info">
+                                <h4><?php echo htmlspecialchars($user_name); ?></h4>
+                                <p><?php echo ucfirst($user_role); ?></p>
+                            </div>
+                        </div>
+                        <div class="sidebar-actions">
+                            <a href="profil.php">Mon Profil</a>
+                            <a href="profil.php?action=logout">Déconnexion</a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="sidebar-footer">
+                        <div class="sidebar-actions">
+                            <a href="connexion.php">Connexion</a>
+                        </div>
+                    </div>
                 <?php endif; ?>
-                <?php if ($user_role === 'admin'): ?>
-                <li><a href="admin.php">Panel Admin</a></li>
-                <?php endif; ?>
-                <?php endif; ?>
-            </ul>
-            <?php if ($is_logged_in): ?>
-                <a href="profil.php" class="btn-gradient">👤 <?php echo htmlspecialchars($user_name); ?></a>
-            <?php else: ?>
-                <a href="connexion.php" class="btn-gradient">Connexion</a>
-            <?php endif; ?>
+            </aside>
         </nav>
     </header>
+    
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <main>
         <section class="hero">
@@ -253,5 +285,6 @@ $user_role = $_SESSION['user_role'] ?? 'user';
 </footer>
 </main>
 
+<script src="../js/navbar.js"></script>
 </body>
 </html>

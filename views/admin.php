@@ -161,16 +161,44 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
     <header>
         <nav>
             <div class="logo header-logo">NOVA<span>.</span></div>
-            <ul class="nav-links">
-                <li><a href="index.php">Accueil</a></li>
-                <li><a href="evenement.php">Événements</a></li>
-                <li><a href="profil.php">Mon Profil</a></li>
-                <li><a href="organisateur.php">Panel Orga</a></li>
-                <li><a href="admin.php" class="active">Panel Admin</a></li>
-            </ul>
-            <a href="profil.php?action=logout" class="btn-gradient btn-logout">Déconnexion</a>
+            <button class="hamburger-btn" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo" style="font-size: 32px;">NOVA<span>.</span></div>
+                    <p>Événements Spectaculaires</p>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="index.php">Accueil</a></li>
+                    <li><a href="evenement.php">Événements</a></li>
+                    <li><a href="profil.php">Mon Profil</a></li>
+                    <li><a href="organisateur.php">Panel Orga</a></li>
+                    <li><a href="admin.php">Panel Admin</a></li>
+                </ul>
+                
+                <div class="sidebar-footer">
+                    <div class="sidebar-user">
+                        <div class="sidebar-user-avatar">👑</div>
+                        <div class="sidebar-user-info">
+                            <h4><?php echo htmlspecialchars($user_name); ?></h4>
+                            <p>Administrateur</p>
+                        </div>
+                    </div>
+                    <div class="sidebar-actions">
+                        <a href="profil.php">Mon Profil</a>
+                        <a href="profil.php?action=logout">Déconnexion</a>
+                    </div>
+                </div>
+            </aside>
         </nav>
     </header>
+    
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <main>
         <section class="admin-section">
@@ -468,5 +496,6 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
         </div>
     </footer>
 
+<script src="../js/navbar.js"></script>
 </body>
 </html>

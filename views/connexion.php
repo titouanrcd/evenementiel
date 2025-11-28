@@ -108,14 +108,33 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
     <header>
         <nav>
             <div class="logo header-logo">NOVA<span>.</span></div>
-            <ul class="nav-links">
-                <li><a href="index.php">Accueil</a></li>
-                <li><a href="evenement.php">Événements</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <a href="index.php" class="btn-gradient">Retour</a>
+            <button class="hamburger-btn" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo" style="font-size: 32px;">NOVA<span>.</span></div>
+                    <p>Événements Spectaculaires</p>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="index.php">Accueil</a></li>
+                    <li><a href="evenement.php">Événements</a></li>
+                </ul>
+                
+                <div class="sidebar-footer">
+                    <div class="sidebar-actions">
+                        <a href="index.php">Retour à l'accueil</a>
+                    </div>
+                </div>
+            </aside>
         </nav>
     </header>
+    
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <main>
        <section class="auth-section">
@@ -216,5 +235,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
         </div>
     </footer>
 
+<script src="../js/navbar.js"></script>
 </body>
 </html>
