@@ -1,8 +1,8 @@
 # ============================================================
-# FICHIER .HTACCESS - SÉCURITÉ NOVA Événements
+# FICHIER .HTACCESS - SÉCURITÉ & PERFORMANCE (AMÉLIORÉ)
 # ============================================================
-# Ce fichier configure la sécurité au niveau du serveur Apache.
-# À placer à la racine du projet.
+# Ce fichier configure la sécurité et la performance au niveau
+# du serveur Apache. À placer à la racine du projet.
 # ============================================================
 
 # Activer le moteur de réécriture
@@ -15,21 +15,23 @@ RewriteEngine On
     # Protection contre le clickjacking
     Header always set X-Frame-Options "DENY"
     
-    # Protection XSS du navigateur
-    Header always set X-XSS-Protection "1; mode=block"
-    
     # Empêcher le sniffing MIME
     Header always set X-Content-Type-Options "nosniff"
     
     # Politique de référent
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # Supprimer les informations sur le serveur
+    # Politique de Sécurité du Contenu (CSP) - HAUTEMENT RECOMMANDÉ
+    # **À AJUSTER** : default-src 'self' ne permet que les ressources de votre domaine.
+    # Si vous utilisez des CDN ou Google Fonts, vous devez ajouter leur domaine ici.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://trusted-cdn.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+    
+    # Politique d'autorisation (Permissions-Policy)
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+    # Suppression des informations sur le serveur (bon pour l'obfuscation)
     Header unset X-Powered-By
     Header unset Server
-    
-    # Permissions Policy (ancien Feature-Policy)
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 </IfModule>
 
 # ============================================================
@@ -52,7 +54,7 @@ RewriteEngine On
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
-    <IfModule !mod_authz_core.c>
+    <IfModule !mod_authz-core.c>
         Order allow,deny
         Deny from all
     </IfModule>
@@ -70,27 +72,24 @@ RewriteEngine On
 </FilesMatch>
 
 # ============================================================
-# 3. PROTECTION DU DOSSIER UPLOADS
-# ============================================================
-# Ce bloc doit être dans un .htaccess dans /uploads/
-# Pour empêcher l'exécution de scripts PHP uploadés
-
-# ============================================================
-# 4. PROTECTION CONTRE L'ÉNUMÉRATION DES RÉPERTOIRES
+# 3. PROTECTION CONTRE L'ÉNUMÉRATION DES RÉPERTOIRES
 # ============================================================
 Options -Indexes
 
 # ============================================================
-# 5. CONFIGURATION PHP (si mod_php)
+# 4. CONFIGURATION PHP (si mod_php)
 # ============================================================
 <IfModule mod_php.c>
-    # Désactiver l'affichage des erreurs PHP
+    # Désactiver l'affichage des erreurs PHP en production (IMPORTANT)
     php_flag display_errors Off
     php_flag display_startup_errors Off
-    php_value error_reporting 0
     
-    # Activer le logging des erreurs
+    # Maintenir le logging des erreurs actif (pour le débogage serveur)
     php_flag log_errors On
+    
+    # Assurer que toutes les erreurs sont enregistrées dans le log.
+    # ATTENTION : Ne jamais mettre à 0 en production, il faut logguer !
+    php_value error_reporting E_ALL & ~E_NOTICE & ~E_DEPRECATED
     
     # Configuration des sessions sécurisées
     php_value session.cookie_httponly 1
@@ -107,14 +106,14 @@ Options -Indexes
 </IfModule>
 
 # ============================================================
-# 6. COMPRESSION GZIP (performance + sécurité)
+# 5. COMPRESSION GZIP (performance)
 # ============================================================
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
 # ============================================================
-# 7. CACHE DES ASSETS STATIQUES
+# 6. CACHE DES ASSETS STATIQUES
 # ============================================================
 <IfModule mod_expires.c>
     ExpiresActive On
