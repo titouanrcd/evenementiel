@@ -2,7 +2,7 @@
 
 ## 📋 Introduction
 
-Ce projet utilise **GitHub Actions** pour automatiser les vérifications de sécurité, les tests et le déploiement. Chaque push déclenche automatiquement les workflows.
+Ce projet utilise **GitHub Actions** et **SonarCloud** pour automatiser les vérifications de sécurité, l'analyse de qualité, les tests et le déploiement. Chaque push déclenche automatiquement les workflows.
 
 ---
 
@@ -21,7 +21,23 @@ Ce projet utilise **GitHub Actions** pour automatiser les vérifications de séc
 - ✅ Contrôle des headers de sécurité
 - ✅ Vérification de la sécurité des uploads
 
-### 2. 📊 Tests (`tests.yml`)
+### 2. � SonarCloud (`sonarcloud.yml`) - NOUVEAU!
+
+**Déclencheur:** Push sur `main`/`develop` ou Pull Request
+
+**Ce qu'il fait:**
+- ✅ Analyse statique du code (SAST)
+- ✅ Détection des bugs potentiels
+- ✅ Détection des vulnérabilités de sécurité
+- ✅ Identification des "code smells"
+- ✅ Mesure de la dette technique
+- ✅ Détection du code dupliqué
+- ✅ Rapport de couverture de tests
+- ✅ Quality Gate automatique
+
+**Dashboard:** [sonarcloud.io](https://sonarcloud.io/project/overview?id=titouanrcd_evenementiel)
+
+### 3. �📊 Tests (`tests.yml`)
 
 **Déclencheur:** Push sur `main`/`develop` ou Pull Request
 
@@ -33,7 +49,7 @@ Ce projet utilise **GitHub Actions** pour automatiser les vérifications de séc
 - ✅ Vérification du responsive design
 - ✅ Contrôle d'accessibilité basique
 
-### 3. 🚀 Deploy (`deploy.yml`)
+### 4. 🚀 Deploy (`deploy.yml`)
 
 **Déclencheur:** Push sur `main` ou déclenchement manuel
 
@@ -48,7 +64,29 @@ Ce projet utilise **GitHub Actions** pour automatiser les vérifications de séc
 
 ## ⚙️ Configuration
 
-### Étape 1: Créer le dépôt GitHub
+### Étape 1: Configurer SonarCloud (IMPORTANT!)
+
+1. **Créer un compte SonarCloud**
+   - Va sur [sonarcloud.io](https://sonarcloud.io)
+   - Connecte-toi avec ton compte GitHub
+
+2. **Importer le projet**
+   - Clique sur "+" puis "Analyze new project"
+   - Sélectionne ton repository `evenementiel`
+   - Choisis "GitHub Actions" comme méthode d'analyse
+
+3. **Récupérer le token SONAR_TOKEN**
+   - Va dans "My Account" > "Security"
+   - Génère un nouveau token
+   - Copie-le précieusement
+
+4. **Ajouter le secret dans GitHub**
+   - Va dans ton repo GitHub > Settings > Secrets and variables > Actions
+   - Clique "New repository secret"
+   - Nom: `SONAR_TOKEN`
+   - Valeur: colle le token
+
+### Étape 2: Créer le dépôt GitHub
 
 ```bash
 # Initialiser Git si ce n'est pas fait
@@ -67,9 +105,14 @@ git remote add origin https://github.com/VOTRE_USERNAME/nova-evenements.git
 git push -u origin main
 ```
 
-### Étape 2: Configurer les Secrets GitHub
+### Étape 3: Configurer les Secrets GitHub
 
 Allez dans **Settings > Secrets and variables > Actions** de votre dépôt.
+
+#### Pour SonarCloud (OBLIGATOIRE):
+| Secret | Description | Comment l'obtenir |
+|--------|-------------|-------------------|
+| `SONAR_TOKEN` | Token d'authentification | sonarcloud.io > My Account > Security |
 
 #### Pour le déploiement FTP:
 | Secret | Description | Exemple |
@@ -86,7 +129,7 @@ Allez dans **Settings > Secrets and variables > Actions** de votre dépôt.
 | `SSH_PRIVATE_KEY` | Clé privée SSH | `-----BEGIN RSA PRIVATE KEY-----...` |
 | `SSH_PATH` | Chemin sur le serveur | `/var/www/html/nova` |
 
-### Étape 3: Activer le Déploiement
+### Étape 4: Activer le Déploiement
 
 Dans `.github/workflows/deploy.yml`, modifiez la ligne `if: false` en `if: true` pour le type de déploiement souhaité:
 
@@ -111,14 +154,49 @@ deploy-ssh:
 3. Consultez le **Summary** pour un aperçu rapide
 4. Cliquez sur chaque job pour les détails
 
+### Dashboard SonarCloud
+
+Accédez à votre dashboard SonarCloud pour voir:
+- **Quality Gate**: Statut global (Passed/Failed)
+- **Bugs**: Erreurs potentielles détectées
+- **Vulnerabilities**: Failles de sécurité
+- **Code Smells**: Problèmes de maintenabilité
+- **Coverage**: Pourcentage de code couvert par les tests
+- **Duplications**: Code dupliqué à refactoriser
+
+👉 [Voir le Dashboard](https://sonarcloud.io/project/overview?id=titouanrcd_evenementiel)
+
 ### Badges de statut
 
 Ajoutez ces badges dans votre README:
 
 ```markdown
-![Security](https://github.com/VOTRE_USERNAME/nova-evenements/workflows/🛡️%20Security%20Check/badge.svg)
-![Tests](https://github.com/VOTRE_USERNAME/nova-evenements/workflows/📊%20Tests/badge.svg)
-![Deploy](https://github.com/VOTRE_USERNAME/nova-evenements/workflows/🚀%20Deploy%20to%20Production/badge.svg)
+![Security](https://github.com/titouanrcd/evenementiel/workflows/🛡️%20Security%20Check/badge.svg)
+![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=alert_status)
+![Tests](https://github.com/titouanrcd/evenementiel/workflows/📊%20Tests/badge.svg)
+![Deploy](https://github.com/titouanrcd/evenementiel/workflows/🚀%20Deploy%20to%20Production/badge.svg)
+```
+
+### Badges SonarCloud supplémentaires
+
+```markdown
+<!-- Quality Gate -->
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
+
+<!-- Bugs -->
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=bugs)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
+
+<!-- Vulnerabilities -->
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
+
+<!-- Code Smells -->
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
+
+<!-- Coverage -->
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=coverage)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
+
+<!-- Duplications -->
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
 ```
 
 ---
@@ -148,6 +226,12 @@ Ajoutez ces badges dans votre README:
 ❌ Credentials hardcodés détectés
 ```
 **Solution:** Utilisez des variables d'environnement ou un fichier `.env` (non versionné)
+
+### 5. Échec SonarCloud Quality Gate
+```
+Quality Gate failed
+```
+**Solution:** Consultez le dashboard SonarCloud pour voir les problèmes détectés et corrigez-les
 
 ---
 
