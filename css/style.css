@@ -5,22 +5,22 @@
 | Ce fichier principal importe tous les modules CSS.
 */
 
-@import url('base/reset.css');
-@import url('base/variables.css');
+@import url("base/reset.css");
+@import url("base/variables.css");
 
-@import url('components/ui-elements.css');
+@import url("components/ui-elements.css");
 
-@import url('layout/navigation.css');
-@import url('layout/footer.css');
+@import url("layout/navigation.css");
+@import url("layout/footer.css");
 
-@import url('sections/hero.css');
-@import url('sections/grid.css');
-@import url('sections/artists.css');
-@import url('sections/gallery.css');
-@import url('sections/events.css');
-@import url('sections/events-page.css');
-@import url('sections/auth.css');
-@import url('sections/profil.css');
-@import url('sections/admin.css');
+@import url("sections/hero.css");
+@import url("sections/grid.css");
+@import url("sections/artists.css");
+@import url("sections/gallery.css");
+@import url("sections/events.css");
+@import url("sections/events-page.css");
+@import url("sections/auth.css");
+@import url("sections/profil.css");
+@import url("sections/admin.css");
 
-@import url('responsive.css');
+@import url("responsive.css");

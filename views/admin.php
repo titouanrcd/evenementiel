@@ -253,35 +253,30 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                         
                         <div class="dashboard-stats">
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">U</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['users']; ?></span>
                                     <span class="stat-label">Utilisateurs</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">E</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['events']; ?></span>
                                     <span class="stat-label">Événements</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">P</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['events_published']; ?></span>
                                     <span class="stat-label">Publiés</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">A</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['events_pending']; ?></span>
                                     <span class="stat-label">En attente</span>
                                 </div>
                             </div>
                             <div class="dashboard-stat-card">
-                                <div class="stat-icon">I</div>
                                 <div class="stat-info">
                                     <span class="stat-value"><?php echo $stats['inscriptions']; ?></span>
                                     <span class="stat-label">Inscriptions</span>

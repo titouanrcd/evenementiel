@@ -1,115 +1,152 @@
 /* --- 10. FOOTER --- */
-footer { background: #000; padding: 80px 5% 30px; border-top: 1px solid #222; }
-.footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 50px; margin-bottom: 60px; }
-        
+footer {
+  background: #000;
+  padding: 80px 5% 30px;
+  border-top: 1px solid #222;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 60px;
+}
+
 /* Logo footer plus petit */
-.footer-logo { font-size: 28px; }
+.footer-logo {
+  font-size: 28px;
+}
 
-.footer-col h5 { font-size: 1rem; margin-bottom: 25px; color: white; text-transform: uppercase; letter-spacing: 2px; }
-.footer-col ul li { margin-bottom: 12px; }
-.footer-col ul li a { color: #666; font-size: 0.95rem; }
-.footer-col ul li a:hover { color: #FF9900; padding-left: 5px; }
-.footer-bottom { text-align: center; font-size: 0.8rem; color: #444; padding-top: 30px; border-top: 1px solid #111; }
-
-/* Footer main column */
-.footer-col-main {
-    flex: 2;
-    min-width: 250px;
+.footer-col h5 {
+  font-size: 1rem;
+  margin-bottom: 25px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.footer-col ul li {
+  margin-bottom: 12px;
+}
+.footer-col ul li a {
+  color: #666;
+  font-size: 0.95rem;
+}
+.footer-col ul li a:hover {
+  color: #ff9900;
+  padding-left: 5px;
+}
+.footer-bottom {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #444;
+  padding-top: 30px;
+  border-top: 1px solid #111;
 }
 
 .footer-logo {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .footer-description {
-    color: #888;
-    max-width: 350px;
-    line-height: 1.6;
-    font-size: 0.9rem;
+  color: #888;
+  max-width: 350px;
+  line-height: 1.6;
+  font-size: 0.9rem;
 }
 
 /* Social links */
 /* Conteneur des icônes pour les aligner horizontalement */
 .social-links {
-    display: flex;
-    gap: 15px; /* Espace entre les icônes */
-    align-items: center;
+  display: flex;
+  gap: 15px; /* Espace entre les icônes */
+  align-items: center;
 }
 
 /* Style de base des icônes */
 /* --- Style général (base) --- */
 .social-links {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+  display: flex;
+  gap: 30px;
+  align-items: center;
 }
 
 .social-link {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 45px;       /* Un peu plus grand pour l'esthétique */
-    height: 45px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1); /* Fond gris/transparent par défaut */
-    color: #fff;       /* Icône blanche par défaut */
-    text-decoration: none;
-    font-size: 1.3rem;
-    transition: all 0.3s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px; /* Un peu plus grand pour l'esthétique */
+  height: 45px;
+  border-radius: 50%;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Fond gris/transparent par défaut */
+  color: #fff; /* Icône blanche par défaut */
+  text-decoration: none;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+  margin-right: 50px;
 }
 
 /* --- Couleurs Spécifiques au Survol (HOVER) --- */
 
 /* Conteneur */
 .social-links {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
 
 /* Le rond autour du logo */
 .social-link {
-    display: flex; /* Centrer le SVG */
-    justify-content: center;
-    align-items: center;
-    width: 45px;
-    height: 45px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    color: #ffffff; /* Couleur du logo (SVG utilise currentColor) */
-    text-decoration: none;
-    transition: all 0.3s ease;
+  display: flex; /* Centrer le SVG */
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #ffffff; /* Couleur du logo (SVG utilise currentColor) */
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 /* Taille du logo SVG */
 .social-link svg {
-    width: 22px;  /* Ajustez ici si vous voulez le logo + grand ou + petit */
-    height: 22px;
+  width: 22px; /* Ajustez ici si vous voulez le logo + grand ou + petit */
+  height: 22px;
 }
 
 /* --- Couleurs au survol (Optionnel mais recommandé) --- */
 
 .social-link.instagram:hover {
-    background: #f09433; 
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-    transform: translateY(-3px);
+  background: #f09433;
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+  transform: translateY(-3px);
 }
 
 .social-link.linkedin:hover {
-    background-color: #0077b5;
-    transform: translateY(-3px);
+  background-color: #0077b5;
+  transform: translateY(-3px);
 }
 
 .social-link.tiktok:hover {
-    /* Couleur de texte blanche pour la lisibilité sur fond sombre */
-    color: #FFFFFF; 
-    
-   /* Couleur de secours */
-background: #00f2ea; 
+  /* Couleur de texte blanche pour la lisibilité sur fond sombre */
+  color: #ffffff;
 
-/* Le dégradé Cyan vers Rose */
-background: linear-gradient(45deg, #00f2ea 0%, #ff0050 100%);
+  /* Couleur de secours */
+  background: #00f2ea;
 
-/* Votre transformation originale */
-transform: translateY(-3px);
+  /* Le dégradé Cyan vers Rose */
+  background: linear-gradient(45deg, #00f2ea 0%, #ff0050 100%);
+
+  /* Votre transformation originale */
+  transform: translateY(-3px);
 }

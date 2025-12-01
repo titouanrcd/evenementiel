@@ -1,73 +1,112 @@
 /* --- 3. UI ELEMENTS & ANIMATIONS --- */
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Highlight text gradient animé */
-.text-gradient, .logo span {
-    background: linear-gradient(270deg, #FF00CC, #FF9900, #FF00CC);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientShift 5s ease infinite;
+.text-gradient,
+.logo span {
+  background: linear-gradient(270deg, #ff00cc, #ff9900, #ff00cc);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 5s ease infinite;
 }
 
 /* Boutons améliorés */
 .btn-gradient {
-    background: linear-gradient(90deg, #FF00CC, #FF9900, #FF00CC);
-    background-size: 200% auto;
-    padding: 14px 30px;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    box-shadow: 0 4px 15px rgba(255, 0, 204, 0.2);
+  background: linear-gradient(90deg, #ff00cc, #ff9900, #ff00cc);
+  background-size: 200% auto;
+  padding: 14px 30px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(255, 0, 204, 0.2);
 }
 
-.btn-gradient:hover { 
-    background-position: right center;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 30px rgba(255, 0, 204, 0.5);
+.btn-gradient:hover {
+  background-position: right center;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(255, 0, 204, 0.5);
 }
 
-.section-title { margin-bottom: 40px; font-size: 2.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: -1px; }
-.sub-title { font-size: 0.8rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 700; }
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  margin-top: 120px;
+}
+.sub-title {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
 
 /* Utilitaires et variantes */
-.sub-title-light { color: rgba(255,255,255,0.7); }
-.btn-black { background: black !important; color: white; }
-.btn-info { background: transparent !important; border: 1px solid #555 !important; box-shadow: none !important; }
-.btn-transparent { background: transparent !important; border: 1px solid rgba(255,255,255,0.3) !important; }
-.btn-small { padding: 10px 20px !important; font-size: 0.8rem !important; margin-top: 25px; }
-.btn-event { padding: 10px 30px !important; font-size: 0.8rem !important; }
+.sub-title-light {
+  color: rgba(255, 255, 255, 0.7);
+}
+.btn-black {
+  background: black !important;
+  color: white;
+}
+.btn-info {
+  background: transparent !important;
+  border: 1px solid #555 !important;
+  box-shadow: none !important;
+}
+.btn-transparent {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+.btn-small {
+  padding: 10px 20px !important;
+  font-size: 0.8rem !important;
+  margin-top: 25px;
+}
+.btn-event {
+  padding: 10px 30px !important;
+  font-size: 0.8rem !important;
+}
 
 /* Navigation buttons */
 .nav-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s;
-    border: 1px solid #333;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+  border: 1px solid #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .nav-btn-prev {
-    background: #222;
+  background: #222;
 }
 
 .nav-btn-next {
-    background: linear-gradient(90deg, #FF00CC, #FF9900);
+  background: linear-gradient(90deg, #ff00cc, #ff9900);
 }

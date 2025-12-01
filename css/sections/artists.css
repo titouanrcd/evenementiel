@@ -1,73 +1,72 @@
-.artists-section { 
-    padding: 80px 5%; 
-    background: linear-gradient(to bottom, #050505, #0a0a0a); 
+.artists-section {
+  padding: 80px 5%;
+  background: linear-gradient(to bottom, #050505, #0a0a0a);
 }
 
 .artist-row {
-    display: flex;
-    gap: 30px;
-    overflow-x: auto;
-    padding-bottom: 30px; 
-    scrollbar-width: none; 
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  padding-bottom: 30px;
+  scrollbar-width: none;
 }
-.artist-row::-webkit-scrollbar { 
-    display: none;
+.artist-row::-webkit-scrollbar {
+  display: none;
 }
 .artist-card {
-    min-width: 280px;
-    cursor: pointer;
+  min-width: 280px;
+  cursor: pointer;
 }
 
 .artist-img-container {
-    height: 350px;
-    width: 100%;
-    margin-bottom: 20px; 
-    border-radius: 150px 150px 0 0; 
-    overflow: hidden;
-    position: relative; 
-    background: #222;
-    border: 1px solid #333;
-    transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  height: 350px;
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 150px 150px 0 0;
+  overflow: hidden;
+  position: relative;
+  background: #222;
+  border: 1px solid #333;
+  transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .artist-img-container img {
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover;
-    transition: inherit;
-    filter: grayscale(100%); 
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: inherit;
+  filter: grayscale(100%);
 }
 
 /* Amélioration du survol artiste */
-.artist-card:hover .artist-img-container { 
-    box-shadow: 0 10px 30px rgba(255, 0, 204, 0.3);
-    
+.artist-card:hover .artist-img-container {
+  box-shadow: 0 10px 30px rgba(255, 0, 204, 0.3);
 }
-.artist-card:hover img { 
-    transform: scale(1.1); 
-    filter: grayscale(0%); 
+.artist-card:hover img {
+  transform: scale(1.1);
+  filter: grayscale(0%);
 }
 
-.abstract-s { 
-    display: flex; 
-    height: 100%; 
-    width: 100%; 
-    align-items: center; 
-    justify-content: center; 
-    background: var(--nova-gradient); 
-    font-size: 8rem; 
-    font-weight: 900; 
-    color: rgba(255,255,255,0.2); 
+.abstract-s {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background: var(--nova-gradient);
+  font-size: 8rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.2);
 }
 
 /* Artists header */
 .artists-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Branding logo */
 .branding-logo {
-    -webkit-text-fill-color: initial;
-    color: rgba(255,255,255,0.2);
+  -webkit-text-fill-color: initial;
+  color: rgba(255, 255, 255, 0.2);
 }
