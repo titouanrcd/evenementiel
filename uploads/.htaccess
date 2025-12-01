@@ -1,17 +1,13 @@
 # ============================================================
-# PROTECTION DU DOSSIER UPLOADS
+# FICHIER .HTACCESS - PROTECTION DU DOSSIER UPLOADS (AMÉLIORÉ)
 # ============================================================
-# Ce fichier empêche l'exécution de scripts PHP dans le dossier uploads
-# TRÈS IMPORTANT pour la sécurité!
+# À placer dans le dossier /uploads/ pour bloquer l'exécution
+# de scripts malveillants tout en autorisant les images.
 # ============================================================
 
-# Désactiver l'exécution de PHP dans ce dossier
-<IfModule mod_php.c>
-    php_flag engine off
-</IfModule>
-
-# Alternative pour PHP-FPM
-<FilesMatch "\.php$">
+# 1. Empêcher l'exécution de TOUS les scripts (méthode la plus fiable)
+# Inclut PHP, Perl, Python, ASP, etc.
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|pl|py|jsp|asp|sh|cgi|exe)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -21,21 +17,10 @@
     </IfModule>
 </FilesMatch>
 
-# Autoriser uniquement les images
-<FilesMatch "^.*\.(jpg|jpeg|png|gif|webp)$">
-    <IfModule mod_authz_core.c>
-        Require all granted
-    </IfModule>
-    <IfModule !mod_authz_core.c>
-        Order allow,deny
-        Allow from all
-    </IfModule>
-</FilesMatch>
-
-# Désactiver le listing des fichiers
+# 2. Désactiver le listing des fichiers du répertoire
 Options -Indexes
 
-# Headers de sécurité pour les fichiers servis
+# 3. Empêcher le "MIME-sniffing" (navigation forcée du type de contenu)
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
 </IfModule>
