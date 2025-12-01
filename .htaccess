@@ -24,7 +24,7 @@ RewriteEngine On
     # Politique de Sécurité du Contenu (CSP) - HAUTEMENT RECOMMANDÉ
     # **À AJUSTER** : default-src 'self' ne permet que les ressources de votre domaine.
     # Si vous utilisez des CDN ou Google Fonts, vous devez ajouter leur domaine ici.
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://trusted-cdn.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;"
     
     # Politique d'autorisation (Permissions-Policy)
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
@@ -87,22 +87,14 @@ Options -Indexes
     # Maintenir le logging des erreurs actif (pour le débogage serveur)
     php_flag log_errors On
     
-    # Assurer que toutes les erreurs sont enregistrées dans le log.
-    # ATTENTION : Ne jamais mettre à 0 en production, il faut logguer !
-    php_value error_reporting E_ALL & ~E_NOTICE & ~E_DEPRECATED
-    
     # Configuration des sessions sécurisées
     php_value session.cookie_httponly 1
-    php_value session.cookie_secure 1
     php_value session.use_strict_mode 1
     php_value session.cookie_samesite Strict
     
     # Limiter les uploads
     php_value upload_max_filesize 5M
     php_value post_max_size 6M
-    
-    # Désactiver les fonctions dangereuses
-    php_value disable_functions "exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source"
 </IfModule>
 
 # ============================================================
