@@ -1,8 +1,14 @@
 <?php
-session_start();
+/**
+ * ============================================================
+ * PAGE DES ÉVÉNEMENTS - NOVA Événements
+ * ============================================================
+ */
+
+require_once 'security.php';  // Sécurité EN PREMIER
 require_once 'db.php';
 
-$is_logged_in = isset($_SESSION['user_email']);
+$is_logged_in = isLoggedIn();
 $user_name = $_SESSION['user_name'] ?? '';
 $user_email = $_SESSION['user_email'] ?? '';
 $user_role = $_SESSION['user_role'] ?? 'user';
@@ -13,56 +19,67 @@ $message_type = '';
 
 // Inscription à un événement
 if (isset($_POST['action']) && $_POST['action'] == 'inscription' && $is_logged_in) {
-    $id_event = intval($_POST['id_event']);
-    
-    try {
-        // Vérifier si déjà inscrit
-        $check = $pdo->prepare("SELECT * FROM inscriptions WHERE user_email = ? AND id_event = ? AND statut = 'confirmé'");
-        $check->execute([$user_email, $id_event]);
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
+        $message_type = "error";
+    } else {
+        $id_event = sanitizeInt($_POST['id_event'] ?? 0);
         
-        if ($check->rowCount() > 0) {
-            $message = "Vous êtes déjà inscrit à cet événement.";
+        if (!$id_event) {
+            $message = "Événement invalide.";
             $message_type = "error";
         } else {
-            // Vérifier la capacité
-            $cap = $pdo->prepare("SELECT e.capacite, COUNT(i.id_inscription) as inscrits 
-                                  FROM event e 
-                                  LEFT JOIN inscriptions i ON e.id_event = i.id_event AND i.statut = 'confirmé'
-                                  WHERE e.id_event = ?
-                                  GROUP BY e.id_event");
-            $cap->execute([$id_event]);
-            $event_cap = $cap->fetch();
-            
-            if ($event_cap && $event_cap['inscrits'] >= $event_cap['capacite']) {
-                $message = "Désolé, cet événement est complet.";
-                $message_type = "error";
-            } else {
-                // Réactiver une inscription annulée ou en créer une nouvelle
-                $reactivate = $pdo->prepare("UPDATE inscriptions SET statut = 'confirmé', date_inscription = NOW() WHERE user_email = ? AND id_event = ?");
-                $reactivate->execute([$user_email, $id_event]);
+            try {
+                // Vérifier si déjà inscrit
+                $check = $pdo->prepare("SELECT * FROM inscriptions WHERE user_email = ? AND id_event = ? AND statut = 'confirmé'");
+                $check->execute([$user_email, $id_event]);
                 
-                if ($reactivate->rowCount() == 0) {
-                    $stmt = $pdo->prepare("INSERT INTO inscriptions (user_email, id_event) VALUES (?, ?)");
-                    $stmt->execute([$user_email, $id_event]);
+                if ($check->rowCount() > 0) {
+                    $message = "Vous êtes déjà inscrit à cet événement.";
+                    $message_type = "error";
+                } else {
+                    // Vérifier la capacité
+                    $cap = $pdo->prepare("SELECT e.capacite, COUNT(i.id_inscription) as inscrits 
+                                          FROM event e 
+                                          LEFT JOIN inscriptions i ON e.id_event = i.id_event AND i.statut = 'confirmé'
+                                          WHERE e.id_event = ?
+                                          GROUP BY e.id_event");
+                    $cap->execute([$id_event]);
+                    $event_cap = $cap->fetch();
+                    
+                    if ($event_cap && $event_cap['inscrits'] >= $event_cap['capacite']) {
+                        $message = "Désolé, cet événement est complet.";
+                        $message_type = "error";
+                    } else {
+                        // Réactiver une inscription annulée ou en créer une nouvelle
+                        $reactivate = $pdo->prepare("UPDATE inscriptions SET statut = 'confirmé', date_inscription = NOW() WHERE user_email = ? AND id_event = ?");
+                        $reactivate->execute([$user_email, $id_event]);
+                        
+                        if ($reactivate->rowCount() == 0) {
+                            $stmt = $pdo->prepare("INSERT INTO inscriptions (user_email, id_event) VALUES (?, ?)");
+                            $stmt->execute([$user_email, $id_event]);
+                        }
+                        
+                        $message = "Inscription réussie ! Rendez-vous dans votre profil pour voir vos inscriptions.";
+                        $message_type = "success";
+                    }
                 }
-                
-                $message = "Inscription réussie ! Rendez-vous dans votre profil pour voir vos inscriptions.";
-                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur inscription événement: " . $e->getMessage());
+                $message = "Erreur lors de l'inscription.";
+                $message_type = "error";
             }
         }
-    } catch (PDOException $e) {
-        $message = "Erreur lors de l'inscription.";
-        $message_type = "error";
     }
 }
 
-// Récupérer les filtres
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
-$tag = isset($_GET['tag']) ? $_GET['tag'] : '';
-$lieu = isset($_GET['lieu']) ? $_GET['lieu'] : '';
-$date_from = isset($_GET['date_from']) ? $_GET['date_from'] : '';
-$date_to = isset($_GET['date_to']) ? $_GET['date_to'] : '';
-$prix_max = isset($_GET['prix_max']) ? intval($_GET['prix_max']) : 200;
+// Récupérer les filtres avec sanitization
+$search = sanitizeString($_GET['search'] ?? '', 100);
+$tag = isset($_GET['tag']) && in_array($_GET['tag'], array_keys(['sport' => 1, 'culture' => 1, 'soiree' => 1, 'conference' => 1, 'festival' => 1, 'autre' => 1])) ? $_GET['tag'] : '';
+$lieu = sanitizeString($_GET['lieu'] ?? '', 255);
+$date_from = sanitizeDate($_GET['date_from'] ?? '') ?: '';
+$date_to = sanitizeDate($_GET['date_to'] ?? '') ?: '';
+$prix_max = sanitizeInt($_GET['prix_max'] ?? 200, 0, 10000) ?: 200;
 
 // Construire la requête SQL avec filtres
 $sql = "SELECT e.*, 
@@ -72,8 +89,10 @@ $sql = "SELECT e.*,
 $params = [];
 
 if (!empty($search)) {
+    // Échapper les caractères spéciaux LIKE
+    $searchEscaped = escapeLike($search);
     $sql .= " AND (e.name LIKE ? OR e.description LIKE ? OR e.lieu LIKE ?)";
-    $searchParam = "%$search%";
+    $searchParam = "%$searchEscaped%";
     $params[] = $searchParam;
     $params[] = $searchParam;
     $params[] = $searchParam;
@@ -85,8 +104,9 @@ if (!empty($tag)) {
 }
 
 if (!empty($lieu)) {
+    $lieuEscaped = escapeLike($lieu);
     $sql .= " AND e.lieu LIKE ?";
-    $params[] = "%$lieu%";
+    $params[] = "%$lieuEscaped%";
 }
 
 if (!empty($date_from)) {
@@ -111,6 +131,7 @@ try {
     $stmt->execute($params);
     $events = $stmt->fetchAll();
 } catch (PDOException $e) {
+    error_log("Erreur récupération événements: " . $e->getMessage());
     $events = [];
 }
 
@@ -395,8 +416,9 @@ function isUserRegistered($pdo, $user_email, $id_event) {
                                                     <span class="btn-full-event">Complet</span>
                                                 <?php else: ?>
                                                     <form method="POST" class="inscription-form">
+                                                        <?php echo csrfField(); ?>
                                                         <input type="hidden" name="action" value="inscription">
-                                                        <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
+                                                        <input type="hidden" name="id_event" value="<?php echo intval($event['id_event']); ?>">
                                                         <button type="submit" class="event-btn">S'inscrire</button>
                                                     </form>
                                                 <?php endif; ?>

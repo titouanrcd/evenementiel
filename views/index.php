@@ -1,6 +1,13 @@
 <?php
-session_start();
-$is_logged_in = isset($_SESSION['user_email']);
+/**
+ * ============================================================
+ * PAGE D'ACCUEIL - NOVA Événements
+ * ============================================================
+ */
+
+require_once 'security.php';  // Sécurité EN PREMIER
+
+$is_logged_in = isLoggedIn();
 $user_name = $_SESSION['user_name'] ?? '';
 $user_role = $_SESSION['user_role'] ?? 'user';
 ?>

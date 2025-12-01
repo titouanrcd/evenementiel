@@ -1,12 +1,15 @@
 <?php
-session_start();
+/**
+ * ============================================================
+ * PANEL ADMINISTRATEUR - NOVA Événements
+ * ============================================================
+ */
+
+require_once 'security.php';  // Sécurité EN PREMIER
 require_once 'db.php';
 
-// Vérifier si l'utilisateur est connecté et est admin
-if (!isset($_SESSION['user_email'])) {
-    header('Location: connexion.php');
-    exit();
-}
+// Vérifier si l'utilisateur est connecté
+requireLogin();
 
 $user_email = $_SESSION['user_email'];
 $user_name = $_SESSION['user_name'] ?? '';
@@ -22,6 +25,7 @@ try {
         exit();
     }
 } catch (PDOException $e) {
+    error_log("Erreur vérification droits admin: " . $e->getMessage());
     die("Erreur de vérification des droits.");
 }
 
@@ -41,18 +45,24 @@ $tags = [
 // TRAITEMENT : Changer le rôle d'un utilisateur
 // =========================================================
 if (isset($_POST['action']) && $_POST['action'] == 'change_role') {
-    $target_email = $_POST['user_email'] ?? '';
-    $new_role = $_POST['new_role'] ?? '';
-    
-    if ($target_email != $user_email && in_array($new_role, ['user', 'organisateur', 'admin'])) {
-        try {
-            $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE email = ?");
-            $stmt->execute([$new_role, $target_email]);
-            $message = "Rôle mis à jour avec succès.";
-            $message_type = "success";
-        } catch (PDOException $e) {
-            $message = "Erreur lors de la mise à jour du rôle.";
-            $message_type = "error";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
+        $message_type = "error";
+    } else {
+        $target_email = sanitizeEmail($_POST['user_email'] ?? '');
+        $new_role = $_POST['new_role'] ?? '';
+        
+        if ($target_email && $target_email != $user_email && in_array($new_role, ['user', 'organisateur', 'admin'])) {
+            try {
+                $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE email = ?");
+                $stmt->execute([$new_role, $target_email]);
+                $message = "Rôle mis à jour avec succès.";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur changement rôle: " . $e->getMessage());
+                $message = "Erreur lors de la mise à jour du rôle.";
+                $message_type = "error";
+            }
         }
     }
 }
@@ -61,18 +71,24 @@ if (isset($_POST['action']) && $_POST['action'] == 'change_role') {
 // TRAITEMENT : Changer le statut d'un événement
 // =========================================================
 if (isset($_POST['action']) && $_POST['action'] == 'change_event_status') {
-    $id_event = intval($_POST['id_event']);
-    $new_status = $_POST['new_status'] ?? '';
-    
-    if (in_array($new_status, ['publié', 'en attente'])) {
-        try {
-            $stmt = $pdo->prepare("UPDATE event SET status = ? WHERE id_event = ?");
-            $stmt->execute([$new_status, $id_event]);
-            $message = "Statut de l'événement mis à jour.";
-            $message_type = "success";
-        } catch (PDOException $e) {
-            $message = "Erreur lors de la mise à jour.";
-            $message_type = "error";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
+        $message_type = "error";
+    } else {
+        $id_event = sanitizeInt($_POST['id_event'] ?? 0);
+        $new_status = $_POST['new_status'] ?? '';
+        
+        if ($id_event && in_array($new_status, ['publié', 'en attente'])) {
+            try {
+                $stmt = $pdo->prepare("UPDATE event SET status = ? WHERE id_event = ?");
+                $stmt->execute([$new_status, $id_event]);
+                $message = "Statut de l'événement mis à jour.";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur changement statut: " . $e->getMessage());
+                $message = "Erreur lors de la mise à jour.";
+                $message_type = "error";
+            }
         }
     }
 }
@@ -81,17 +97,23 @@ if (isset($_POST['action']) && $_POST['action'] == 'change_event_status') {
 // TRAITEMENT : Supprimer un utilisateur
 // =========================================================
 if (isset($_POST['action']) && $_POST['action'] == 'delete_user') {
-    $target_email = $_POST['user_email'] ?? '';
-    
-    if ($target_email != $user_email) {
-        try {
-            $stmt = $pdo->prepare("DELETE FROM users WHERE email = ?");
-            $stmt->execute([$target_email]);
-            $message = "Utilisateur supprimé.";
-            $message_type = "success";
-        } catch (PDOException $e) {
-            $message = "Erreur lors de la suppression.";
-            $message_type = "error";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
+        $message_type = "error";
+    } else {
+        $target_email = sanitizeEmail($_POST['user_email'] ?? '');
+        
+        if ($target_email && $target_email != $user_email) {
+            try {
+                $stmt = $pdo->prepare("DELETE FROM users WHERE email = ?");
+                $stmt->execute([$target_email]);
+                $message = "Utilisateur supprimé.";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur suppression utilisateur: " . $e->getMessage());
+                $message = "Erreur lors de la suppression.";
+                $message_type = "error";
+            }
         }
     }
 }
@@ -100,16 +122,24 @@ if (isset($_POST['action']) && $_POST['action'] == 'delete_user') {
 // TRAITEMENT : Supprimer un événement
 // =========================================================
 if (isset($_POST['action']) && $_POST['action'] == 'delete_event') {
-    $id_event = intval($_POST['id_event']);
-    
-    try {
-        $stmt = $pdo->prepare("DELETE FROM event WHERE id_event = ?");
-        $stmt->execute([$id_event]);
-        $message = "Événement supprimé.";
-        $message_type = "success";
-    } catch (PDOException $e) {
-        $message = "Erreur lors de la suppression.";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
         $message_type = "error";
+    } else {
+        $id_event = sanitizeInt($_POST['id_event'] ?? 0);
+        
+        if ($id_event) {
+            try {
+                $stmt = $pdo->prepare("DELETE FROM event WHERE id_event = ?");
+                $stmt->execute([$id_event]);
+                $message = "Événement supprimé.";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur suppression événement: " . $e->getMessage());
+                $message = "Erreur lors de la suppression.";
+                $message_type = "error";
+            }
+        }
     }
 }
 
@@ -321,8 +351,9 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                             <td><?php echo htmlspecialchars($u['email']); ?></td>
                                             <td>
                                                 <form method="POST" class="role-form">
+                                                    <?php echo csrfField(); ?>
                                                     <input type="hidden" name="action" value="change_role">
-                                                    <input type="hidden" name="user_email" value="<?php echo $u['email']; ?>">
+                                                    <input type="hidden" name="user_email" value="<?php echo htmlspecialchars($u['email']); ?>">
                                                     <select name="new_role" onchange="this.form.submit()" 
                                                             <?php echo $u['email'] == $user_email ? 'disabled' : ''; ?>>
                                                         <option value="user" <?php echo $u['role'] == 'user' ? 'selected' : ''; ?>>User</option>
@@ -336,8 +367,9 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                                 <?php if ($u['email'] != $user_email): ?>
                                                     <form method="POST" style="display: inline;" 
                                                           onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                                                        <?php echo csrfField(); ?>
                                                         <input type="hidden" name="action" value="delete_user">
-                                                        <input type="hidden" name="user_email" value="<?php echo $u['email']; ?>">
+                                                        <input type="hidden" name="user_email" value="<?php echo htmlspecialchars($u['email']); ?>">
                                                         <button type="submit" class="btn-action btn-delete">X</button>
                                                     </form>
                                                 <?php else: ?>
@@ -398,8 +430,9 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                             </td>
                                             <td>
                                                 <form method="POST" class="status-form">
+                                                    <?php echo csrfField(); ?>
                                                     <input type="hidden" name="action" value="change_event_status">
-                                                    <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
+                                                    <input type="hidden" name="id_event" value="<?php echo intval($event['id_event']); ?>">
                                                     <select name="new_status" onchange="this.form.submit()">
                                                         <option value="publié" <?php echo $event['status'] == 'publié' ? 'selected' : ''; ?>>Publié</option>
                                                         <option value="en attente" <?php echo $event['status'] == 'en attente' ? 'selected' : ''; ?>>En attente</option>
@@ -409,8 +442,9 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                             <td>
                                                 <form method="POST" style="display: inline;" 
                                                       onsubmit="return confirm('Supprimer cet événement ?');">
+                                                    <?php echo csrfField(); ?>
                                                     <input type="hidden" name="action" value="delete_event">
-                                                    <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
+                                                    <input type="hidden" name="id_event" value="<?php echo intval($event['id_event']); ?>">
                                                     <button type="submit" class="btn-action btn-delete">X</button>
                                                 </form>
                                             </td>
@@ -461,14 +495,16 @@ $active_tab = $_GET['tab'] ?? 'dashboard';
                                         </div>
                                         <div class="pending-actions">
                                             <form method="POST">
+                                                <?php echo csrfField(); ?>
                                                 <input type="hidden" name="action" value="change_event_status">
-                                                <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
+                                                <input type="hidden" name="id_event" value="<?php echo intval($event['id_event']); ?>">
                                                 <input type="hidden" name="new_status" value="publié">
                                                 <button type="submit" class="btn-approve">Approuver</button>
                                             </form>
                                             <form method="POST" onsubmit="return confirm('Supprimer cet événement ?');">
+                                                <?php echo csrfField(); ?>
                                                 <input type="hidden" name="action" value="delete_event">
-                                                <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
+                                                <input type="hidden" name="id_event" value="<?php echo intval($event['id_event']); ?>">
                                                 <button type="submit" class="btn-reject">Rejeter</button>
                                             </form>
                                         </div>

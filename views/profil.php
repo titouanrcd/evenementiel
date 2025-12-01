@@ -1,12 +1,15 @@
 <?php
+/**
+ * ============================================================
+ * PAGE PROFIL UTILISATEUR - NOVA Événements
+ * ============================================================
+ */
+
+require_once 'security.php';  // Sécurité EN PREMIER
 require_once 'db.php';
-session_start();
 
 // Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['user_email'])) {
-    header('Location: connexion.php');
-    exit();
-}
+requireLogin();
 
 $user_email = $_SESSION['user_email'];
 $message = '';
@@ -18,6 +21,7 @@ try {
     $stmt->execute([$user_email]);
     $user = $stmt->fetch();
 } catch (PDOException $e) {
+    error_log("Erreur récupération utilisateur: " . $e->getMessage());
     die("Erreur lors de la récupération des données utilisateur.");
 }
 
@@ -25,52 +29,83 @@ try {
 // TRAITEMENT DES ACTIONS
 // =========================================================
 
-// Déconnexion
+// Déconnexion sécurisée (via POST uniquement pour éviter CSRF via lien)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] == 'logout') {
+    if (verifyCsrfToken()) {
+        secureLogout();
+        header('Location: index.php');
+        exit();
+    }
+}
+
+// Support de déconnexion via GET (pour compatibilité) mais avec confirmation
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-    session_destroy();
+    secureLogout();
     header('Location: index.php');
     exit();
 }
 
 // Annuler une inscription
 if (isset($_POST['action']) && $_POST['action'] == 'cancel_inscription') {
-    $id_inscription = intval($_POST['id_inscription']);
-    
-    try {
-        $stmt = $pdo->prepare("UPDATE inscriptions SET statut = 'annulé' WHERE id_inscription = ? AND user_email = ?");
-        $stmt->execute([$id_inscription, $user_email]);
-        
-        if ($stmt->rowCount() > 0) {
-            $message = "Votre inscription a été annulée avec succès.";
-            $message_type = "success";
-        } else {
-            $message = "Impossible d'annuler cette inscription.";
-            $message_type = "error";
-        }
-    } catch (PDOException $e) {
-        $message = "Erreur lors de l'annulation.";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
         $message_type = "error";
+    } else {
+        $id_inscription = sanitizeInt($_POST['id_inscription'] ?? 0);
+        
+        if ($id_inscription === false) {
+            $message = "ID d'inscription invalide.";
+            $message_type = "error";
+        } else {
+            try {
+                $stmt = $pdo->prepare("UPDATE inscriptions SET statut = 'annulé' WHERE id_inscription = ? AND user_email = ?");
+                $stmt->execute([$id_inscription, $user_email]);
+                
+                if ($stmt->rowCount() > 0) {
+                    $message = "Votre inscription a été annulée avec succès.";
+                    $message_type = "success";
+                } else {
+                    $message = "Impossible d'annuler cette inscription.";
+                    $message_type = "error";
+                }
+            } catch (PDOException $e) {
+                error_log("Erreur annulation inscription: " . $e->getMessage());
+                $message = "Erreur lors de l'annulation.";
+                $message_type = "error";
+            }
+        }
     }
 }
 
 // Mise à jour du profil
 if (isset($_POST['action']) && $_POST['action'] == 'update_profile') {
-    $new_user = htmlspecialchars(trim($_POST['user'] ?? ''));
-    $new_number = htmlspecialchars(trim($_POST['number'] ?? ''));
-    
-    try {
-        $stmt = $pdo->prepare("UPDATE users SET user = ?, number = ? WHERE email = ?");
-        $stmt->execute([$new_user, $new_number, $user_email]);
-        
-        $_SESSION['user_name'] = $new_user;
-        $user['user'] = $new_user;
-        $user['number'] = $new_number;
-        
-        $message = "Profil mis à jour avec succès !";
-        $message_type = "success";
-    } catch (PDOException $e) {
-        $message = "Erreur lors de la mise à jour.";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
         $message_type = "error";
+    } else {
+        $new_user = sanitizeString($_POST['user'] ?? '', 100);
+        $new_number = sanitizePhone($_POST['number'] ?? '') ?: '';
+        
+        if (empty($new_user) || strlen($new_user) < 3) {
+            $message = "Le nom d'utilisateur doit faire au moins 3 caractères.";
+            $message_type = "error";
+        } else {
+            try {
+                $stmt = $pdo->prepare("UPDATE users SET user = ?, number = ? WHERE email = ?");
+                $stmt->execute([$new_user, $new_number, $user_email]);
+                
+                $_SESSION['user_name'] = $new_user;
+                $user['user'] = $new_user;
+                $user['number'] = $new_number;
+                
+                $message = "Profil mis à jour avec succès !";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur mise à jour profil: " . $e->getMessage());
+                $message = "Erreur lors de la mise à jour.";
+                $message_type = "error";
+            }
+        }
     }
 }
 
@@ -296,8 +331,9 @@ function formatTime($time) {
                                         <div class="inscription-actions">
                                             <?php if ($inscription['statut'] == 'confirmé'): ?>
                                                 <form method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette inscription ?');">
+                                                    <?php echo csrfField(); ?>
                                                     <input type="hidden" name="action" value="cancel_inscription">
-                                                    <input type="hidden" name="id_inscription" value="<?php echo $inscription['id_inscription']; ?>">
+                                                    <input type="hidden" name="id_inscription" value="<?php echo intval($inscription['id_inscription']); ?>">
                                                     <button type="submit" class="btn-cancel">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                             <circle cx="12" cy="12" r="10"></circle>
@@ -325,12 +361,13 @@ function formatTime($time) {
                         </div>
 
                         <form method="POST" class="settings-form">
+                            <?php echo csrfField(); ?>
                             <input type="hidden" name="action" value="update_profile">
                             
                             <div class="form-grid">
                                 <div class="input-group">
                                     <label>Nom d'utilisateur</label>
-                                    <input type="text" name="user" value="<?php echo htmlspecialchars($user['user']); ?>" required>
+                                    <input type="text" name="user" value="<?php echo htmlspecialchars($user['user']); ?>" required minlength="3" maxlength="100">
                                 </div>
                                 
                                 <div class="input-group">

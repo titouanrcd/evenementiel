@@ -1,0 +1,128 @@
+# ============================================================
+# FICHIER .HTACCESS - SÉCURITÉ NOVA Événements
+# ============================================================
+# Ce fichier configure la sécurité au niveau du serveur Apache.
+# À placer à la racine du projet.
+# ============================================================
+
+# Activer le moteur de réécriture
+RewriteEngine On
+
+# ============================================================
+# 1. HEADERS DE SÉCURITÉ
+# ============================================================
+<IfModule mod_headers.c>
+    # Protection contre le clickjacking
+    Header always set X-Frame-Options "DENY"
+    
+    # Protection XSS du navigateur
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Empêcher le sniffing MIME
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Politique de référent
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Supprimer les informations sur le serveur
+    Header unset X-Powered-By
+    Header unset Server
+    
+    # Permissions Policy (ancien Feature-Policy)
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# ============================================================
+# 2. PROTECTION DES FICHIERS SENSIBLES
+# ============================================================
+
+# Bloquer l'accès aux fichiers de configuration
+<FilesMatch "^(db\.php|security\.php|\.env|\.htaccess|\.htpasswd)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Bloquer l'accès aux fichiers SQL
+<FilesMatch "\.sql$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Bloquer l'accès aux fichiers de logs
+<FilesMatch "\.log$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ============================================================
+# 3. PROTECTION DU DOSSIER UPLOADS
+# ============================================================
+# Ce bloc doit être dans un .htaccess dans /uploads/
+# Pour empêcher l'exécution de scripts PHP uploadés
+
+# ============================================================
+# 4. PROTECTION CONTRE L'ÉNUMÉRATION DES RÉPERTOIRES
+# ============================================================
+Options -Indexes
+
+# ============================================================
+# 5. CONFIGURATION PHP (si mod_php)
+# ============================================================
+<IfModule mod_php.c>
+    # Désactiver l'affichage des erreurs PHP
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_value error_reporting 0
+    
+    # Activer le logging des erreurs
+    php_flag log_errors On
+    
+    # Configuration des sessions sécurisées
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 1
+    php_value session.use_strict_mode 1
+    php_value session.cookie_samesite Strict
+    
+    # Limiter les uploads
+    php_value upload_max_filesize 5M
+    php_value post_max_size 6M
+    
+    # Désactiver les fonctions dangereuses
+    php_value disable_functions "exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source"
+</IfModule>
+
+# ============================================================
+# 6. COMPRESSION GZIP (performance + sécurité)
+# ============================================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# ============================================================
+# 7. CACHE DES ASSETS STATIQUES
+# ============================================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>

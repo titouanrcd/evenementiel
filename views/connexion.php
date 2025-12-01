@@ -1,60 +1,93 @@
 <?php 
+/**
+ * ============================================================
+ * PAGE DE CONNEXION / INSCRIPTION - NOVA Événements
+ * ============================================================
+ * Sécurité implémentée:
+ * - Protection CSRF
+ * - Validation des entrées
+ * - Protection contre la force brute
+ * - Régénération de session après connexion
+ * ============================================================
+ */
+
+require_once 'security.php';  // Inclure la sécurité EN PREMIER
 require_once 'db.php'; 
-session_start(); 
 
 $erreurs = []; 
 $active_tab = 'login'; 
 
+// Vérifier si l'IP est bloquée (trop de tentatives)
+$clientIp = getClientIp();
+if (isIpBlocked($pdo, $clientIp)) {
+    $erreurs[] = "Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.";
+}
+
 // =========================================================
 // 1. TRAITEMENT DE L'INSCRIPTION
 // =========================================================
-if (isset($_POST['action']) && $_POST['action'] == 'register') {
-    $active_tab = 'register'; 
+if (isset($_POST['action']) && $_POST['action'] == 'register' && empty($erreurs)) {
+    // Vérification du token CSRF
+    if (!verifyCsrfToken()) {
+        $erreurs[] = "Erreur de sécurité. Veuillez rafraîchir la page et réessayer.";
+    } else {
+        $active_tab = 'register'; 
 
-    // Récupération des données (Alignées sur vos colonnes DB)
-    $user = htmlspecialchars(trim($_POST['user'] ?? '')); // Colonne 'user'
-    $date_of_birth = $_POST['date_of_birth'] ?? '';       // Colonne 'date_of_birth'
-    $sexe = $_POST['sexe'] ?? '';                         // Colonne 'sexe'
-    $number = htmlspecialchars(trim($_POST['number'] ?? '')); // Colonne 'number'
-    $email = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL); // Colonne 'email'
-    $password = $_POST['password'] ?? '';                 // Colonne 'password'
-    $confirm_password = $_POST['confirm_password'] ?? '';
+        // Récupération et validation des données
+        $user = sanitizeString($_POST['user'] ?? '', 100);
+        $date_of_birth = sanitizeDate($_POST['date_of_birth'] ?? '');
+        $sexe = in_array($_POST['sexe'] ?? '', ['H', 'F', 'A']) ? $_POST['sexe'] : '';
+        $number = sanitizePhone($_POST['number'] ?? '') ?: '';
+        $email = sanitizeEmail($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
 
-    // Validation 
-    if (empty($user)) $erreurs[] = "Le nom d'utilisateur est obligatoire.";
-    if (!$email) $erreurs[] = "L'email n'est pas valide.";
-    if ($password !== $confirm_password) $erreurs[] = "Les mots de passe ne correspondent pas.";
-    if (strlen($password) < 8) $erreurs[] = "Le mot de passe doit faire au moins 8 caractères.";
+        // Validation 
+        if (empty($user)) $erreurs[] = "Le nom d'utilisateur est obligatoire.";
+        if (strlen($user) < 3) $erreurs[] = "Le nom d'utilisateur doit faire au moins 3 caractères.";
+        if (!$email) $erreurs[] = "L'email n'est pas valide.";
+        if (!$date_of_birth) $erreurs[] = "La date de naissance n'est pas valide.";
+        if ($password !== $confirm_password) $erreurs[] = "Les mots de passe ne correspondent pas.";
+        
+        // Validation renforcée du mot de passe
+        $passwordCheck = validatePassword($password);
+        if (!$passwordCheck['valid']) {
+            $erreurs = array_merge($erreurs, $passwordCheck['errors']);
+        }
 
-    // Insertion avec systeme de sécurité basique 
-    if (empty($erreurs)) {
-        try {
-            // Vérif doublon email
-            $check = $pdo->prepare("SELECT email FROM users WHERE email = ?");
-            $check->execute([$email]);
+        // Insertion avec systeme de sécurité 
+        if (empty($erreurs)) {
+            try {
+                // Vérif doublon email
+                $check = $pdo->prepare("SELECT email FROM users WHERE email = ?");
+                $check->execute([$email]);
 
-            if ($check->rowCount() > 0) {
-                $erreurs[] = "Cet email est déjà utilisé.";
-            } else {
-                // Hashage
-                $hash = password_hash($password, PASSWORD_BCRYPT);
+                if ($check->rowCount() > 0) {
+                    $erreurs[] = "Cet email est déjà utilisé.";
+                } else {
+                    // Hashage avec coût par défaut (actuellement 10)
+                    $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
-                // INSERTION EXACTE SELON VOTRE DB
-                $sql = "INSERT INTO users (user, email, date_of_birth, sexe, number, password) 
-                        VALUES (?, ?, ?, ?, ?, ?)";
-                
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$user, $email, $date_of_birth, $sexe, $number, $hash]);
+                    // INSERTION SÉCURISÉE
+                    $sql = "INSERT INTO users (user, email, date_of_birth, sexe, number, password) 
+                            VALUES (?, ?, ?, ?, ?, ?)";
+                    
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([$user, $email, $date_of_birth, $sexe, $number, $hash]);
 
-                // Connexion auto
-                $_SESSION['user_email'] = $email;
-                $_SESSION['user_name'] = $user;
-                
-                header('Location: index.php');
-                exit();
+                    // Connexion auto avec régénération de session
+                    regenerateSession();
+                    $_SESSION['user_email'] = $email;
+                    $_SESSION['user_name'] = $user;
+                    $_SESSION['user_role'] = 'user';
+                    
+                    header('Location: index.php');
+                    exit();
+                }
+            } catch (PDOException $e) {
+                error_log("Erreur inscription: " . $e->getMessage());
+                $erreurs[] = "Une erreur technique est survenue. Veuillez réessayer.";
             }
-        } catch (PDOException $e) {
-            $erreurs[] = "Erreur technique : " . $e->getMessage();
         }
     }
 }
@@ -62,33 +95,47 @@ if (isset($_POST['action']) && $_POST['action'] == 'register') {
 // =========================================================
 // 2. TRAITEMENT DE LA CONNEXION
 // =========================================================
-if (isset($_POST['action']) && $_POST['action'] == 'login') {
-    $active_tab = 'login';
-
-    $identifier = trim($_POST['identifier'] ?? ''); // Email ou user ou number
-    $password_login = $_POST['password'] ?? '';
-
-    if (empty($identifier) || empty($password_login)) {
-        $erreurs[] = "Veuillez remplir tous les champs.";
+if (isset($_POST['action']) && $_POST['action'] == 'login' && empty($erreurs)) {
+    // Vérification du token CSRF
+    if (!verifyCsrfToken()) {
+        $erreurs[] = "Erreur de sécurité. Veuillez rafraîchir la page et réessayer.";
     } else {
-        try {
-            // On autorise la connexion par email ou par user
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR user = ?");
-            $stmt->execute([$identifier, $identifier]);
-            $user_data = $stmt->fetch();
+        $active_tab = 'login';
 
-            if ($user_data && password_verify($password_login, $user_data['password'])) {
-                $_SESSION['user_email'] = $user_data['email'];
-                $_SESSION['user_name'] = $user_data['user']; // La colonne s'appelle 'user'
-                $_SESSION['user_role'] = $user_data['role'] ?? 'user';
+        $identifier = sanitizeString($_POST['identifier'] ?? '', 255);
+        $password_login = $_POST['password'] ?? '';
 
-                header('Location: index.php');
-                exit();
-            } else {
-                $erreurs[] = "Identifiants incorrects.";
+        if (empty($identifier) || empty($password_login)) {
+            $erreurs[] = "Veuillez remplir tous les champs.";
+        } else {
+            try {
+                // On autorise la connexion par email ou par user
+                $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR user = ?");
+                $stmt->execute([$identifier, $identifier]);
+                $user_data = $stmt->fetch();
+
+                if ($user_data && password_verify($password_login, $user_data['password'])) {
+                    // Connexion réussie - Régénérer la session
+                    regenerateSession();
+                    
+                    $_SESSION['user_email'] = $user_data['email'];
+                    $_SESSION['user_name'] = $user_data['user'];
+                    $_SESSION['user_role'] = $user_data['role'] ?? 'user';
+
+                    // Nettoyer les tentatives de connexion
+                    cleanOldAttempts($pdo);
+
+                    header('Location: index.php');
+                    exit();
+                } else {
+                    // Enregistrer la tentative échouée
+                    recordFailedAttempt($pdo, $clientIp);
+                    $erreurs[] = "Identifiants incorrects.";
+                }
+            } catch (PDOException $e) {
+                error_log("Erreur connexion: " . $e->getMessage());
+                $erreurs[] = "Erreur de connexion.";
             }
-        } catch (PDOException $e) {
-            $erreurs[] = "Erreur de connexion.";
         }
     }
 }
@@ -152,16 +199,17 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
                 <div id="login-form" class="auth-form">
                     <form action="connexion.php" method="POST">
                         <input type="hidden" name="action" value="login">
+                        <?php echo csrfField(); ?>
                         
                         <?php if (!empty($erreurs) && $active_tab == 'login'): ?>
                             <div class="error-message" style="background: #ff4d4d; color: white; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
-                                <?php foreach($erreurs as $e) echo "<p>$e</p>"; ?>
+                                <?php foreach($erreurs as $e) echo "<p>" . htmlspecialchars($e) . "</p>"; ?>
                             </div>
                         <?php endif; ?>
 
                         <div class="input-group">
                             <label>Email ou Nom d'utilisateur</label>
-                            <input type="text" name="identifier" required placeholder="votre@email.com">
+                            <input type="text" name="identifier" required placeholder="votre@email.com" maxlength="255">
                         </div>
                         <div class="input-group">
                             <label>Mot de passe</label>
@@ -174,10 +222,11 @@ if (isset($_POST['action']) && $_POST['action'] == 'login') {
                 <div id="register-form" class="auth-form">
                     <form action="connexion.php" method="POST">
                         <input type="hidden" name="action" value="register">
+                        <?php echo csrfField(); ?>
 
                         <?php if (!empty($erreurs) && $active_tab == 'register'): ?>
                             <div class="error-message" style="background: #ff4d4d; color: white; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
-                                <?php foreach($erreurs as $e) echo "<p>$e</p>"; ?>
+                                <?php foreach($erreurs as $e) echo "<p>" . htmlspecialchars($e) . "</p>"; ?>
                             </div>
                         <?php endif; ?>
 

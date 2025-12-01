@@ -1,0 +1,41 @@
+# ============================================================
+# PROTECTION DU DOSSIER UPLOADS
+# ============================================================
+# Ce fichier empêche l'exécution de scripts PHP dans le dossier uploads
+# TRÈS IMPORTANT pour la sécurité!
+# ============================================================
+
+# Désactiver l'exécution de PHP dans ce dossier
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# Alternative pour PHP-FPM
+<FilesMatch "\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Autoriser uniquement les images
+<FilesMatch "^.*\.(jpg|jpeg|png|gif|webp)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
+</FilesMatch>
+
+# Désactiver le listing des fichiers
+Options -Indexes
+
+# Headers de sécurité pour les fichiers servis
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>

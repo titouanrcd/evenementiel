@@ -1,12 +1,15 @@
 <?php
-session_start();
+/**
+ * ============================================================
+ * PANEL ORGANISATEUR - NOVA Événements
+ * ============================================================
+ */
+
+require_once 'security.php';  // Sécurité EN PREMIER
 require_once 'db.php';
 
-// Vérifier si l'utilisateur est connecté et est organisateur
-if (!isset($_SESSION['user_email'])) {
-    header('Location: connexion.php');
-    exit();
-}
+// Vérifier si l'utilisateur est connecté
+requireLogin();
 
 $user_email = $_SESSION['user_email'];
 $user_name = $_SESSION['user_name'] ?? '';
@@ -22,16 +25,17 @@ try {
         exit();
     }
 } catch (PDOException $e) {
+    error_log("Erreur vérification droits organisateur: " . $e->getMessage());
     die("Erreur de vérification des droits.");
 }
 
 $message = '';
 $message_type = '';
 
-// Créer le dossier uploads s'il n'existe pas
+// Créer le dossier uploads s'il n'existe pas (avec permissions sécurisées)
 $upload_dir = '../uploads/events/';
 if (!is_dir($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
+    mkdir($upload_dir, 0755, true);
 }
 
 $tags = [
@@ -47,48 +51,49 @@ $tags = [
 // TRAITEMENT : Créer un événement
 // =========================================================
 if (isset($_POST['action']) && $_POST['action'] == 'create_event') {
-    $name = htmlspecialchars(trim($_POST['name'] ?? ''));
-    $description = htmlspecialchars(trim($_POST['description'] ?? ''));
-    $event_date = $_POST['event_date'] ?? '';
-    $hour = $_POST['hour'] ?? '';
-    $lieu = htmlspecialchars(trim($_POST['lieu'] ?? ''));
-    $capacite = intval($_POST['capacite'] ?? 0);
-    $prix = intval($_POST['prix'] ?? 0);
-    $tag = $_POST['tag'] ?? 'autre';
-    $image_url = '';
-    
-    // Gestion de l'image
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        $filename = $_FILES['image']['name'];
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
-        if (in_array($ext, $allowed)) {
-            $new_filename = uniqid('event_') . '.' . $ext;
-            $upload_path = $upload_dir . $new_filename;
-            
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
-                $image_url = 'uploads/events/' . $new_filename;
-            }
-        }
-    } elseif (!empty($_POST['image_url'])) {
-        $image_url = filter_var($_POST['image_url'], FILTER_VALIDATE_URL) ? $_POST['image_url'] : '';
-    }
-    
-    // Validation
-    if (empty($name) || empty($event_date) || empty($lieu) || $capacite <= 0) {
-        $message = "Veuillez remplir tous les champs obligatoires.";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
         $message_type = "error";
     } else {
-        try {
-            $stmt = $pdo->prepare("INSERT INTO event (name, description, event_date, hour, lieu, capacite, prix, tag, image, owner_email, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en attente')");
-            $stmt->execute([$name, $description, $event_date, $hour, $lieu, $capacite, $prix, $tag, $image_url, $user_email]);
-            
-            $message = "Événement créé avec succès ! Il sera visible après validation par un administrateur.";
-            $message_type = "success";
-        } catch (PDOException $e) {
-            $message = "Erreur lors de la création de l'événement.";
+        $name = sanitizeString($_POST['name'] ?? '', 255);
+        $description = sanitizeString($_POST['description'] ?? '', 5000);
+        $event_date = sanitizeDate($_POST['event_date'] ?? '');
+        $hour = $_POST['hour'] ?? '';
+        $lieu = sanitizeString($_POST['lieu'] ?? '', 255);
+        $capacite = sanitizeInt($_POST['capacite'] ?? 0, 1, 100000);
+        $prix = sanitizeInt($_POST['prix'] ?? 0, 0, 10000);
+        $tag = in_array($_POST['tag'] ?? '', array_keys($tags)) ? $_POST['tag'] : 'autre';
+        $image_url = '';
+        
+        // Gestion sécurisée de l'image
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+            $uploadResult = secureFileUpload($_FILES['image'], $upload_dir);
+            if ($uploadResult['success']) {
+                $image_url = 'uploads/events/' . $uploadResult['filename'];
+            } else {
+                $message = $uploadResult['error'];
+                $message_type = "error";
+            }
+        } elseif (!empty($_POST['image_url'])) {
+            $image_url = filter_var($_POST['image_url'], FILTER_VALIDATE_URL) ? $_POST['image_url'] : '';
+        }
+        
+        // Validation
+        if (empty($name) || !$event_date || empty($lieu) || !$capacite) {
+            $message = "Veuillez remplir tous les champs obligatoires.";
             $message_type = "error";
+        } elseif (empty($message)) {
+            try {
+                $stmt = $pdo->prepare("INSERT INTO event (name, description, event_date, hour, lieu, capacite, prix, tag, image, owner_email, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en attente')");
+                $stmt->execute([$name, $description, $event_date, $hour, $lieu, $capacite, $prix ?: 0, $tag, $image_url, $user_email]);
+                
+                $message = "Événement créé avec succès ! Il sera visible après validation par un administrateur.";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur création événement: " . $e->getMessage());
+                $message = "Erreur lors de la création de l'événement.";
+                $message_type = "error";
+            }
         }
     }
 }
@@ -97,49 +102,52 @@ if (isset($_POST['action']) && $_POST['action'] == 'create_event') {
 // TRAITEMENT : Modifier un événement
 // =========================================================
 if (isset($_POST['action']) && $_POST['action'] == 'edit_event') {
-    $id_event = intval($_POST['id_event']);
-    $name = htmlspecialchars(trim($_POST['name'] ?? ''));
-    $description = htmlspecialchars(trim($_POST['description'] ?? ''));
-    $event_date = $_POST['event_date'] ?? '';
-    $hour = $_POST['hour'] ?? '';
-    $lieu = htmlspecialchars(trim($_POST['lieu'] ?? ''));
-    $capacite = intval($_POST['capacite'] ?? 0);
-    $prix = intval($_POST['prix'] ?? 0);
-    $tag = $_POST['tag'] ?? 'autre';
-    
-    // Récupérer l'image actuelle
-    $current = $pdo->prepare("SELECT image FROM event WHERE id_event = ? AND owner_email = ?");
-    $current->execute([$id_event, $user_email]);
-    $current_event = $current->fetch();
-    $image_url = $current_event['image'] ?? '';
-    
-    // Nouvelle image ?
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        $filename = $_FILES['image']['name'];
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
+        $message_type = "error";
+    } else {
+        $id_event = sanitizeInt($_POST['id_event'] ?? 0);
+        $name = sanitizeString($_POST['name'] ?? '', 255);
+        $description = sanitizeString($_POST['description'] ?? '', 5000);
+        $event_date = sanitizeDate($_POST['event_date'] ?? '');
+        $hour = $_POST['hour'] ?? '';
+        $lieu = sanitizeString($_POST['lieu'] ?? '', 255);
+        $capacite = sanitizeInt($_POST['capacite'] ?? 0, 1, 100000);
+        $prix = sanitizeInt($_POST['prix'] ?? 0, 0, 10000);
+        $tag = in_array($_POST['tag'] ?? '', array_keys($tags)) ? $_POST['tag'] : 'autre';
         
-        if (in_array($ext, $allowed)) {
-            $new_filename = uniqid('event_') . '.' . $ext;
-            $upload_path = $upload_dir . $new_filename;
+        if (!$id_event) {
+            $message = "Événement invalide.";
+            $message_type = "error";
+        } else {
+            // Récupérer l'image actuelle
+            $current = $pdo->prepare("SELECT image FROM event WHERE id_event = ? AND owner_email = ?");
+            $current->execute([$id_event, $user_email]);
+            $current_event = $current->fetch();
+            $image_url = $current_event['image'] ?? '';
             
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
-                $image_url = 'uploads/events/' . $new_filename;
+            // Nouvelle image ?
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $uploadResult = secureFileUpload($_FILES['image'], $upload_dir);
+                if ($uploadResult['success']) {
+                    $image_url = 'uploads/events/' . $uploadResult['filename'];
+                }
+            } elseif (!empty($_POST['image_url'])) {
+                $image_url = filter_var($_POST['image_url'], FILTER_VALIDATE_URL) ? $_POST['image_url'] : $image_url;
+            }
+            
+            try {
+                $stmt = $pdo->prepare("UPDATE event SET name = ?, description = ?, event_date = ?, hour = ?, lieu = ?, capacite = ?, prix = ?, tag = ?, image = ? WHERE id_event = ? AND owner_email = ?");
+                $stmt->execute([$name, $description, $event_date, $hour, $lieu, $capacite, $prix ?: 0, $tag, $image_url, $id_event, $user_email]);
+                
+                $message = "Événement modifié avec succès !";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur modification événement: " . $e->getMessage());
+                $message = "Erreur lors de la modification.";
+                $message_type = "error";
             }
         }
-    } elseif (!empty($_POST['image_url'])) {
-        $image_url = filter_var($_POST['image_url'], FILTER_VALIDATE_URL) ? $_POST['image_url'] : $image_url;
-    }
-    
-    try {
-        $stmt = $pdo->prepare("UPDATE event SET name = ?, description = ?, event_date = ?, hour = ?, lieu = ?, capacite = ?, prix = ?, tag = ?, image = ? WHERE id_event = ? AND owner_email = ?");
-        $stmt->execute([$name, $description, $event_date, $hour, $lieu, $capacite, $prix, $tag, $image_url, $id_event, $user_email]);
-        
-        $message = "Événement modifié avec succès !";
-        $message_type = "success";
-    } catch (PDOException $e) {
-        $message = "Erreur lors de la modification.";
-        $message_type = "error";
     }
 }
 
@@ -147,17 +155,25 @@ if (isset($_POST['action']) && $_POST['action'] == 'edit_event') {
 // TRAITEMENT : Supprimer un événement
 // =========================================================
 if (isset($_POST['action']) && $_POST['action'] == 'delete_event') {
-    $id_event = intval($_POST['id_event']);
-    
-    try {
-        $stmt = $pdo->prepare("DELETE FROM event WHERE id_event = ? AND owner_email = ?");
-        $stmt->execute([$id_event, $user_email]);
-        
-        $message = "Événement supprimé.";
-        $message_type = "success";
-    } catch (PDOException $e) {
-        $message = "Erreur lors de la suppression.";
+    if (!verifyCsrfToken()) {
+        $message = "Erreur de sécurité. Veuillez rafraîchir la page.";
         $message_type = "error";
+    } else {
+        $id_event = sanitizeInt($_POST['id_event'] ?? 0);
+        
+        if ($id_event) {
+            try {
+                $stmt = $pdo->prepare("DELETE FROM event WHERE id_event = ? AND owner_email = ?");
+                $stmt->execute([$id_event, $user_email]);
+                
+                $message = "Événement supprimé.";
+                $message_type = "success";
+            } catch (PDOException $e) {
+                error_log("Erreur suppression événement: " . $e->getMessage());
+                $message = "Erreur lors de la suppression.";
+                $message_type = "error";
+            }
+        }
     }
 }
 
@@ -318,9 +334,10 @@ if (isset($_GET['edit'])) {
                         </div>
 
                         <form method="POST" enctype="multipart/form-data" class="wizard-body-form" id="event-wizard-form">
+                            <?php echo csrfField(); ?>
                             <input type="hidden" name="action" value="<?php echo $edit_event ? 'edit_event' : 'create_event'; ?>">
                             <?php if ($edit_event): ?>
-                                <input type="hidden" name="id_event" value="<?php echo $edit_event['id_event']; ?>">
+                                <input type="hidden" name="id_event" value="<?php echo intval($edit_event['id_event']); ?>">
                             <?php endif; ?>
 
                             <!-- STEP 1: TYPE D'ÉVÉNEMENT -->
@@ -537,12 +554,13 @@ if (isset($_GET['edit'])) {
                                                 </td>
                                                 <td>
                                                     <div class="action-buttons">
-                                                        <a href="organisateur.php?edit=<?php echo $event['id_event']; ?>#create" 
+                                                        <a href="organisateur.php?edit=<?php echo intval($event['id_event']); ?>#create" 
                                                            class="btn-action btn-edit" title="Modifier">Modifier</a>
                                                         <form method="POST" style="display: inline;" 
                                                               onsubmit="return confirm('Supprimer cet événement ?');">
+                                                            <?php echo csrfField(); ?>
                                                             <input type="hidden" name="action" value="delete_event">
-                                                            <input type="hidden" name="id_event" value="<?php echo $event['id_event']; ?>">
+                                                            <input type="hidden" name="id_event" value="<?php echo intval($event['id_event']); ?>">
                                                             <button type="submit" class="btn-action btn-delete" title="Supprimer">X</button>
                                                         </form>
                                                     </div>
