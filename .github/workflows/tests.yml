@@ -1,0 +1,257 @@
+# ============================================================
+# 📊 NOVA Événements - Tests Automatisés
+# ============================================================
+# Ce workflow exécute les tests unitaires et d'intégration
+# ============================================================
+
+name: 📊 Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ===================================================================
+  # JOB 1: TESTS PHP
+  # ===================================================================
+  php-tests:
+    name: 🧪 PHP Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: evenements_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, mbstring, json
+          coverage: xdebug
+
+      - name: 🗄️ Initialisation base de données
+        run: |
+          mysql -h 127.0.0.1 -u root -proot evenements_test < gestion_events_etudiants.sql || true
+          mysql -h 127.0.0.1 -u root -proot evenements_test < security_update.sql || true
+
+      - name: 🧪 Tests de syntaxe PHP
+        run: |
+          echo "🔍 Vérification de la syntaxe PHP..."
+          
+          errors=0
+          for file in $(find views -name "*.php"); do
+            if ! php -l "$file" > /dev/null 2>&1; then
+              echo "❌ Erreur de syntaxe: $file"
+              php -l "$file"
+              errors=$((errors + 1))
+            fi
+          done
+          
+          if [ $errors -gt 0 ]; then
+            echo "❌ $errors erreur(s) de syntaxe détectée(s)"
+            exit 1
+          fi
+          
+          echo "✅ Tous les fichiers PHP sont valides"
+
+      - name: 📋 Tests fonctionnels
+        run: |
+          echo "🧪 Exécution des tests fonctionnels..."
+          
+          # Test 1: Vérification des includes
+          echo ""
+          echo "📋 Test 1: Vérification des fichiers requis..."
+          
+          required_includes=(
+            "views/security.php"
+            "views/db.php"
+          )
+          
+          for file in "${required_includes[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file existe"
+            else
+              echo "❌ $file manquant!"
+              exit 1
+            fi
+          done
+          
+          # Test 2: Vérification des fonctions de sécurité
+          echo ""
+          echo "📋 Test 2: Fonctions de sécurité..."
+          
+          functions=(
+            "generateCsrfToken"
+            "verifyCsrfToken"
+            "secureSessionStart"
+            "sanitizeString"
+            "validateEmail"
+            "secureUpload"
+          )
+          
+          for func in "${functions[@]}"; do
+            if grep -q "function $func" views/security.php; then
+              echo "✅ $func() présente"
+            else
+              echo "❌ $func() manquante!"
+              exit 1
+            fi
+          done
+          
+          echo ""
+          echo "✅ Tous les tests fonctionnels passés!"
+
+      - name: 📊 Rapport de tests
+        run: |
+          echo "# 📊 Rapport de Tests" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date '+%d/%m/%Y %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Résultats" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test | Statut |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Syntaxe PHP | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fichiers requis | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fonctions de sécurité | ✅ |" >> $GITHUB_STEP_SUMMARY
+
+  # ===================================================================
+  # JOB 2: TESTS FRONTEND
+  # ===================================================================
+  frontend-tests:
+    name: 🎨 Frontend Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🎨 Validation CSS
+        run: |
+          echo "🔍 Vérification des fichiers CSS..."
+          
+          # Compter les fichiers CSS
+          css_count=$(find css -name "*.css" | wc -l)
+          echo "📊 $css_count fichiers CSS trouvés"
+          
+          # Vérifier la syntaxe basique (accolades équilibrées)
+          for file in $(find css -name "*.css"); do
+            open=$(grep -o '{' "$file" | wc -l)
+            close=$(grep -o '}' "$file" | wc -l)
+            
+            if [ "$open" -ne "$close" ]; then
+              echo "⚠️ Accolades non équilibrées dans $file"
+            else
+              echo "✅ $file"
+            fi
+          done
+
+      - name: 🔍 Validation JavaScript
+        run: |
+          echo "🔍 Vérification des fichiers JavaScript..."
+          
+          for file in $(find js -name "*.js"); do
+            # Vérification basique de syntaxe avec Node
+            if node --check "$file" 2>/dev/null; then
+              echo "✅ $file"
+            else
+              echo "⚠️ Problème potentiel dans $file"
+            fi
+          done
+
+      - name: 📱 Vérification responsive
+        run: |
+          echo "📱 Vérification du design responsive..."
+          
+          if grep -q "@media" css/responsive.css; then
+            echo "✅ Media queries détectées dans responsive.css"
+            
+            # Lister les breakpoints
+            echo ""
+            echo "📊 Breakpoints utilisés:"
+            grep -oE "@media[^{]+" css/responsive.css | head -10
+          else
+            echo "⚠️ Pas de media queries dans responsive.css"
+          fi
+
+  # ===================================================================
+  # JOB 3: TESTS D'ACCESSIBILITÉ
+  # ===================================================================
+  accessibility-check:
+    name: ♿ Accessibility Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: ♿ Vérifications d'accessibilité
+        run: |
+          echo "♿ Vérification des bonnes pratiques d'accessibilité..."
+          
+          warnings=0
+          
+          # Test 1: Attributs alt sur les images
+          echo ""
+          echo "📋 Test 1: Attributs alt sur les images..."
+          
+          for file in $(find views -name "*.php"); do
+            # Chercher les images sans alt
+            if grep -qE '<img[^>]+>' "$file"; then
+              if grep -qE '<img[^>]+alt=' "$file"; then
+                echo "✅ $file - images avec attribut alt"
+              else
+                echo "⚠️ $file - images potentiellement sans alt"
+                warnings=$((warnings + 1))
+              fi
+            fi
+          done
+          
+          # Test 2: Labels sur les formulaires
+          echo ""
+          echo "📋 Test 2: Labels des formulaires..."
+          
+          for file in $(find views -name "*.php"); do
+            if grep -qE '<input[^>]+>' "$file"; then
+              if grep -qE '<label' "$file"; then
+                echo "✅ $file - labels présents"
+              else
+                echo "⚠️ $file - labels potentiellement manquants"
+                warnings=$((warnings + 1))
+              fi
+            fi
+          done
+          
+          # Test 3: Hiérarchie des titres
+          echo ""
+          echo "📋 Test 3: Hiérarchie des titres..."
+          
+          for file in $(find views -name "*.php"); do
+            if grep -qE '<h[1-6]' "$file"; then
+              echo "✅ $file - titres présents"
+            fi
+          done
+          
+          echo ""
+          if [ $warnings -gt 0 ]; then
+            echo "⚠️ $warnings avertissement(s) d'accessibilité"
+            echo "   (Non bloquant mais à améliorer)"
+          else
+            echo "✅ Bonnes pratiques d'accessibilité respectées!"
+          fi

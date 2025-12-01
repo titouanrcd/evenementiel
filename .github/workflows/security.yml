@@ -1,0 +1,341 @@
+# ============================================================
+# 🔒 NOVA Événements - Pipeline de Sécurité CI/CD
+# ============================================================
+# Ce workflow s'exécute à chaque push/PR pour vérifier la sécurité
+# ============================================================
+
+name: 🔒 Security & Quality Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  # Permet l'exécution manuelle depuis GitHub
+  workflow_dispatch:
+
+jobs:
+  # ===================================================================
+  # JOB 1: VÉRIFICATION DE LA SYNTAXE PHP
+  # ===================================================================
+  php-lint:
+    name: 🐘 PHP Syntax Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Configuration de PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: ✅ Vérification de la syntaxe PHP
+        run: |
+          echo "🔍 Vérification de la syntaxe de tous les fichiers PHP..."
+          errors=0
+          
+          for file in $(find . -name "*.php" -not -path "./vendor/*"); do
+            if ! php -l "$file" > /dev/null 2>&1; then
+              echo "❌ Erreur de syntaxe: $file"
+              php -l "$file"
+              errors=$((errors + 1))
+            fi
+          done
+          
+          if [ $errors -gt 0 ]; then
+            echo "❌ $errors fichier(s) avec des erreurs de syntaxe"
+            exit 1
+          else
+            echo "✅ Tous les fichiers PHP sont valides!"
+          fi
+
+  # ===================================================================
+  # JOB 2: ANALYSE DE SÉCURITÉ STATIQUE
+  # ===================================================================
+  security-scan:
+    name: 🛡️ Security Analysis
+    runs-on: ubuntu-latest
+    needs: php-lint
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🔍 Recherche de patterns dangereux
+        run: |
+          echo "🔍 Analyse des vulnérabilités potentielles..."
+          echo ""
+          vulnerabilities=0
+          
+          # === Test 1: Requêtes SQL non préparées ===
+          echo "📋 Test 1: Requêtes SQL non préparées..."
+          if grep -rn "query\s*(\s*[\"'].*\\\$" views/*.php 2>/dev/null; then
+            echo "⚠️ ATTENTION: Requêtes SQL potentiellement non préparées détectées"
+            vulnerabilities=$((vulnerabilities + 1))
+          else
+            echo "✅ Aucune requête SQL non préparée détectée"
+          fi
+          echo ""
+          
+          # === Test 2: Utilisation de eval() ===
+          echo "📋 Test 2: Utilisation de eval()..."
+          if grep -rn "\beval\s*(" views/*.php 2>/dev/null; then
+            echo "❌ CRITIQUE: Utilisation de eval() détectée!"
+            vulnerabilities=$((vulnerabilities + 1))
+          else
+            echo "✅ Pas d'utilisation de eval()"
+          fi
+          echo ""
+          
+          # === Test 3: Utilisation de shell_exec/system/exec ===
+          echo "📋 Test 3: Fonctions shell dangereuses..."
+          if grep -rn "\b\(shell_exec\|system\|exec\|passthru\|popen\)\s*(" views/*.php 2>/dev/null; then
+            echo "❌ CRITIQUE: Fonctions shell dangereuses détectées!"
+            vulnerabilities=$((vulnerabilities + 1))
+          else
+            echo "✅ Pas de fonctions shell dangereuses"
+          fi
+          echo ""
+          
+          # === Test 4: Inclusion de fichiers dynamique ===
+          echo "📋 Test 4: Inclusions dynamiques..."
+          if grep -rn "\b\(include\|require\|include_once\|require_once\)\s*(\s*\\\$" views/*.php 2>/dev/null; then
+            echo "⚠️ ATTENTION: Inclusions dynamiques détectées"
+            vulnerabilities=$((vulnerabilities + 1))
+          else
+            echo "✅ Pas d'inclusions dynamiques dangereuses"
+          fi
+          echo ""
+          
+          # === Test 5: Désérialisation non sécurisée ===
+          echo "📋 Test 5: Désérialisation..."
+          if grep -rn "\bunserialize\s*(\s*\\\$" views/*.php 2>/dev/null; then
+            echo "❌ CRITIQUE: Désérialisation de données utilisateur!"
+            vulnerabilities=$((vulnerabilities + 1))
+          else
+            echo "✅ Pas de désérialisation dangereuse"
+          fi
+          echo ""
+          
+          # === Résumé ===
+          echo "========================================"
+          if [ $vulnerabilities -gt 0 ]; then
+            echo "⚠️ $vulnerabilities vulnérabilité(s) potentielle(s) détectée(s)"
+            echo "Veuillez vérifier et corriger ces problèmes"
+          else
+            echo "✅ Aucune vulnérabilité critique détectée!"
+          fi
+
+      - name: 🔐 Vérification des secrets exposés
+        run: |
+          echo "🔍 Recherche de secrets potentiellement exposés..."
+          secrets_found=0
+          
+          # Patterns de secrets courants
+          patterns=(
+            "api[_-]?key\s*=\s*['\"][^'\"]{10,}['\"]"
+            "secret[_-]?key\s*=\s*['\"][^'\"]{10,}['\"]"
+            "aws[_-]?access[_-]?key"
+            "private[_-]?key"
+          )
+          
+          for pattern in "${patterns[@]}"; do
+            if grep -riE "$pattern" --include="*.php" --include="*.js" --include="*.env" . 2>/dev/null | grep -v "node_modules"; then
+              echo "⚠️ Pattern suspect trouvé: $pattern"
+              secrets_found=$((secrets_found + 1))
+            fi
+          done
+          
+          if [ $secrets_found -eq 0 ]; then
+            echo "✅ Aucun secret exposé détecté"
+          else
+            echo "⚠️ $secrets_found pattern(s) suspect(s) trouvé(s)"
+          fi
+
+  # ===================================================================
+  # JOB 3: VÉRIFICATION DES PROTECTIONS DE SÉCURITÉ
+  # ===================================================================
+  security-checks:
+    name: 🔒 Security Protections Check
+    runs-on: ubuntu-latest
+    needs: php-lint
+    
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🛡️ Vérification de la protection CSRF
+        run: |
+          echo "🔍 Vérification de la protection CSRF..."
+          
+          if [ -f "views/security.php" ]; then
+            if grep -q "csrf_token" views/security.php; then
+              echo "✅ Fichier security.php avec CSRF détecté"
+            else
+              echo "❌ Protection CSRF non trouvée dans security.php"
+              exit 1
+            fi
+          else
+            echo "❌ Fichier views/security.php manquant!"
+            exit 1
+          fi
+          
+          # Vérifier que les formulaires utilisent le CSRF
+          csrf_forms=$(grep -r "csrfField()" views/*.php 2>/dev/null | wc -l)
+          echo "📊 $csrf_forms formulaire(s) protégé(s) par CSRF"
+          
+          if [ $csrf_forms -lt 5 ]; then
+            echo "⚠️ Attention: Peu de formulaires semblent protégés par CSRF"
+          else
+            echo "✅ Bonne couverture CSRF"
+          fi
+
+      - name: 🔒 Vérification des headers de sécurité
+        run: |
+          echo "🔍 Vérification des headers de sécurité..."
+          
+          headers_ok=0
+          headers_missing=0
+          
+          # Vérifier .htaccess
+          if [ -f ".htaccess" ]; then
+            echo "📄 Analyse de .htaccess..."
+            
+            if grep -q "X-Frame-Options" .htaccess; then
+              echo "  ✅ X-Frame-Options (anti-clickjacking)"
+              headers_ok=$((headers_ok + 1))
+            else
+              echo "  ❌ X-Frame-Options manquant"
+              headers_missing=$((headers_missing + 1))
+            fi
+            
+            if grep -q "X-XSS-Protection" .htaccess; then
+              echo "  ✅ X-XSS-Protection"
+              headers_ok=$((headers_ok + 1))
+            else
+              echo "  ❌ X-XSS-Protection manquant"
+              headers_missing=$((headers_missing + 1))
+            fi
+            
+            if grep -q "X-Content-Type-Options" .htaccess; then
+              echo "  ✅ X-Content-Type-Options"
+              headers_ok=$((headers_ok + 1))
+            else
+              echo "  ❌ X-Content-Type-Options manquant"
+              headers_missing=$((headers_missing + 1))
+            fi
+          else
+            echo "❌ Fichier .htaccess manquant!"
+            exit 1
+          fi
+          
+          echo ""
+          echo "📊 Résultat: $headers_ok headers OK, $headers_missing manquants"
+          
+          if [ $headers_missing -gt 0 ]; then
+            exit 1
+          fi
+
+      - name: 📁 Vérification protection uploads
+        run: |
+          echo "🔍 Vérification de la protection du dossier uploads..."
+          
+          if [ -f "uploads/.htaccess" ]; then
+            echo "✅ Fichier uploads/.htaccess présent"
+            
+            if grep -q "php.*off\|\.php.*denied" uploads/.htaccess; then
+              echo "✅ Exécution PHP désactivée dans uploads"
+            else
+              echo "⚠️ Vérifiez que l'exécution PHP est bien bloquée"
+            fi
+          else
+            echo "❌ Fichier uploads/.htaccess manquant!"
+            echo "   Risque: Les fichiers PHP uploadés pourraient être exécutés"
+            exit 1
+          fi
+
+      - name: 🔐 Vérification hashage mots de passe
+        run: |
+          echo "🔍 Vérification du hashage des mots de passe..."
+          
+          if grep -r "password_hash" views/*.php > /dev/null 2>&1; then
+            echo "✅ password_hash() utilisé"
+          else
+            echo "❌ password_hash() non trouvé!"
+            exit 1
+          fi
+          
+          if grep -r "password_verify" views/*.php > /dev/null 2>&1; then
+            echo "✅ password_verify() utilisé"
+          else
+            echo "❌ password_verify() non trouvé!"
+            exit 1
+          fi
+          
+          # Vérifier qu'on n'utilise pas md5/sha1 pour les mots de passe
+          if grep -rE "md5\s*\(\s*\\\$.*password|sha1\s*\(\s*\\\$.*password" views/*.php 2>/dev/null; then
+            echo "❌ CRITIQUE: MD5/SHA1 utilisé pour les mots de passe!"
+            exit 1
+          else
+            echo "✅ Pas de hashage faible détecté"
+          fi
+
+      - name: 🛡️ Vérification requêtes préparées PDO
+        run: |
+          echo "🔍 Vérification de l'utilisation des requêtes préparées..."
+          
+          # Compter les prepare()
+          prepare_count=$(grep -r "->prepare(" views/*.php 2>/dev/null | wc -l)
+          echo "📊 $prepare_count requêtes préparées trouvées"
+          
+          # Vérifier la configuration PDO
+          if grep -q "ATTR_EMULATE_PREPARES.*false" views/db.php 2>/dev/null; then
+            echo "✅ Émulation des requêtes préparées désactivée"
+          else
+            echo "⚠️ Recommandation: Désactivez ATTR_EMULATE_PREPARES"
+          fi
+          
+          if [ $prepare_count -gt 0 ]; then
+            echo "✅ Requêtes préparées utilisées"
+          else
+            echo "⚠️ Peu de requêtes préparées détectées"
+          fi
+
+  # ===================================================================
+  # JOB 4: RAPPORT FINAL
+  # ===================================================================
+  security-report:
+    name: 📋 Security Report
+    runs-on: ubuntu-latest
+    needs: [php-lint, security-scan, security-checks]
+    if: always()
+    
+    steps:
+      - name: 📊 Génération du rapport
+        run: |
+          echo "# 🔒 Rapport de Sécurité CI/CD - NOVA Événements" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date '+%d/%m/%Y %H:%M')" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branche:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Résultats des vérifications" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Vérification | Statut |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🐘 Syntaxe PHP | ${{ needs.php-lint.result == 'success' && '✅ OK' || '❌ Échec' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🛡️ Analyse de sécurité | ${{ needs.security-scan.result == 'success' && '✅ OK' || '❌ Échec' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔒 Protections actives | ${{ needs.security-checks.result == 'success' && '✅ OK' || '❌ Échec' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.php-lint.result }}" == "success" ] && [ "${{ needs.security-scan.result }}" == "success" ] && [ "${{ needs.security-checks.result }}" == "success" ]; then
+            echo "## ✅ Toutes les vérifications sont passées!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Le code est prêt pour le déploiement." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Certaines vérifications ont échoué" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Veuillez corriger les problèmes avant de fusionner." >> $GITHUB_STEP_SUMMARY
+          fi
