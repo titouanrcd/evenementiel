@@ -1,15 +1,23 @@
 # ============================================================
-# FICHIER .HTACCESS - SÉCURITÉ & PERFORMANCE (AMÉLIORÉ)
+# FICHIER .HTACCESS - SÉCURITÉ & PERFORMANCE (PENTEST READY)
 # ============================================================
 # Ce fichier configure la sécurité et la performance au niveau
 # du serveur Apache. À placer à la racine du projet.
+# VERSION: 2.0 - Hardened for Pentest
 # ============================================================
 
 # Activer le moteur de réécriture
 RewriteEngine On
 
 # ============================================================
-# 1. HEADERS DE SÉCURITÉ
+# 0. PROTECTION CONTRE LES MÉTHODES HTTP DANGEREUSES
+# ============================================================
+# Autoriser uniquement GET, POST, HEAD
+RewriteCond %{REQUEST_METHOD} !^(GET|POST|HEAD)$ [NC]
+RewriteRule .* - [F,L]
+
+# ============================================================
+# 1. HEADERS DE SÉCURITÉ (RENFORCÉS)
 # ============================================================
 <IfModule mod_headers.c>
     # Protection contre le clickjacking
@@ -18,26 +26,37 @@ RewriteEngine On
     # Empêcher le sniffing MIME
     Header always set X-Content-Type-Options "nosniff"
     
+    # Protection XSS du navigateur
+    Header always set X-XSS-Protection "1; mode=block"
+    
     # Politique de référent
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # CSP - Autorise Google Maps, Fonts, et images externes
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src https://www.google.com https://maps.google.com; connect-src 'self' https://maps.googleapis.com;"
+    # HSTS - Forcer HTTPS (décommenter en production avec HTTPS)
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
     
-    # Politique d'autorisation - Autorise la géolocalisation pour Google Maps
-    Header always set Permissions-Policy "geolocation=(self), microphone=(), camera=()"
+    # CSP - Autorise Google Maps, Fonts, OpenWeatherMap et images externes
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src https://www.google.com https://maps.google.com; connect-src 'self' https://maps.googleapis.com https://api.openweathermap.org; base-uri 'self'; form-action 'self';"
+    
+    # Politique d'autorisation - Restreint les fonctionnalités du navigateur
+    Header always set Permissions-Policy "geolocation=(self), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
 
     # Suppression des informations sur le serveur
     Header unset X-Powered-By
     Header unset Server
+    Header always unset X-Powered-By
+    
+    # Protection contre le cross-origin
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Cross-Origin-Resource-Policy "same-origin"
 </IfModule>
 
 # ============================================================
-# 2. PROTECTION DES FICHIERS SENSIBLES
+# 2. PROTECTION DES FICHIERS SENSIBLES (RENFORCÉE)
 # ============================================================
 
-# Bloquer l'accès aux fichiers de configuration
-<FilesMatch "^(db\.php|security\.php|\.env|\.htaccess|\.htpasswd)$">
+# Bloquer l'accès aux fichiers de configuration et sensibles
+<FilesMatch "^(db\.php|security\.php|config\.php|\.env|\.htaccess|\.htpasswd|\.git|composer\.(json|lock)|package(-lock)?\.json|README\.md|SECURITY.*|.*\.log|.*\.sql|.*\.bak|.*\.old|.*\.orig)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -72,10 +91,40 @@ RewriteEngine On
 # ============================================================
 # 3. PROTECTION CONTRE L'ÉNUMÉRATION DES RÉPERTOIRES
 # ============================================================
-Options -Indexes
+Options -Indexes -ExecCGI -Includes
+
+# Désactiver le suivi des liens symboliques (sécurité)
+Options -FollowSymLinks
+Options +SymLinksIfOwnerMatch
 
 # ============================================================
-# 4. CONFIGURATION PHP (si mod_php)
+# 4. PROTECTION CONTRE LES ATTAQUES COURANTES
+# ============================================================
+
+# Bloquer les user-agents malveillants connus
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} (havij|sqlmap|nikto|nmap|nessus|w3af|acunetix|burp|netsparker) [NC,OR]
+    RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|scan) [NC]
+    RewriteCond %{HTTP_USER_AGENT} !(googlebot|bingbot|yandex|duckduckbot) [NC]
+    RewriteRule .* - [F,L]
+    
+    # Bloquer les requêtes suspectes (injections)
+    RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} proc/self/environ [OR]
+    RewriteCond %{QUERY_STRING} mosConfig_[a-zA-Z_]{1,21}(=|\%3D) [OR]
+    RewriteCond %{QUERY_STRING} base64_(en|de)code[^(]*\([^)]*\) [OR]
+    RewriteCond %{QUERY_STRING} (<|%3C)([^s]*s)+cript.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} UNION.*(ALL|SELECT) [NC,OR]
+    RewriteCond %{QUERY_STRING} (localhost|loopback|127\.0\.0\.1) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.\\) [OR]
+    RewriteCond %{QUERY_STRING} (;|<|>|'|"|\)|%0A|%0D|%22|%27|%3C|%3E|%00).*(/\*|union|select|insert|drop|delete|update|cast|create|char|convert|alter|declare|order|script|set|md5|benchmark|encode) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# ============================================================
+# 5. CONFIGURATION PHP (si mod_php) - RENFORCÉE
 # ============================================================
 <IfModule mod_php.c>
     # Désactiver l'affichage des erreurs PHP en production (IMPORTANT)
@@ -89,10 +138,22 @@ Options -Indexes
     php_value session.cookie_httponly 1
     php_value session.use_strict_mode 1
     php_value session.cookie_samesite Strict
+    php_value session.use_only_cookies 1
+    php_value session.use_trans_sid 0
     
     # Limiter les uploads
     php_value upload_max_filesize 5M
     php_value post_max_size 6M
+    php_value max_input_vars 1000
+    
+    # Sécurité supplémentaire
+    php_flag allow_url_fopen Off
+    php_flag allow_url_include Off
+    php_value max_execution_time 30
+    php_value memory_limit 128M
+    
+    # Désactiver les fonctions dangereuses (si possible)
+    # php_value disable_functions "exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source"
 </IfModule>
 
 # ============================================================

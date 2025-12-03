@@ -1,9 +1,20 @@
 <?php
-// navbar.php - Barre de navigation réutilisable
-session_start();
-$is_logged_in = isset($_SESSION['user_email']);
-$user_name = $_SESSION['user_name'] ?? '';
-$user_role = $_SESSION['user_role'] ?? 'user';
+/**
+ * ============================================================
+ * NAVBAR - NOVA Événements
+ * ============================================================
+ * Barre de navigation réutilisable avec sécurité
+ * ============================================================
+ */
+
+// Inclure la sécurité si pas déjà fait (vérifie si la session est déjà démarrée)
+if (session_status() === PHP_SESSION_NONE) {
+    require_once __DIR__ . '/security.php';
+}
+
+$is_logged_in = isset($_SESSION['user_email']) && !empty($_SESSION['user_email']);
+$user_name = htmlspecialchars($_SESSION['user_name'] ?? '', ENT_QUOTES, 'UTF-8');
+$user_role = htmlspecialchars($_SESSION['user_role'] ?? 'user', ENT_QUOTES, 'UTF-8');
 ?>
 
 <header>

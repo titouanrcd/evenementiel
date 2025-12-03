@@ -5,8 +5,45 @@
  * ============================================================
  * Ce fichier contient toutes les fonctions et configurations
  * de sécurité du site. À inclure en premier dans chaque page.
+ * VERSION: 2.0 - Pentest Ready
  * ============================================================
  */
+
+// Définir la constante pour l'accès sécurisé aux fichiers config
+define('NOVA_APP', true);
+
+// ============================================================
+// 0. FONCTIONS DE LOGGING SÉCURISÉ
+// ============================================================
+
+/**
+ * Log sécurisé des événements de sécurité
+ */
+function securityLog($type, $message, $data = []) {
+    $logDir = __DIR__ . '/../logs/';
+    if (!is_dir($logDir)) {
+        mkdir($logDir, 0755, true);
+    }
+    
+    $logFile = $logDir . 'security.log';
+    $timestamp = date('Y-m-d H:i:s');
+    $ip = getClientIp();
+    $userAgent = substr($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown', 0, 200);
+    $uri = $_SERVER['REQUEST_URI'] ?? 'Unknown';
+    
+    $logEntry = sprintf(
+        "[%s] [%s] [IP: %s] [URI: %s] %s %s\n",
+        $timestamp,
+        strtoupper($type),
+        $ip,
+        $uri,
+        $message,
+        !empty($data) ? json_encode($data, JSON_UNESCAPED_UNICODE) : ''
+    );
+    
+    // Écriture atomique
+    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+}
 
 // ============================================================
 // 1. CONFIGURATION SÉCURISÉE DES SESSIONS
@@ -25,7 +62,23 @@ function initSecureSession() {
         ];
         
         session_set_cookie_params($cookieParams);
+        
+        // Nom de session personnalisé (moins prévisible)
+        session_name('NOVA_SID');
+        
         session_start();
+        
+        // Vérifier l'intégrité de la session (fingerprint)
+        $fingerprint = md5($_SERVER['HTTP_USER_AGENT'] ?? '' . $_SERVER['REMOTE_ADDR'] ?? '');
+        if (!isset($_SESSION['_fingerprint'])) {
+            $_SESSION['_fingerprint'] = $fingerprint;
+        } elseif ($_SESSION['_fingerprint'] !== $fingerprint) {
+            // Possible session hijacking - détruire la session
+            securityLog('warning', 'Session fingerprint mismatch - possible hijacking');
+            session_destroy();
+            session_start();
+            $_SESSION['_fingerprint'] = $fingerprint;
+        }
         
         // Régénérer l'ID de session périodiquement pour éviter le fixation
         if (!isset($_SESSION['_last_regeneration'])) {
@@ -376,8 +429,13 @@ function regenerateSession() {
  */
 function secureErrorHandler($errno, $errstr, $errfile, $errline) {
     // Logger l'erreur (à adapter avec votre système de logs)
+    $logDir = __DIR__ . '/../logs/';
+    if (!is_dir($logDir)) {
+        mkdir($logDir, 0755, true);
+    }
+    
     $logMessage = date('[Y-m-d H:i:s]') . " Erreur [$errno]: $errstr dans $errfile ligne $errline\n";
-    error_log($logMessage, 3, __DIR__ . '/../logs/errors.log');
+    error_log($logMessage, 3, $logDir . 'errors.log');
     
     // En production, ne pas afficher les détails
     if (defined('ENVIRONMENT') && ENVIRONMENT === 'production') {
@@ -421,13 +479,174 @@ function validatePassword($password) {
 }
 
 // ============================================================
-// 10. INITIALISATION AUTOMATIQUE
+// 10. PROTECTION XSS AVANCÉE
+// ============================================================
+
+/**
+ * Échappe les données pour affichage HTML sécurisé
+ */
+function e($string) {
+    return htmlspecialchars($string ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+/**
+ * Échappe les données pour les attributs HTML
+ */
+function eAttr($string) {
+    return htmlspecialchars($string ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+/**
+ * Échappe les données pour JavaScript
+ */
+function eJs($string) {
+    return json_encode($string, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+}
+
+// ============================================================
+// 11. PROTECTION RATE LIMITING
+// ============================================================
+
+/**
+ * Rate limiting global basé sur la session
+ */
+function checkRateLimit($key, $maxRequests = 100, $windowSeconds = 60) {
+    $rateLimitKey = 'rate_limit_' . $key;
+    
+    if (!isset($_SESSION[$rateLimitKey])) {
+        $_SESSION[$rateLimitKey] = ['count' => 0, 'time' => time()];
+    }
+    
+    // Réinitialiser après la fenêtre de temps
+    if (time() - $_SESSION[$rateLimitKey]['time'] > $windowSeconds) {
+        $_SESSION[$rateLimitKey] = ['count' => 0, 'time' => time()];
+    }
+    
+    // Vérifier la limite
+    if ($_SESSION[$rateLimitKey]['count'] >= $maxRequests) {
+        securityLog('rate_limit', "Rate limit exceeded for key: $key");
+        return false;
+    }
+    
+    $_SESSION[$rateLimitKey]['count']++;
+    return true;
+}
+
+// ============================================================
+// 12. VALIDATION D'URL SÉCURISÉE
+// ============================================================
+
+/**
+ * Valide et nettoie une URL
+ */
+function sanitizeUrl($url, $allowedHosts = []) {
+    $url = trim($url);
+    
+    // Vérifier que c'est une URL valide
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return false;
+    }
+    
+    // Vérifier le protocole (HTTP/HTTPS uniquement)
+    $parsed = parse_url($url);
+    if (!in_array($parsed['scheme'] ?? '', ['http', 'https'])) {
+        return false;
+    }
+    
+    // Vérifier l'hôte si une liste blanche est fournie
+    if (!empty($allowedHosts)) {
+        if (!in_array($parsed['host'] ?? '', $allowedHosts)) {
+            return false;
+        }
+    }
+    
+    return $url;
+}
+
+// ============================================================
+// 13. PROTECTION CONTRE L'INJECTION D'EN-TÊTES
+// ============================================================
+
+/**
+ * Nettoie une valeur pour l'utilisation dans les en-têtes HTTP
+ */
+function sanitizeHeader($value) {
+    // Supprimer les caractères de nouvelle ligne (injection d'en-têtes)
+    return str_replace(["\r", "\n", "\0"], '', $value);
+}
+
+/**
+ * Redirection sécurisée
+ */
+function secureRedirect($url) {
+    // Liste blanche des URLs internes autorisées
+    $allowedPaths = [
+        'index.php', 'profil.php', 'connexion.php', 'evenement.php', 
+        'admin.php', 'organisateur.php'
+    ];
+    
+    // Vérifier si c'est une URL relative interne
+    $cleanUrl = sanitizeHeader($url);
+    $isAllowed = false;
+    
+    foreach ($allowedPaths as $path) {
+        if (strpos($cleanUrl, $path) === 0 || $cleanUrl === $path) {
+            $isAllowed = true;
+            break;
+        }
+    }
+    
+    if (!$isAllowed) {
+        $cleanUrl = 'index.php';
+    }
+    
+    header('Location: ' . $cleanUrl);
+    exit();
+}
+
+// ============================================================
+// 14. PROTECTION CLICKJACKING (Frame Busting JS)
+// ============================================================
+
+/**
+ * Génère le code JavaScript anti-clickjacking
+ */
+function antiClickjackingScript() {
+    return '<script>if(self!==top){top.location=self.location;}</script>';
+}
+
+// ============================================================
+// 15. NETTOYAGE DES DONNÉES D'ENTRÉE GLOBALES
+// ============================================================
+
+/**
+ * Nettoie les superglobales dangereuses
+ */
+function sanitizeGlobals() {
+    // Nettoyer $_GET
+    if (!empty($_GET)) {
+        foreach ($_GET as $key => $value) {
+            if (is_string($value)) {
+                $_GET[$key] = strip_tags(trim($value));
+            }
+        }
+    }
+    
+    // Supprimer les variables GLOBALS potentiellement dangereuses
+    unset($GLOBALS['_REQUEST']);
+}
+
+// ============================================================
+// 16. INITIALISATION AUTOMATIQUE
 // ============================================================
 
 // Définir l'environnement (à changer en 'production' sur le serveur)
 if (!defined('ENVIRONMENT')) {
     define('ENVIRONMENT', 'development');
 }
+
+// Nettoyer les globales
+sanitizeGlobals();
 
 // Initialiser la session sécurisée
 initSecureSession();

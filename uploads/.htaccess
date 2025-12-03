@@ -1,13 +1,13 @@
 # ============================================================
-# FICHIER .HTACCESS - PROTECTION DU DOSSIER UPLOADS (AMÉLIORÉ)
+# FICHIER .HTACCESS - PROTECTION DU DOSSIER UPLOADS (PENTEST READY)
 # ============================================================
 # À placer dans le dossier /uploads/ pour bloquer l'exécution
 # de scripts malveillants tout en autorisant les images.
 # ============================================================
 
-# 1. Empêcher l'exécution de TOUS les scripts (méthode la plus fiable)
+# 1. Empêcher l'exécution de TOUS les scripts
 # Inclut PHP, Perl, Python, ASP, etc.
-<FilesMatch "\.(php|phtml|php3|php4|php5|php7|pl|py|jsp|asp|sh|cgi|exe)$">
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|php8|phar|pl|py|pyc|jsp|asp|aspx|sh|cgi|exe|bat|cmd|com|htaccess|htpasswd|ini|log|sql|conf|config)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -17,10 +17,49 @@
     </IfModule>
 </FilesMatch>
 
-# 2. Désactiver le listing des fichiers du répertoire
-Options -Indexes
+# 2. Autoriser UNIQUEMENT les images (whitelist)
+<FilesMatch "\.(?i:jpe?g|gif|png|webp|svg|ico)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</FilesMatch>
 
-# 3. Empêcher le "MIME-sniffing" (navigation forcée du type de contenu)
+# 3. Désactiver le listing des fichiers du répertoire
+Options -Indexes -ExecCGI
+
+# 4. Désactiver complètement l'exécution PHP dans ce dossier
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# Alternative pour PHP-FPM
+<IfModule mod_fcgid.c>
+    <Files "*.php">
+        SetHandler none
+    </Files>
+</IfModule>
+
+# 5. Empêcher le "MIME-sniffing"
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
+    Header set Content-Security-Policy "default-src 'none'; img-src 'self';"
 </IfModule>
+
+# 6. Forcer le Content-Type pour les images
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    AddType image/webp .webp
+    
+    # Empêcher l'exécution de fichiers déguisés
+    RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phar
+    RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phar
+</IfModule>
+
+# 7. Protection contre les fichiers double extension (ex: image.php.jpg)
+<FilesMatch "\.ph(p[345]?|t|tml|ar)\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>

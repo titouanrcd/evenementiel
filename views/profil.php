@@ -40,6 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // Support de déconnexion via GET (pour compatibilité) mais avec confirmation
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    // Vérifier que la requête vient bien du site (Referrer check)
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if (empty($referer) || strpos($referer, $host) === false) {
+        // Rediriger vers la page de profil avec un message
+        header('Location: profil.php');
+        exit();
+    }
     secureLogout();
     header('Location: index.php');
     exit();
