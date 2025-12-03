@@ -1,6 +1,6 @@
 /* --- RESPONSIVE --- */
 
-/* Tablet */
+/* Tablet (Tablettes et petits laptops) */
 @media (max-width: 1024px) {
   nav {
     padding: 15px 20px;
@@ -9,41 +9,54 @@
     font-size: 24px;
   }
 
+  /* Admin & Dashboard */
   .admin-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Passage en 1 colonne */
   }
   .admin-sidebar {
     position: static;
+    width: 100%; /* CORRECTION : Assure que la sidebar prend toute la largeur */
+    margin-bottom: 20px; /* Ajout d'espace sous la sidebar */
   }
   .admin-nav {
+    display: flex; /* CORRECTION : S'assurer que c'est bien flex */
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 10px; /* Ajout d'espace entre les éléments */
   }
   .admin-nav-link {
     flex: 1;
     min-width: 120px;
     justify-content: center;
+    white-space: nowrap; /* Empêche le texte de se casser bizarrement */
   }
+
+  /* Cards */
   .pending-card {
     grid-template-columns: 1fr;
   }
   .pending-image {
     width: 100%;
     height: 150px;
+    object-fit: cover; /* CORRECTION : Évite la déformation de l'image */
   }
   .pending-actions {
     flex-direction: row;
+    justify-content: space-between; /* Mieux répartir les boutons */
   }
 
+  /* Profil */
   .profil-container {
     grid-template-columns: 1fr;
   }
   .profil-sidebar {
     position: static;
+    margin-bottom: 20px;
   }
   .profil-nav {
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 10px;
   }
   .profil-nav-btn {
     flex: 1;
@@ -51,62 +64,92 @@
     min-width: 150px;
   }
 
+  /* Events Tablet Layout */
   .events-container {
-    grid-template-columns: 280px 1fr;
-    gap: 40px;
+    grid-template-columns: 250px 1fr; /* Réduit légèrement la sidebar pour laisser place au contenu */
+    gap: 30px;
   }
   .events-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Min-width légèrement réduit pour éviter les trous */
+    gap: 20px;
   }
 }
 
-/* Mobile */
+/* Mobile (Téléphones) */
 @media (max-width: 768px) {
+  /* Navigation */
   nav {
     flex-direction: column;
-    gap: 20px;
+    gap: 15px; /* Réduit un peu l'écart */
     padding: 15px;
   }
   .header-logo {
     font-size: 20px;
   }
-  .sidebar {
-    width: 75vw;
-    max-width: 280px;
+  .nav-links {
+    display: none; /* Cache le menu desktop */
+    /* Note : Il faudra un bouton JS ou CSS (:checked) pour afficher le menu mobile */
+  }
+  .back-link {
+    display: block;
+    color: white;
+    font-size: 1rem; /* Ajusté pour mobile */
+    align-self: flex-start; /* Aligne le lien retour à gauche */
   }
 
+  /* Sidebar Mobile (Off-canvas) */
+  .sidebar {
+    width: 85vw; /* Plus large pour meilleure lisibilité sur petits écrans */
+    max-width: 300px;
+    z-index: 1000; /* Assure que ça passe au-dessus */
+  }
+
+  /* Typography & Hero */
   h1 {
-    font-size: 2.8rem;
+    font-size: 2rem; /* CORRECTION : 2.8rem est souvent trop gros sur mobile et cause des débordements */
+    line-height: 1.2;
   }
   .hero {
     flex-direction: column;
     text-align: center;
-    padding-top: 60px;
+    padding-top: 40px; /* Réduit légèrement */
+    padding-bottom: 40px;
   }
   .hero-text {
     padding-right: 0;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
   }
   .hero-desc {
     border-left: none;
     padding-left: 0;
-    margin: 0 auto 30px;
+    margin: 0 auto 20px;
+    width: 90%; /* Évite que le texte touche les bords */
   }
   .hero-visuals {
     width: 100%;
     justify-content: center;
   }
   .arch-img {
-    width: 300px;
-    height: 300px;
+    width: 100%; /* Responsive */
+    max-width: 300px;
+    height: auto; /* Garde les proportions */
+    aspect-ratio: 1/1; /* Maintient le carré */
   }
   .hero-buttons {
-    justify-content: center;
+    flex-direction: column; /* CORRECTION : Empile les boutons sur très petits écrans */
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+  }
+  .hero-buttons button {
+    width: 100%; /* Boutons pleine largeur pour le tactile */
+    max-width: 300px;
   }
 
+  /* Grid System adjustments */
   .grid-section {
     grid-template-columns: 1fr;
+    gap: 40px;
   }
   .item-large {
     grid-column: span 1;
@@ -118,167 +161,136 @@
     grid-template-columns: 1fr;
     height: auto;
   }
+  
+  /* Layout Fixes */
   .stacked-items {
-    flex-direction: row;
-    height: 200px;
+    flex-direction: column; /* CORRECTION : 'row' risque d'écraser le contenu sur mobile. 'column' est plus sûr. */
+    height: auto; /* Laisse le contenu définir la hauteur */
+    gap: 20px;
   }
+
   .event-row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch; /* Les éléments prennent toute la largeur */
     gap: 15px;
   }
   .event-row button {
     width: 100%;
     margin-top: 10px;
   }
+
+  /* Footer & Miscellaneous */
   .footer-content {
     flex-direction: column;
-    gap: 30px;
-  }
-  .artists-header {
-    flex-direction: column;
-    gap: 20px;
+    gap: 40px;
     text-align: center;
   }
-  .navigation-buttons {
-    justify-content: center;
-  }
+  .artists-header, 
   .gallery-header {
     flex-direction: column;
     gap: 20px;
     text-align: center;
+    align-items: center;
+  }
+  .navigation-buttons {
+    justify-content: center;
+    width: 100%;
   }
   .nova-circle {
     margin-right: 0;
+    margin-bottom: 15px;
   }
   .social-links {
     justify-content: center;
   }
 
+  /* Admin & Tables Mobile */
   .admin-section {
-    padding: 20px 15px;
+    padding: 15px 10px;
   }
   .form-row {
     grid-template-columns: 1fr;
+    gap: 15px;
   }
   .dashboard-stats {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr; /* 1 colonne est plus lisible sur petit mobile */
+    gap: 15px;
+  }
+  
+  /* Table Responsiveness */
+  .events-table {
+    display: block; /* Rend le tableau scrollable */
+    overflow-x: auto;
+    white-space: nowrap;
   }
   .events-table th,
   .events-table td {
-    padding: 10px;
+    padding: 10px 5px;
     font-size: 0.85rem;
   }
-  .event-thumb {
-    width: 40px;
-    height: 40px;
-  }
+  
+  /* Wizard / Form Steps */
   .wizard-header {
-    padding: 20px;
-  }
-  .wizard-body {
-    padding: 20px;
-    min-height: 300px;
-  }
-  .wizard-footer {
-    padding: 15px 20px;
+    padding: 15px;
+    flex-direction: column; /* Empile les étapes si nécessaire */
+    gap: 10px;
   }
   .type-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr); /* Force 2 colonnes minimum pour les choix */
+    gap: 10px;
   }
   .step-label {
-    display: none;
-  }
-  .step-circle {
-    width: 28px;
-    height: 28px;
-    font-size: 0.8rem;
+    display: none; /* Correct */
   }
 
-  .profil-section {
-    padding: 20px 15px;
-  }
-  .inscription-card {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .inscription-date-badge {
-    margin: 0 auto;
-  }
-  .inscription-header {
-    justify-content: center;
-  }
-  .inscription-details {
-    justify-content: center;
-  }
-  .inscription-actions {
-    justify-content: center;
-    margin-top: 15px;
-  }
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  .profil-stats {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
+  /* Events Page Mobile */
   .events-hero-content h1 {
-    font-size: 2.5rem;
+    font-size: 2rem; /* Réduit pour éviter le wrap */
   }
   .events-container {
     grid-template-columns: 1fr;
     gap: 30px;
-    padding: 0 20px;
+    padding: 0 15px;
   }
+  
+  /* Filtres & Search */
   .events-filters {
-    order: 2;
-    padding: 25px;
+    order: 0; /* CORRECTION : Souvent on veut les filtres EN HAUT sur mobile, ou un bouton pour les ouvrir */
+    background: #f4f4f4; /* Optionnel : distingue la zone filtre */
+    padding: 20px;
+    border-radius: 8px;
   }
   .events-content {
     order: 1;
   }
-  .events-grid {
-    grid-template-columns: 1fr;
-  }
+  
   .event-card.featured {
     grid-column: span 1;
-    grid-row: span 1;
   }
   .event-card.featured .event-image {
-    height: 220px;
+    height: 200px;
   }
-  .event-card.featured .event-title {
-    font-size: 1.3rem;
-  }
+  
   .date-range {
-    flex-direction: row;
-    gap: 15px;
+    flex-direction: column; /* CORRECTION : 'row' casse souvent sur mobile. 'column' est plus sûr. */
+    gap: 10px;
   }
   .date-input-group {
-    flex: 1;
+    width: 100%;
   }
   .filter-header {
-    flex-direction: column;
-    gap: 15px;
-    align-items: stretch;
-    text-align: center;
+    flex-direction: row; /* Garde le titre et le reset alignés */
+    justify-content: space-between;
+    align-items: center;
   }
 
+  /* Auth Pages */
   .auth-container {
-    padding: 30px 20px;
+    padding: 20px;
   }
   .auth-bg-gradient {
-    width: 400px;
-    height: 400px;
-  }
-  .nav-links {
-    display: none;
-  }
-  .back-link {
-    display: block;
-    color: white;
-    font-size: 1.2rem;
+    width: 100%; /* Responsive */
+    height: 200px; /* Moins haut sur mobile */
+    border-radius: 20px;
   }
 }
