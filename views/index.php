@@ -35,7 +35,7 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                 
                 <aside class="sidebar" id="sidebar">
                     <div class="sidebar-header">
-                        <div class="logo" style="font-size: 32px;">NOVA<span>.</span></div>
+                        <div class="logo" style="font-size: 32px;">caca<span>.</span></div>
                         <p>Événements Spectaculaires</p>
                     </div>
                     
