@@ -586,10 +586,11 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
                                                <?php echo ($tag == $key) ? 'checked' : ''; ?>>
                                         <span><?php echo $label; ?></span>
                                     </label>
+                                    
                                 <?php endforeach; ?>
                                 <label class="tag-option <?php echo empty($tag) ? 'active' : ''; ?>">
                                     <input type="radio" name="tag" value="" <?php echo empty($tag) ? 'checked' : ''; ?>>
-                                    <span>🔄 Tous</span>
+                                    <p>🔄 Tous</p>
                                 </label>
                             </div>
                         </div>
