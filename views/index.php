@@ -135,43 +135,82 @@ $user_role = $_SESSION['user_role'] ?? 'user';
             </div>
         </section>
 
-        <section class="artists-section">
+        <section class="artists-section" id="services">
             <div class="artists-header">
-                <h2 class="section-title">Nos Services</h2>
+                <h2 class="section-title">Nos Catégories</h2>
+                <!-- Flèches navigation dynamiques -->
+                <div class="carousel-nav">
+                    <button class="nav-arrow" id="carouselLeft" aria-label="Précédent">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5"></path>
+                            <path d="M12 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-arrow" id="carouselRight" aria-label="Suivant">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="M12 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
             
-            <div class="artist-row">
-                <div class="artist-card">
-                    <div class="artist-img-container">
-                        <img src="https://i.pinimg.com/1200x/ab/d7/64/abd7645999487483ab8799800f651cbe.jpg" alt="ELECTRO">
-                    </div>
-                    <h3>ELECTRO</h3>
-                    <p class="sub-title">Festivals & DJ Sets</p>
-                </div>
+            <!-- Conteneur du carousel -->
+            <div class="carousel-wrapper">
+                <div class="artist-row" id="categoriesCarousel">
+                    <!-- Sport -->
+                    <a href="evenement.php?tag=sport" class="artist-card artist-card-link">
+                        <div class="artist-img-container">
+                            <img src="https://images.unsplash.com/photo-1461896836934- voices-of-the-stadium?w=600" alt="Sport">
+                        </div>
+                        <h3>SPORT</h3>
+                        <p class="sub-title">Compétitions & Tournois</p>
+                    </a>
 
-                <div class="artist-card">
-                    <div class="artist-img-container">
-                        <img src="https://i.pinimg.com/1200x/18/d8/b7/18d8b7b2d99b0c380b6c2bf813c05faa.jpg" alt="BRANDING">
-                    </div>
-                    <h3>BRANDING</h3>
-                        
-                    <p class="sub-title">Lancements de marque</p>
-                </div>
+                    <!-- Culture -->
+                    <a href="evenement.php?tag=culture" class="artist-card artist-card-link">
+                        <div class="artist-img-container">
+                            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600" alt="Culture">
+                        </div>
+                        <h3>CULTURE</h3>
+                        <p class="sub-title">Arts & Expositions</p>
+                    </a>
 
-                <div class="artist-card">
-                    <div class="artist-img-container">
-                        <img src="https://i.pinimg.com/1200x/78/ba/f4/78baf4fbbeeadc2e6510efab605d6d9a.jpg" alt="LUXE">
-                    </div>
-                    <h3>LUXE</h3>
-                    <p class="sub-title">Mariages & VIP</p>
-                </div>
+                    <!-- Soirée -->
+                    <a href="evenement.php?tag=soiree" class="artist-card artist-card-link">
+                        <div class="artist-img-container">
+                            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600" alt="Soirée">
+                        </div>
+                        <h3>SOIRÉE</h3>
+                        <p class="sub-title">Fêtes & Galas</p>
+                    </a>
 
-                <div class="artist-card">
-                    <div class="artist-img-container">
-                        <img src="https://i.pinimg.com/736x/a5/75/af/a575afb24edbbc5812f54c02ad12a4df.jpg" alt="SCÉNOGRAPHIE">
-                    </div>
-                    <h3>SCÉNOGRAPHIE</h3>
-                    <p class="sub-title">Immersion Totale</p>
+                    <!-- Conférence -->
+                    <a href="evenement.php?tag=conference" class="artist-card artist-card-link">
+                        <div class="artist-img-container">
+                            <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600" alt="Conférence">
+                        </div>
+                        <h3>CONFÉRENCE</h3>
+                        <p class="sub-title">Séminaires & Talks</p>
+                    </a>
+
+                    <!-- Festival -->
+                    <a href="evenement.php?tag=festival" class="artist-card artist-card-link">
+                        <div class="artist-img-container">
+                            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600" alt="Festival">
+                        </div>
+                        <h3>FESTIVAL</h3>
+                        <p class="sub-title">Concerts & DJ Sets</p>
+                    </a>
+
+                    <!-- Autre -->
+                    <a href="evenement.php?tag=autre" class="artist-card artist-card-link">
+                        <div class="artist-img-container">
+                            <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600" alt="Autre">
+                        </div>
+                        <h3>AUTRE</h3>
+                        <p class="sub-title">Événements Divers</p>
+                    </a>
                 </div>
             </div>
         </section>
@@ -218,7 +257,110 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                 priceDisplay.textContent = value >= 200 ? '200€+' : value + '€';
             });
         }
+
+        // Carousel des catégories - Défilement fluide
+        const carousel = document.getElementById('categoriesCarousel');
+        const leftArrow = document.getElementById('carouselLeft');
+        const rightArrow = document.getElementById('carouselRight');
+        
+        if (carousel && leftArrow && rightArrow) {
+            let isScrolling = false;
+            let scrollTarget = 0;
+            let animationId = null;
+            
+            // Fonction de défilement fluide personnalisée
+            function smoothScrollTo(target) {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+                
+                const start = carousel.scrollLeft;
+                const distance = target - start;
+                const duration = 600; // Durée en ms
+                let startTime = null;
+                
+                // Fonction d'easing (ease-out cubic)
+                function easeOutCubic(t) {
+                    return 1 - Math.pow(1 - t, 3);
+                }
+                
+                function animate(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    carousel.scrollLeft = start + distance * easeOutCubic(progress);
+                    
+                    if (progress < 1) {
+                        animationId = requestAnimationFrame(animate);
+                    } else {
+                        isScrolling = false;
+                        updateArrows();
+                    }
+                }
+                
+                isScrolling = true;
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            // Calculer la largeur d'une carte
+            function getCardWidth() {
+                const card = carousel.querySelector('.artist-card');
+                if (card) {
+                    const style = window.getComputedStyle(carousel);
+                    const gap = parseInt(style.gap) || 30;
+                    return card.offsetWidth + gap;
+                }
+                return 310;
+            }
+            
+            leftArrow.addEventListener('click', function() {
+                if (isScrolling) return;
+                const cardWidth = getCardWidth();
+                scrollTarget = Math.max(0, carousel.scrollLeft - cardWidth);
+                smoothScrollTo(scrollTarget);
+            });
+            
+            rightArrow.addEventListener('click', function() {
+                if (isScrolling) return;
+                const cardWidth = getCardWidth();
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                scrollTarget = Math.min(maxScroll, carousel.scrollLeft + cardWidth);
+                smoothScrollTo(scrollTarget);
+            });
+            
+            // Mettre à jour l'état des flèches
+            function updateArrows() {
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                
+                if (carousel.scrollLeft <= 5) {
+                    leftArrow.classList.add('disabled');
+                } else {
+                    leftArrow.classList.remove('disabled');
+                }
+                
+                if (carousel.scrollLeft >= maxScroll - 5) {
+                    rightArrow.classList.add('disabled');
+                } else {
+                    rightArrow.classList.remove('disabled');
+                }
+            }
+            
+            // Écouter le scroll manuel (drag)
+            carousel.addEventListener('scroll', function() {
+                if (!isScrolling) {
+                    updateArrows();
+                }
+            });
+            
+            window.addEventListener('resize', updateArrows);
+            
+            // Initialiser
+            setTimeout(updateArrows, 100);
+        }
     </script>
     <script src="../js/navbar.js"></script>
+
+
 </body>
 </html>

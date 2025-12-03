@@ -159,6 +159,10 @@ function isUserRegistered($pdo, $user_email, $id_event) {
     $stmt->execute([$user_email, $id_event]);
     return $stmt->rowCount() > 0;
 }
+
+// Configuration API Météo OpenWeatherMap (gratuit)
+define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -167,7 +171,7 @@ function isUserRegistered($pdo, $user_email, $id_event) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Événements - NOVA ÉVÉNEMENTS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     
@@ -332,6 +336,156 @@ function isUserRegistered($pdo, $user_email, $id_event) {
                 flex: 1 1 45%;
             }
         }
+        
+        /* ===== WIDGET MÉTÉO ===== */
+        .weather-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .weather-badge:hover {
+            background: rgba(0, 0, 0, 0.85);
+            transform: scale(1.05);
+        }
+        .weather-badge.loading {
+            min-width: 80px;
+        }
+        .weather-badge.loading::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .weather-icon {
+            width: 32px;
+            height: 32px;
+        }
+        .weather-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .weather-temp {
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .weather-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 10px;
+            text-transform: capitalize;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        /* Popup détails météo */
+        .weather-popup {
+            display: none;
+            position: absolute;
+            top: 55px;
+            left: 12px;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 16px;
+            min-width: 220px;
+            z-index: 20;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .weather-badge.active + .weather-popup,
+        .weather-popup:hover {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .weather-popup-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .weather-popup-icon {
+            width: 50px;
+            height: 50px;
+        }
+        .weather-popup-main {
+            flex: 1;
+        }
+        .weather-popup-temp {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .weather-popup-desc {
+            color: rgba(255,255,255,0.7);
+            text-transform: capitalize;
+            font-size: 13px;
+        }
+        .weather-popup-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .weather-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+        }
+        .weather-detail svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+        .weather-detail-value {
+            font-weight: 600;
+            color: #fff;
+        }
+        .weather-forecast-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 12px;
+            text-align: center;
+        }
+        
+        /* Couleurs selon la météo */
+        .weather-sunny { background: linear-gradient(135deg, rgba(255,193,7,0.3), rgba(255,152,0,0.2)); }
+        .weather-cloudy { background: linear-gradient(135deg, rgba(158,158,158,0.3), rgba(96,125,139,0.2)); }
+        .weather-rainy { background: linear-gradient(135deg, rgba(33,150,243,0.3), rgba(63,81,181,0.2)); }
+        .weather-snowy { background: linear-gradient(135deg, rgba(236,239,241,0.3), rgba(176,190,197,0.2)); }
+        .weather-stormy { background: linear-gradient(135deg, rgba(69,90,100,0.4), rgba(38,50,56,0.3)); }
     </style>
 </head>
 <body>
@@ -511,6 +665,7 @@ function isUserRegistered($pdo, $user_email, $id_event) {
                                 $is_registered = isUserRegistered($pdo, $user_email, $event['id_event']);
                                 $is_full = $event['nb_inscrits'] >= $event['capacite'];
                                 $places_restantes = $event['capacite'] - $event['nb_inscrits'];
+                                $event_timestamp = strtotime($event['event_date']);
                             ?>
                                 <article class="event-card <?php echo ($index === 0) ? 'featured' : ''; ?>">
                                     <div class="event-image">
@@ -522,6 +677,15 @@ function isUserRegistered($pdo, $user_email, $id_event) {
                                             <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800" 
                                                  alt="<?php echo htmlspecialchars($event['name']); ?>">
                                         <?php endif; ?>
+                                        
+                                        <!-- Badge Météo dynamique -->
+                                        <div class="weather-badge loading" 
+                                             data-city="<?php echo htmlspecialchars($event['lieu']); ?>"
+                                             data-date="<?php echo $event['event_date']; ?>"
+                                             data-event-id="<?php echo $event['id_event']; ?>"
+                                             onclick="this.classList.toggle('active')">
+                                        </div>
+                                        <div class="weather-popup" id="weather-popup-<?php echo $event['id_event']; ?>"></div>
                                         
                                         <div class="event-tag tag-<?php echo $event['tag']; ?>">
                                             <?php echo $tags[$event['tag']] ?? $event['tag']; ?>
@@ -868,6 +1032,315 @@ function isUserRegistered($pdo, $user_email, $id_event) {
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeDirections();
+            }
+        });
+    </script>
+    
+    <!-- ===== API MÉTÉO OpenWeatherMap ===== -->
+    <script>
+        // Clé API OpenWeatherMap - Obtenez votre clé gratuite sur https://openweathermap.org/api
+        const WEATHER_API_KEY = '<?php echo OPENWEATHER_API_KEY; ?>';
+        
+        // Cache pour éviter les appels répétés
+        const weatherCache = new Map();
+        
+        // Icônes météo (utilise les icônes OpenWeatherMap)
+        function getWeatherIcon(iconCode) {
+            return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        }
+        
+        // Déterminer la classe de couleur selon le temps
+        function getWeatherClass(weatherId) {
+            if (weatherId >= 200 && weatherId < 300) return 'weather-stormy';  // Orage
+            if (weatherId >= 300 && weatherId < 600) return 'weather-rainy';   // Pluie
+            if (weatherId >= 600 && weatherId < 700) return 'weather-snowy';   // Neige
+            if (weatherId >= 700 && weatherId < 800) return 'weather-cloudy';  // Brouillard
+            if (weatherId === 800) return 'weather-sunny';                      // Clair
+            return 'weather-cloudy';                                            // Nuageux
+        }
+        
+        // Liste des grandes villes françaises pour la détection
+        const frenchCities = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier', 'Bordeaux', 'Lille', 'Rennes', 'Reims', 'Le Havre', 'Saint-Étienne', 'Toulon', 'Grenoble', 'Dijon', 'Angers', 'Nîmes', 'Villeurbanne', 'Clermont-Ferrand', 'Le Mans', 'Aix-en-Provence', 'Brest', 'Tours', 'Amiens', 'Limoges', 'Annecy', 'Perpignan', 'Boulogne', 'Metz', 'Besançon', 'Orléans', 'Rouen', 'Mulhouse', 'Caen', 'Nancy', 'Saint-Denis', 'Argenteuil', 'Montreuil', 'Roubaix', 'Tourcoing', 'Avignon', 'Dunkerque', 'Créteil', 'Poitiers', 'Fort-de-France', 'Courbevoie', 'Versailles', 'Vitry', 'Colombes', 'Pau', 'Aulnay', 'Asnières', 'Rueil', 'Saint-Maur', 'Antibes', 'Calais', 'Cannes', 'Béziers', 'Bourges', 'La Rochelle', 'Saint-Nazaire', 'Colmar', 'Valence', 'Quimper', 'Troyes', 'Lorient', 'Sarcelles', 'Niort', 'Chambéry', 'Pessac', 'Cergy', 'Beauvais', 'Cholet', 'Ajaccio', 'Vincennes', 'Issy', 'Levallois', 'Noisy', 'Neuilly', 'Antony', 'Clichy', 'Ivry', 'Épinay', 'Pantin', 'Bondy', 'Fontenay', 'Sartrouville', 'Clamart', 'Évry', 'Chelles', 'Bobigny', 'Meaux', 'Saint-Ouen', 'Sevran', 'Montrouge', 'Suresnes', 'Massy', 'Corbeil', 'Savigny', 'Gennevilliers', 'Rosny', 'Stains', 'Saint-Brieuc', 'Cagnes', 'Bastia', 'Martigues', 'Arles', 'Aubagne', 'Fréjus', 'Grasse', 'Hyères', 'Salon', 'Istres', 'La Seyne'];
+        
+        // Extraire le nom de la ville du lieu
+        function extractCity(lieu) {
+            // Nettoyer le lieu
+            const cleanLieu = lieu.trim();
+            
+            // D'abord chercher si une ville connue est dans le texte
+            for (const city of frenchCities) {
+                if (cleanLieu.toLowerCase().includes(city.toLowerCase())) {
+                    return city;
+                }
+            }
+            
+            // Sinon, essayer de parser intelligemment
+            const parts = cleanLieu.split(',').map(p => p.trim());
+            
+            // Si format "Ville, Lieu" (ex: "Paris, Atelier des Lumières")
+            if (parts.length >= 2) {
+                // Vérifier si le premier élément ressemble à une ville (mot court sans chiffres)
+                const firstPart = parts[0];
+                if (firstPart.length < 20 && !/\d/.test(firstPart) && !firstPart.toLowerCase().includes('salle') && !firstPart.toLowerCase().includes('rue') && !firstPart.toLowerCase().includes('avenue')) {
+                    return firstPart;
+                }
+                // Sinon prendre le dernier élément
+                return parts[parts.length - 1];
+            }
+            
+            // Si pas de virgule, prendre le premier mot significatif
+            const words = cleanLieu.split(' ');
+            if (words.length > 0) {
+                return words[0];
+            }
+            
+            return cleanLieu;
+        }
+        
+        // Récupérer la météo pour une ville et une date
+        async function fetchWeather(city, date, eventId) {
+            const cacheKey = `${city}-${date}`;
+            
+            // Vérifier le cache
+            if (weatherCache.has(cacheKey)) {
+                return weatherCache.get(cacheKey);
+            }
+            
+            const eventDate = new Date(date);
+            const today = new Date();
+            const daysDiff = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+            
+            try {
+                let weatherData;
+                
+                // OpenWeatherMap offre des prévisions gratuites sur 5 jours
+                // On utilise un proxy PHP local pour éviter les erreurs CORS
+                if (daysDiff <= 5 && daysDiff >= 0) {
+                    // Utiliser l'API forecast pour les 5 prochains jours
+                    const response = await fetch(
+                        `weather_api.php?city=${encodeURIComponent(city)}&type=forecast`
+                    );
+                    
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.message || 'Erreur API');
+                    
+                    // Trouver la prévision la plus proche de la date de l'événement
+                    const targetDate = date;
+                    let closestForecast = data.list[0];
+                    
+                    for (const forecast of data.list) {
+                        const forecastDate = forecast.dt_txt.split(' ')[0];
+                        if (forecastDate === targetDate) {
+                            // Prendre la prévision de midi si possible
+                            if (forecast.dt_txt.includes('12:00')) {
+                                closestForecast = forecast;
+                                break;
+                            }
+                            closestForecast = forecast;
+                        }
+                    }
+                    
+                    weatherData = {
+                        temp: Math.round(closestForecast.main.temp),
+                        feels_like: Math.round(closestForecast.main.feels_like),
+                        humidity: closestForecast.main.humidity,
+                        wind: Math.round(closestForecast.wind.speed * 3.6), // m/s vers km/h
+                        description: closestForecast.weather[0].description,
+                        icon: closestForecast.weather[0].icon,
+                        weatherId: closestForecast.weather[0].id,
+                        city: data.city.name,
+                        isForecast: true
+                    };
+                } else if (daysDiff < 0) {
+                    // Événement passé - météo actuelle comme indication
+                    const response = await fetch(
+                        `weather_api.php?city=${encodeURIComponent(city)}&type=weather`
+                    );
+                    
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.message || 'Erreur API');
+                    
+                    weatherData = {
+                        temp: Math.round(data.main.temp),
+                        feels_like: Math.round(data.main.feels_like),
+                        humidity: data.main.humidity,
+                        wind: Math.round(data.wind.speed * 3.6),
+                        description: data.weather[0].description,
+                        icon: data.weather[0].icon,
+                        weatherId: data.weather[0].id,
+                        city: data.name,
+                        isForecast: false,
+                        isPast: true
+                    };
+                } else {
+                    // Plus de 5 jours - météo actuelle comme approximation
+                    const response = await fetch(
+                        `weather_api.php?city=${encodeURIComponent(city)}&type=weather`
+                    );
+                    
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.message || 'Erreur API');
+                    
+                    weatherData = {
+                        temp: Math.round(data.main.temp),
+                        feels_like: Math.round(data.main.feels_like),
+                        humidity: data.main.humidity,
+                        wind: Math.round(data.wind.speed * 3.6),
+                        description: data.weather[0].description,
+                        icon: data.weather[0].icon,
+                        weatherId: data.weather[0].id,
+                        city: data.name,
+                        isForecast: false,
+                        isFuture: true,
+                        daysAway: daysDiff
+                    };
+                }
+                
+                // Mettre en cache
+                weatherCache.set(cacheKey, weatherData);
+                return weatherData;
+                
+            } catch (error) {
+                console.error('❌ Erreur météo pour ville:', city, '| date:', date, '| eventId:', eventId, '| erreur:', error.message || error);
+                return {
+                    error: true,
+                    message: error.message || 'Erreur API',
+                    city: city
+                };
+            }
+        }
+        
+        // Mettre à jour l'affichage du badge météo
+        function updateWeatherBadge(badge, weatherData, eventId) {
+            badge.classList.remove('loading');
+            
+            if (!weatherData) {
+                badge.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span style="color:rgba(255,255,255,0.5);font-size:11px;">Météo indisponible</span>
+                `;
+                return;
+            }
+            
+            // Gestion des erreurs avec message détaillé
+            if (weatherData.error) {
+                console.warn('⚠️ Météo indisponible pour', weatherData.city, '-', weatherData.message);
+                badge.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5">
+                        <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+                    </svg>
+                    <span style="color:rgba(255,255,255,0.5);font-size:10px;" title="${weatherData.message}">${weatherData.city}: ${weatherData.message}</span>
+                `;
+                return;
+            }
+            
+            const weatherClass = getWeatherClass(weatherData.weatherId);
+            badge.classList.add(weatherClass);
+            
+            badge.innerHTML = `
+                <img src="${getWeatherIcon(weatherData.icon)}" alt="${weatherData.description}" class="weather-icon">
+                <div class="weather-info">
+                    <span class="weather-temp">${weatherData.temp}°C</span>
+                    <span class="weather-desc">${weatherData.description}</span>
+                </div>
+            `;
+            
+            // Créer le popup de détails
+            const popup = document.getElementById(`weather-popup-${eventId}`);
+            if (popup) {
+                let forecastLabel = '';
+                if (weatherData.isForecast) {
+                    forecastLabel = '📅 Prévision pour le jour de l\'événement';
+                } else if (weatherData.isPast) {
+                    forecastLabel = '⏰ Événement passé - météo actuelle';
+                } else if (weatherData.isFuture) {
+                    forecastLabel = `🔮 Prévision approximative (J+${weatherData.daysAway})`;
+                }
+                
+                popup.innerHTML = `
+                    <div class="weather-popup-header">
+                        <img src="${getWeatherIcon(weatherData.icon)}" alt="${weatherData.description}" class="weather-popup-icon">
+                        <div class="weather-popup-main">
+                            <div class="weather-popup-temp">${weatherData.temp}°C</div>
+                            <div class="weather-popup-desc">${weatherData.description}</div>
+                        </div>
+                    </div>
+                    <div class="weather-popup-details">
+                        <div class="weather-detail">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+                            </svg>
+                            Ressenti <span class="weather-detail-value">${weatherData.feels_like}°C</span>
+                        </div>
+                        <div class="weather-detail">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                            </svg>
+                            Humidité <span class="weather-detail-value">${weatherData.humidity}%</span>
+                        </div>
+                        <div class="weather-detail">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>
+                            </svg>
+                            Vent <span class="weather-detail-value">${weatherData.wind} km/h</span>
+                        </div>
+                        <div class="weather-detail">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span class="weather-detail-value">${weatherData.city}</span>
+                        </div>
+                    </div>
+                    ${forecastLabel ? `<div class="weather-forecast-label">${forecastLabel}</div>` : ''}
+                `;
+            }
+        }
+        
+        // Initialiser la météo pour tous les événements
+        async function initWeather() {
+            const weatherBadges = document.querySelectorAll('.weather-badge');
+            
+            for (const badge of weatherBadges) {
+                const lieu = badge.dataset.city;
+                const date = badge.dataset.date;
+                const eventId = badge.dataset.eventId;
+                
+                const city = extractCity(lieu);
+                const weatherData = await fetchWeather(city, date, eventId);
+                updateWeatherBadge(badge, weatherData, eventId);
+                
+                // Petit délai pour ne pas surcharger l'API
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+        
+        // Lancer au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🌤️ Initialisation météo...');
+            console.log('📍 Clé API:', WEATHER_API_KEY ? WEATHER_API_KEY.substring(0, 8) + '...' : 'NON CONFIGURÉE');
+            
+            // Vérifier si la clé API est configurée
+            if (WEATHER_API_KEY && WEATHER_API_KEY !== 'VOTRE_CLE_API_OPENWEATHER') {
+                console.log('✅ Clé API détectée, lancement des requêtes météo...');
+                initWeather();
+            } else {
+                console.warn('❌ Clé API non configurée');
+                // Afficher un message si pas de clé API
+                document.querySelectorAll('.weather-badge').forEach(badge => {
+                    badge.classList.remove('loading');
+                    badge.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4">
+                            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+                        </svg>
+                        <span style="color:rgba(255,255,255,0.4);font-size:10px;">Configurer API</span>
+                    `;
+                    badge.title = 'Configurez votre clé API OpenWeatherMap';
+                });
             }
         });
     </script>

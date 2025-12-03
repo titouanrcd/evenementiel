@@ -3,19 +3,165 @@
   background: linear-gradient(to bottom, #050505, #0a0a0a);
 }
 
+/* Header avec titre et navigation */
+.artists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+/* Navigation flèches */
+.carousel-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-arrow {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Effet de fond animé au hover */
+.nav-arrow::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: linear-gradient(135deg, #ff00cc, #3333ff);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  z-index: 0;
+}
+
+.nav-arrow:hover::before {
+  width: 150%;
+  height: 150%;
+}
+
+.nav-arrow svg {
+  position: relative;
+  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-arrow:hover {
+  border-color: transparent;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(255, 0, 204, 0.3);
+}
+
+.nav-arrow:hover svg {
+  transform: scale(1.2);
+}
+
+.nav-arrow:active {
+  transform: scale(0.95);
+}
+
+/* État désactivé */
+.nav-arrow.disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.nav-arrow.disabled::before {
+  display: none;
+}
+
+/* Animation pulse subtile */
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+}
+
+.nav-arrow:not(.disabled) {
+  animation: pulse-border 3s ease-in-out infinite;
+}
+
+.nav-arrow:hover {
+  animation: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  
+  .carousel-nav {
+    gap: 6px;
+  }
+}
+
+/* Wrapper du carousel */
+.carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
 .artist-row {
   display: flex;
   gap: 30px;
   overflow-x: auto;
-  padding-bottom: 30px;
+  padding: 20px 0;
   scrollbar-width: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
+
 .artist-row::-webkit-scrollbar {
   display: none;
 }
 .artist-card {
   min-width: 280px;
   cursor: pointer;
+}
+
+/* Style pour les cartes cliquables (liens) */
+.artist-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.artist-card-link:hover {
+  transform: translateY(-10px);
+}
+
+.artist-card-link h3,
+.artist-card-link .sub-title {
+  transition: color 0.3s ease;
+}
+
+.artist-card-link:hover h3 {
+  background: var(--nova-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .artist-img-container {
