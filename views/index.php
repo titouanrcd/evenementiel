@@ -206,9 +206,7 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                 </div>
             </div>
         </section>
-
         
-
         <footer>
             <div class="footer-content">
                 <div class="footer-col footer-col-main">
