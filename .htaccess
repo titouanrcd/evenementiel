@@ -13,7 +13,7 @@ RewriteEngine On
 # ============================================================
 <IfModule mod_headers.c>
     # Protection contre le clickjacking
-    Header always set X-Frame-Options "DENY"
+    Header always set X-Frame-Options "SAMEORIGIN"
     
     # Empêcher le sniffing MIME
     Header always set X-Content-Type-Options "nosniff"
@@ -21,15 +21,13 @@ RewriteEngine On
     # Politique de référent
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # Politique de Sécurité du Contenu (CSP) - HAUTEMENT RECOMMANDÉ
-    # **À AJUSTER** : default-src 'self' ne permet que les ressources de votre domaine.
-    # Si vous utilisez des CDN ou Google Fonts, vous devez ajouter leur domaine ici.
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;"
+    # CSP - Autorise Google Maps, Fonts, et images externes
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src https://www.google.com https://maps.google.com; connect-src 'self' https://maps.googleapis.com;"
     
-    # Politique d'autorisation (Permissions-Policy)
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    # Politique d'autorisation - Autorise la géolocalisation pour Google Maps
+    Header always set Permissions-Policy "geolocation=(self), microphone=(), camera=()"
 
-    # Suppression des informations sur le serveur (bon pour l'obfuscation)
+    # Suppression des informations sur le serveur
     Header unset X-Powered-By
     Header unset Server
 </IfModule>
