@@ -337,35 +337,34 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
             }
         }
         
-        /* ===== WIDGET MÉTÉO ===== */
+        /* ===== WIDGET MÉTÉO MINI ===== */
         .weather-badge {
             position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 8px 12px;
+            top: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 4px;
+            padding: 2px 5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 2px;
             z-index: 10;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
         }
         .weather-badge:hover {
-            background: rgba(0, 0, 0, 0.85);
-            transform: scale(1.05);
+            background: rgba(0, 0, 0, 0.7);
         }
         .weather-badge.loading {
-            min-width: 80px;
+            min-width: 28px;
+            padding: 3px 5px;
         }
         .weather-badge.loading::after {
             content: '';
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
+            width: 8px;
+            height: 8px;
+            border: 1px solid rgba(255,255,255,0.3);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
@@ -374,118 +373,125 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
             to { transform: rotate(360deg); }
         }
         .weather-icon {
-            width: 32px;
-            height: 32px;
+            width: 14px;
+            height: 14px;
         }
         .weather-info {
             display: flex;
-            flex-direction: column;
+            align-items: center;
         }
         .weather-temp {
             color: #fff;
-            font-weight: 700;
-            font-size: 16px;
+            font-weight: 600;
+            font-size: 9px;
             line-height: 1;
         }
         .weather-desc {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 10px;
-            text-transform: capitalize;
-            max-width: 80px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            display: none;
         }
         
-        /* Popup détails météo */
+        /* Popup détails météo - RECTANGLE HORIZONTAL */
         .weather-popup {
             display: none;
             position: absolute;
-            top: 55px;
-            left: 12px;
-            background: rgba(15, 15, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 16px;
-            min-width: 220px;
+            top: 28px;
+            left: 8px;
+            background: rgba(10, 10, 25, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 6px;
+            padding: 6px 10px;
             z-index: 20;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            white-space: nowrap;
         }
         .weather-badge.active + .weather-popup,
         .weather-popup:hover {
-            display: block;
-            animation: fadeInUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeInUp 0.2s ease;
         }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .weather-popup-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            gap: 4px;
+            padding-right: 8px;
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
         .weather-popup-icon {
-            width: 50px;
-            height: 50px;
+            width: 18px;
+            height: 18px;
         }
         .weather-popup-main {
-            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         .weather-popup-temp {
-            font-size: 28px;
+            font-size: 11px;
             font-weight: 700;
             color: #fff;
+            line-height: 1.1;
         }
         .weather-popup-desc {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.6);
             text-transform: capitalize;
-            font-size: 13px;
+            font-size: 8px;
         }
         .weather-popup-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            display: flex;
+            gap: 8px;
         }
         .weather-detail {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 2px;
             color: rgba(255,255,255,0.8);
-            font-size: 12px;
+            font-size: 9px;
         }
         .weather-detail svg {
-            width: 16px;
-            height: 16px;
-            opacity: 0.6;
+            display: none;
         }
         .weather-detail-value {
             font-weight: 600;
             color: #fff;
         }
         .weather-forecast-label {
-            font-size: 10px;
-            color: rgba(255,255,255,0.5);
-            margin-top: 12px;
-            text-align: center;
+            display: none;
         }
         
         /* Couleurs selon la météo */
-        .weather-sunny { background: linear-gradient(135deg, rgba(255,193,7,0.3), rgba(255,152,0,0.2)); }
-        .weather-cloudy { background: linear-gradient(135deg, rgba(158,158,158,0.3), rgba(96,125,139,0.2)); }
-        .weather-rainy { background: linear-gradient(135deg, rgba(33,150,243,0.3), rgba(63,81,181,0.2)); }
-        .weather-snowy { background: linear-gradient(135deg, rgba(236,239,241,0.3), rgba(176,190,197,0.2)); }
-        .weather-stormy { background: linear-gradient(135deg, rgba(69,90,100,0.4), rgba(38,50,56,0.3)); }
+        .weather-sunny { background: rgba(255,193,7,0.15) !important; }
+        .weather-cloudy { background: rgba(158,158,158,0.15) !important; }
+        .weather-rainy { background: rgba(33,150,243,0.15) !important; }
+        .weather-snowy { background: rgba(200,200,220,0.15) !important; }
+        .weather-stormy { background: rgba(69,90,100,0.2) !important; }
+        
+        /* Tag inline à côté du titre */
+        .event-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .event-tag-inline {
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .event-tag-inline.tag-sport { background: #e91e63; color: #fff; }
+        .event-tag-inline.tag-culture { background: #9c27b0; color: #fff; }
+        .event-tag-inline.tag-soiree { background: #ff9800; color: #fff; }
+        .event-tag-inline.tag-conference { background: #2196f3; color: #fff; }
+        .event-tag-inline.tag-festival { background: #4caf50; color: #fff; }
+        .event-tag-inline.tag-autre { background: #607d8b; color: #fff; }
     </style>
 </head>
 <body>
@@ -667,6 +673,7 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
                                 $is_full = $event['nb_inscrits'] >= $event['capacite'];
                                 $places_restantes = $event['capacite'] - $event['nb_inscrits'];
                                 $event_timestamp = strtotime($event['event_date']);
+                                $event_hour = date('H', strtotime($event['hour']));
                             ?>
                                 <article class="event-card <?php echo ($index === 0) ? 'featured' : ''; ?>">
                                     <div class="event-image">
@@ -679,18 +686,15 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
                                                  alt="<?php echo htmlspecialchars($event['name']); ?>">
                                         <?php endif; ?>
                                         
-                                        <!-- Badge Météo dynamique -->
+                                        <!-- Badge Météo dynamique avec heure précise -->
                                         <div class="weather-badge loading" 
                                              data-city="<?php echo htmlspecialchars($event['lieu']); ?>"
                                              data-date="<?php echo $event['event_date']; ?>"
+                                             data-hour="<?php echo $event_hour; ?>"
                                              data-event-id="<?php echo $event['id_event']; ?>"
                                              onclick="this.classList.toggle('active')">
                                         </div>
                                         <div class="weather-popup" id="weather-popup-<?php echo $event['id_event']; ?>"></div>
-                                        
-                                        <div class="event-tag tag-<?php echo $event['tag']; ?>">
-                                            <?php echo $tags[$event['tag']] ?? $event['tag']; ?>
-                                        </div>
                                         
                                         <?php if ($event['prix'] == 0): ?>
                                             <div class="event-status">Gratuit</div>
@@ -703,7 +707,12 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
                                     </div>
                                     
                                     <div class="event-info">
-                                        <h3 class="event-title"><?php echo htmlspecialchars($event['name']); ?></h3>
+                                        <div class="event-title-row">
+                                            <h3 class="event-title"><?php echo htmlspecialchars($event['name']); ?></h3>
+                                            <span class="event-tag-inline tag-<?php echo $event['tag']; ?>">
+                                                <?php echo $tags[$event['tag']] ?? $event['tag']; ?>
+                                            </span>
+                                        </div>
                                         <p class="event-location">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -1098,9 +1107,9 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
             return cleanLieu;
         }
         
-        // Récupérer la météo pour une ville et une date
-        async function fetchWeather(city, date, eventId) {
-            const cacheKey = `${city}-${date}`;
+        // Récupérer la météo pour une ville, date et heure précise
+        async function fetchWeather(city, date, hour, eventId) {
+            const cacheKey = `${city}-${date}-${hour}`;
             
             // Vérifier le cache
             if (weatherCache.has(cacheKey)) {
@@ -1114,7 +1123,7 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
             try {
                 let weatherData;
                 
-                // OpenWeatherMap offre des prévisions gratuites sur 5 jours
+                // OpenWeatherMap offre des prévisions gratuites sur 5 jours (toutes les 3h)
                 // On utilise un proxy PHP local pour éviter les erreurs CORS
                 if (daysDiff <= 5 && daysDiff >= 0) {
                     // Utiliser l'API forecast pour les 5 prochains jours
@@ -1125,21 +1134,28 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
                     const data = await response.json();
                     if (data.error) throw new Error(data.message || 'Erreur API');
                     
-                    // Trouver la prévision la plus proche de la date de l'événement
+                    // Trouver la prévision la plus proche de la date ET heure de l'événement
                     const targetDate = date;
+                    const targetHour = parseInt(hour) || 12;
                     let closestForecast = data.list[0];
+                    let minHourDiff = 24;
                     
                     for (const forecast of data.list) {
-                        const forecastDate = forecast.dt_txt.split(' ')[0];
+                        const [forecastDate, forecastTime] = forecast.dt_txt.split(' ');
+                        const forecastHour = parseInt(forecastTime.split(':')[0]);
+                        
                         if (forecastDate === targetDate) {
-                            // Prendre la prévision de midi si possible
-                            if (forecast.dt_txt.includes('12:00')) {
+                            // Trouver l'heure la plus proche de l'heure de l'événement
+                            const hourDiff = Math.abs(forecastHour - targetHour);
+                            if (hourDiff < minHourDiff) {
+                                minHourDiff = hourDiff;
                                 closestForecast = forecast;
-                                break;
                             }
-                            closestForecast = forecast;
                         }
                     }
+                    
+                    // Extraire l'heure de la prévision trouvée
+                    const forecastTime = closestForecast.dt_txt.split(' ')[1].substring(0, 5);
                     
                     weatherData = {
                         temp: Math.round(closestForecast.main.temp),
@@ -1150,7 +1166,8 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
                         icon: closestForecast.weather[0].icon,
                         weatherId: closestForecast.weather[0].id,
                         city: data.city.name,
-                        isForecast: true
+                        isForecast: true,
+                        forecastTime: forecastTime
                     };
                 } else if (daysDiff < 0) {
                     // Événement passé - météo actuelle comme indication
@@ -1309,10 +1326,11 @@ define('OPENWEATHER_API_KEY', 'e9b37b97190dcabd2eb2b9256b76ffeb');
             for (const badge of weatherBadges) {
                 const lieu = badge.dataset.city;
                 const date = badge.dataset.date;
+                const hour = badge.dataset.hour || '12';
                 const eventId = badge.dataset.eventId;
                 
                 const city = extractCity(lieu);
-                const weatherData = await fetchWeather(city, date, eventId);
+                const weatherData = await fetchWeather(city, date, hour, eventId);
                 updateWeatherBadge(badge, weatherData, eventId);
                 
                 // Petit délai pour ne pas surcharger l'API
