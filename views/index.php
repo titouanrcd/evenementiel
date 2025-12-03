@@ -35,7 +35,7 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                 
                 <aside class="sidebar" id="sidebar">
                     <div class="sidebar-header">
-                        <div class="logo" style="font-size: 32px;">caca<span>.</span></div>
+                        <div class="logo" style="font-size: 32px;">NOVA<span>.</span></div>
                         <p>Événements Spectaculaires</p>
                     </div>
                     
@@ -90,7 +90,7 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                     Agence événementielle 360°. Nous transformons vos idées en expériences spectaculaires, du concept à la réalité. Corporate, Privé, Festival.
                 </p>
                 <div class="hero-buttons">
-                    <button class="btn-gradient">Organiser un événement</button>
+                    <button class="btn-gradient" href="evenement.php">Voir les événement</button>
                 </div>
             </div>
             
@@ -218,7 +218,7 @@ $user_role = $_SESSION['user_role'] ?? 'user';
         <section class="gallery-section">
             <div class="gallery-header">
                 <h2 class="section-title gallery-title">Réatisation 2025</h2>
-                <a href="evenement.html" class="gallery-link">Voir tous les evenement</a>
+                <a href="evenement.php" class="gallery-link">Voir tous les evenement</a>
             </div>
 
             <div class="gallery-grid">
