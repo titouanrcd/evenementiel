@@ -1,6 +1,8 @@
 /* --- RESPONSIVE --- */
 
-/* Tablet (Tablettes et petits laptops) */
+/* =========================================
+   TABLETTE (max-width: 1024px)
+   ========================================= */
 @media (max-width: 1024px) {
   nav {
     padding: 15px 20px;
@@ -9,40 +11,39 @@
     font-size: 24px;
   }
 
-  /* Admin & Dashboard */
+  /* Admin Layout */
   .admin-container {
-    grid-template-columns: 1fr; /* Passage en 1 colonne */
+    grid-template-columns: 1fr;
   }
   .admin-sidebar {
     position: static;
-    width: 100%; /* CORRECTION : Assure que la sidebar prend toute la largeur */
+    width: 100%;
     margin-bottom: 20px; /* Ajout d'espace sous la sidebar */
   }
   .admin-nav {
-    display: flex; /* CORRECTION : S'assurer que c'est bien flex */
+    display: flex; /* S'assure que c'est flex */
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 10px; /* Ajout d'espace entre les éléments */
+    gap: 10px; /* Espacement entre les liens */
   }
   .admin-nav-link {
     flex: 1;
     min-width: 120px;
     justify-content: center;
-    white-space: nowrap; /* Empêche le texte de se casser bizarrement */
   }
 
-  /* Cards */
+  /* Cards & Lists */
   .pending-card {
     grid-template-columns: 1fr;
   }
   .pending-image {
     width: 100%;
     height: 150px;
-    object-fit: cover; /* CORRECTION : Évite la déformation de l'image */
+    object-fit: cover; /* Important pour ne pas déformer l'image */
   }
   .pending-actions {
     flex-direction: row;
-    justify-content: space-between; /* Mieux répartir les boutons */
+    justify-content: space-between; /* Espacement uniforme */
   }
 
   /* Profil */
@@ -64,55 +65,46 @@
     min-width: 150px;
   }
 
-  /* Events Tablet Layout */
+  /* Events */
   .events-container {
-    grid-template-columns: 250px 1fr; /* Réduit légèrement la sidebar pour laisser place au contenu */
+    grid-template-columns: 250px 1fr; /* Sidebar légèrement réduite */
     gap: 30px;
   }
   .events-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Min-width légèrement réduit pour éviter les trous */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
   }
 }
 
-/* Mobile (Téléphones) */
+/* =========================================
+   MOBILE (max-width: 768px)
+   ========================================= */
 @media (max-width: 768px) {
-  /* Navigation */
+  /* Navigation & Header */
   nav {
     flex-direction: column;
-    gap: 15px; /* Réduit un peu l'écart */
+    gap: 15px;
     padding: 15px;
   }
   .header-logo {
     font-size: 20px;
   }
-  .nav-links {
-    display: none; /* Cache le menu desktop */
-    /* Note : Il faudra un bouton JS ou CSS (:checked) pour afficher le menu mobile */
-  }
-  .back-link {
-    display: block;
-    color: white;
-    font-size: 1rem; /* Ajusté pour mobile */
-    align-self: flex-start; /* Aligne le lien retour à gauche */
-  }
-
-  /* Sidebar Mobile (Off-canvas) */
   .sidebar {
-    width: 85vw; /* Plus large pour meilleure lisibilité sur petits écrans */
+    width: 85vw; /* Plus large sur mobile pour lisibilité */
     max-width: 300px;
-    z-index: 1000; /* Assure que ça passe au-dessus */
   }
 
-  /* Typography & Hero */
+  /* Typography */
   h1 {
-    font-size: 2rem; /* CORRECTION : 2.8rem est souvent trop gros sur mobile et cause des débordements */
+    font-size: 2rem; /* Réduit de 2.8rem à 2rem pour éviter les débordements */
     line-height: 1.2;
   }
+  
+  /* Hero Section */
   .hero {
     flex-direction: column;
     text-align: center;
-    padding-top: 40px; /* Réduit légèrement */
+    padding-top: 40px;
     padding-bottom: 40px;
   }
   .hero-text {
@@ -123,33 +115,33 @@
     border-left: none;
     padding-left: 0;
     margin: 0 auto 20px;
-    width: 90%; /* Évite que le texte touche les bords */
+    width: 90%;
   }
   .hero-visuals {
     width: 100%;
     justify-content: center;
   }
   .arch-img {
-    width: 100%; /* Responsive */
-    max-width: 300px;
-    height: auto; /* Garde les proportions */
-    aspect-ratio: 1/1; /* Maintient le carré */
+    width: 100%;
+    max-width: 300px; /* Limite la taille */
+    height: auto;     /* Garde le ratio */
+    aspect-ratio: 1/1;
   }
   .hero-buttons {
-    flex-direction: column; /* CORRECTION : Empile les boutons sur très petits écrans */
+    flex-direction: column; /* Boutons l'un sous l'autre sur mobile */
     gap: 15px;
     width: 100%;
     align-items: center;
   }
   .hero-buttons button {
-    width: 100%; /* Boutons pleine largeur pour le tactile */
-    max-width: 300px;
+    width: 100%;
+    max-width: 320px;
   }
 
-  /* Grid System adjustments */
+  /* Grids & Layouts */
   .grid-section {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 30px;
   }
   .item-large {
     grid-column: span 1;
@@ -162,16 +154,16 @@
     height: auto;
   }
   
-  /* Layout Fixes */
+  /* Correction Critique ici : Stacked Items */
   .stacked-items {
-    flex-direction: column; /* CORRECTION : 'row' risque d'écraser le contenu sur mobile. 'column' est plus sûr. */
+    flex-direction: column; /* 'row' cassait la mise en page sur petits écrans */
     height: auto; /* Laisse le contenu définir la hauteur */
     gap: 20px;
   }
 
   .event-row {
     flex-direction: column;
-    align-items: stretch; /* Les éléments prennent toute la largeur */
+    align-items: stretch;
     gap: 15px;
   }
   .event-row button {
@@ -179,13 +171,13 @@
     margin-top: 10px;
   }
 
-  /* Footer & Miscellaneous */
+  /* Footer */
   .footer-content {
     flex-direction: column;
-    gap: 40px;
+    gap: 30px;
     text-align: center;
   }
-  .artists-header, 
+  .artists-header,
   .gallery-header {
     flex-direction: column;
     gap: 20px;
@@ -204,93 +196,162 @@
     justify-content: center;
   }
 
-  /* Admin & Tables Mobile */
+  /* Admin Section Mobile */
   .admin-section {
-    padding: 15px 10px;
+    padding: 20px 10px; /* Marges réduites */
   }
   .form-row {
     grid-template-columns: 1fr;
     gap: 15px;
   }
   .dashboard-stats {
-    grid-template-columns: 1fr; /* 1 colonne est plus lisible sur petit mobile */
+    grid-template-columns: 1fr; /* 1 colonne pour lisibilité */
     gap: 15px;
   }
-  
-  /* Table Responsiveness */
+
+  /* Tables responsive */
   .events-table {
-    display: block; /* Rend le tableau scrollable */
-    overflow-x: auto;
-    white-space: nowrap;
+    display: block;      /* Permet le scroll */
+    overflow-x: auto;    /* Scroll horizontal */
+    white-space: nowrap; /* Empêche le texte de revenir à la ligne */
   }
   .events-table th,
   .events-table td {
-    padding: 10px 5px;
+    padding: 10px 8px;
     font-size: 0.85rem;
   }
-  
-  /* Wizard / Form Steps */
+  .event-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Wizard / Form steps */
   .wizard-header {
     padding: 15px;
-    flex-direction: column; /* Empile les étapes si nécessaire */
+    flex-direction: column;
+    gap: 15px;
+  }
+  .wizard-body {
+    padding: 15px;
+    min-height: auto;
+  }
+  .wizard-footer {
+    padding: 15px;
+    flex-direction: column-reverse; /* Boutons empilés, 'Suivant' en haut ou bas selon pref */
     gap: 10px;
   }
+  .wizard-footer button {
+    width: 100%;
+  }
   .type-grid {
-    grid-template-columns: repeat(2, 1fr); /* Force 2 colonnes minimum pour les choix */
+    grid-template-columns: repeat(2, 1fr); /* 2 colonnes min */
     gap: 10px;
   }
   .step-label {
-    display: none; /* Correct */
+    display: none;
+  }
+  .step-circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+
+  /* Profil Section */
+  .profil-section {
+    padding: 20px 10px;
+  }
+  .inscription-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .inscription-date-badge {
+    margin: 0 auto 15px auto;
+  }
+  .inscription-header,
+  .inscription-details,
+  .inscription-actions {
+    justify-content: center;
+  }
+  .inscription-actions {
+    margin-top: 20px;
+    flex-direction: column; /* Boutons empilés */
+    gap: 10px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .profil-stats {
+    grid-template-columns: 1fr;
+    gap: 15px;
   }
 
   /* Events Page Mobile */
   .events-hero-content h1 {
-    font-size: 2rem; /* Réduit pour éviter le wrap */
+    font-size: 2rem;
   }
   .events-container {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 20px;
     padding: 0 15px;
   }
-  
-  /* Filtres & Search */
+  /* On remet les filtres au début ou on les gère via JS, 
+     mais ici on garde l'ordre logique du flux */
   .events-filters {
-    order: 0; /* CORRECTION : Souvent on veut les filtres EN HAUT sur mobile, ou un bouton pour les ouvrir */
-    background: #f4f4f4; /* Optionnel : distingue la zone filtre */
+    order: 0; 
     padding: 20px;
+    background: #f8f9fa; /* Fond léger pour séparer visuellement */
     border-radius: 8px;
+    margin-bottom: 20px;
   }
   .events-content {
     order: 1;
   }
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
   
   .event-card.featured {
     grid-column: span 1;
+    grid-row: span 1;
   }
   .event-card.featured .event-image {
     height: 200px;
   }
-  
+  .event-card.featured .event-title {
+    font-size: 1.3rem;
+  }
+
+  /* Inputs Date */
   .date-range {
-    flex-direction: column; /* CORRECTION : 'row' casse souvent sur mobile. 'column' est plus sûr. */
+    flex-direction: column; /* Stack vertical pour les dates */
     gap: 10px;
   }
   .date-input-group {
     width: 100%;
   }
   .filter-header {
-    flex-direction: row; /* Garde le titre et le reset alignés */
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    text-align: left;
   }
 
-  /* Auth Pages */
+  /* Auth */
   .auth-container {
     padding: 20px;
   }
   .auth-bg-gradient {
-    width: 100%; /* Responsive */
-    height: 200px; /* Moins haut sur mobile */
-    border-radius: 20px;
+    width: 100%;
+    height: 180px; /* Moins haut */
+    border-radius: 12px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .back-link {
+    display: block;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 10px;
   }
 }
