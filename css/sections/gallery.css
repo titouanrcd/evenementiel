@@ -1,6 +1,7 @@
 .gallery-section {
     padding: var(--section-padding);
     overflow: hidden;
+    margin-bottom: 80px;
 }
 
 .gallery-header {
