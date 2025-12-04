@@ -90,7 +90,9 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                     Agence événementielle 360°. Nous transformons vos idées en expériences spectaculaires, du concept à la réalité. Corporate, Privé, Festival.
                 </p>
                 <div class="hero-buttons">
-                    <button class="btn-gradient" href="evenement.php">Voir les événement</button>
+                    <a class="btn-gradient" href="evenement.php">Voir les évènements</a>
+       
+
                 </div>
             </div>
             
@@ -217,8 +219,8 @@ $user_role = $_SESSION['user_role'] ?? 'user';
 
         <section class="gallery-section">
             <div class="gallery-header">
-                <h2 class="section-title gallery-title">Réatisation 2025</h2>
-                <a href="evenement.php" class="gallery-link">Voir tous les evenement</a>
+                <h2 class="section-title gallery-title">Réalisation 2025</h2>
+    
             </div>
 
             <div class="gallery-grid">
