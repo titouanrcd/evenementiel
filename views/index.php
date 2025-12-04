@@ -224,7 +224,7 @@ $user_role = $_SESSION['user_role'] ?? 'user';
             </div>
 
             <div class="gallery-grid">
-                <div class="gallery-item gallery-item-main">
+                <div class="gallery-item item-main">
                     <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWlsdmp2ZDU5ZndwMjBqOXdmaThpNWVhb2U4bGFuenhhdTUxMW1wZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3UcmWzwnN5DafNOo/giphy.gif" alt="Festival">
                     <div class="gallery-item-info">
                         <h3 class="gallery-item-title">Festival</h3>
@@ -233,17 +233,16 @@ $user_role = $_SESSION['user_role'] ?? 'user';
                     <div class="gallery-item-overlay"></div>
                 </div>
 
-                <div class="stacked-items">
-                    <div class="gallery-item gallery-item-small">
-                        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXJpaWRhbXBxbXdjY3A4MHB6NTNxM3gwbmJ6cDZpaTI1bGF2NXBzbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JUXtbHuixcZKeGJEro/giphy.gif" alt="SEMINAIRE">
-                        <div class="gallery-item-label">SEMINAIRE</div>
-                        <div class="gallery-item-overlay gallery-item-overlay-light"></div>
-                    </div>
-                    <div class="gallery-item gallery-item-small">
-                        <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NHVlYWdyY2xucXNzOGdsNHlyN3g3eHBka2JocDJoeXk5dWhucWY4MiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/un0j2CfCo3BhrDSZPO/giphy.gif" alt="FETE">
-                        <div class="gallery-item-label">FETE</div>
-                        <div class="gallery-item-overlay gallery-item-overlay-light"></div>
-                    </div>
+                <div class="gallery-item item-sub1">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXJpaWRhbXBxbXdjY3A4MHB6NTNxM3gwbmJ6cDZpaTI1bGF2NXBzbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JUXtbHuixcZKeGJEro/giphy.gif" alt="SEMINAIRE">
+                    <div class="gallery-item-label">SEMINAIRE</div>
+                    <div class="gallery-item-overlay gallery-item-overlay-light"></div>
+                </div>
+
+                <div class="gallery-item item-sub2">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NHVlYWdyY2xucXNzOGdsNHlyN3g3eHBka2JocDJoeXk5dWhucWY4MiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/un0j2CfCo3BhrDSZPO/giphy.gif" alt="FETE">
+                    <div class="gallery-item-label">FETE</div>
+                    <div class="gallery-item-overlay gallery-item-overlay-light"></div>
                 </div>
             </div>
         </section>

@@ -4,6 +4,7 @@ footer {
     border-top: 1px solid #222;
     position: relative;
     z-index: 10;
+    margin-top: auto;
 }
 
 .footer-content {
