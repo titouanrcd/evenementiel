@@ -1,138 +1,95 @@
-/* --- 8. GALLERY SECTION --- */
 .gallery-section {
-  padding: 80px 5%;
-  margin-bottom: 100px;
-  position: relative;
-  z-index: 1;
+    padding: var(--section-padding);
+    overflow: hidden;
 }
+
 .gallery-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    padding-right: 5%;
 }
+
 .gallery-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  height: 500px;
+    display: grid;
+    /* Desktop : Grid Layout */
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    height: 500px;
+    width: 100%;
 }
+
 .gallery-item {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  background: #222;
-  border: 1px solid #333;
-  transition: 0.3s;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+    width: 100%;
+    height: 100%;
 }
+
+/* Placement Desktop */
+.item-main {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+.item-sub1 {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.item-sub2 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
 .gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s;
-  opacity: 0.7;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
 }
-.gallery-item:hover {
-  border-color: #ff9900;
-  box-shadow: 0 5px 20px rgba(255, 153, 0, 0.2);
-}
+
 .gallery-item:hover img {
-  transform: scale(1.05);
-  opacity: 1;
-}
-
-.play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
-  background: rgba(255, 0, 204, 0.1);
-  backdrop-filter: blur(5px);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 0, 204, 0.5);
-  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  font-size: 1.5rem;
-  color: white;
-  z-index: 5;
-}
-.gallery-item:hover .play-btn {
-  background: var(--nova-gradient);
-  transform: translate(-50%, -50%) scale(1.1);
-  border: none;
-  box-shadow: 0 0 30px rgba(255, 0, 204, 0.5);
-}
-.stacked-items {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Gallery header styles */
-.gallery-title {
-  margin-bottom: 0;
-}
-
-.gallery-link {
-  font-size: 0.9rem;
-  color: #fff;
-  border-bottom: 2px solid #ff00cc;
-  padding-bottom: 5px;
-  transition: 0.3s;
-}
-
-/* Gallery item styles */
-.gallery-item-main .gallery-item-info {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-  z-index: 2;
-}
-
-.gallery-item-title {
-  font-size: 2rem;
-  text-transform: uppercase;
-}
-
-.gallery-item-location {
-  font-size: 1rem;
-  opacity: 0.9;
-  margin-top: 5px;
-  color: #ff9900;
+    transform: scale(1.05);
 }
 
 .gallery-item-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, black, transparent);
+    opacity: 0.7;
+    pointer-events: none;
 }
 
-.gallery-item-overlay-light {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+.gallery-item-info {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    z-index: 2;
 }
 
-.gallery-item-small {
-  flex: 1;
+.gallery-item-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-.play-btn-small {
-  width: 50px;
-  height: 50px;
-  font-size: 1rem;
+.gallery-item-location {
+    color: var(--nova-yellow);
 }
 
 .gallery-item-label {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  font-weight: 700;
-  z-index: 2;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 2;
+    font-weight: 700;
+    font-size: 1.2rem;
 }
