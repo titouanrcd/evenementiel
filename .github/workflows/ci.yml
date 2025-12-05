@@ -1,7 +1,7 @@
 # ============================================================
 # 🚀 NOVA Événements - CI/CD Pipeline
 # ============================================================
-# Pipeline simple: Lint PHP + Analyse SonarCloud
+# Pipeline: Lint PHP + Analyse SonarQube + Sécurité (ZAP)
 # ============================================================
 
 name: CI/CD Pipeline
@@ -34,6 +34,7 @@ jobs:
           echo "🔍 Vérification de la syntaxe PHP..."
           errors=0
           
+          # Recherche de tous les fichiers .php (hors vendor)
           for file in $(find . -name "*.php" -not -path "./vendor/*"); do
             if ! php -l "$file" > /dev/null 2>&1; then
               echo "❌ Erreur: $file"
@@ -43,17 +44,17 @@ jobs:
           done
           
           if [ $errors -gt 0 ]; then
-            echo "❌ $errors erreur(s) de syntaxe"
+            echo "❌ $errors erreur(s) de syntaxe détectée(s)."
             exit 1
           fi
           
           echo "✅ Syntaxe PHP OK"
 
   # ===================================================================
-  # JOB 2: ANALYSE SONARCLOUD
+  # JOB 2: ANALYSE SONARQUBE (Self-Hosted)
   # ===================================================================
-  sonarcloud:
-    name: 🔬 SonarCloud
+  sonarqube:
+    name: 🔬 SonarQube Analysis
     runs-on: ubuntu-latest
     needs: php-check
 
@@ -61,18 +62,18 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # ⚠️ Obligatoire pour une analyse précise
 
-      - name: 🔬 SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+      - name: 🔬 SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           projectBaseDir: .
           args: >
             -Dsonar.projectKey=ShadowRich_evenementiel
-            -Dsonar.organization=shadowrich
+            -Dsonar.verbose=false
 
   # ===================================================================
   # JOB 3: SÉCURITÉ (OWASP ZAP)
@@ -93,15 +94,16 @@ jobs:
 
       - name: 🚀 Démarrer Serveur PHP (Background)
         run: |
+          # Démarrage du serveur PHP intégré sur le port 8080
           php -S 0.0.0.0:8080 -t public > /dev/null 2>&1 &
+          echo "⏳ Attente du démarrage du serveur..."
           sleep 5
 
       - name: 🕷️ Run ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.11.0
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           target: 'http://localhost:8080'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
-          fail_action: false
+          fail_action: false # Met à true si tu veux bloquer la CI en cas de faille
           allow_issue_writing: false
-
