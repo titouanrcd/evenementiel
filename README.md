@@ -26,7 +26,7 @@ git clone https://github.com/votre-repo/evenementiel.git
 ### 2. Configuration de la Base de Données
 
 1.  Ouvrez **phpMyAdmin** (généralement `http://localhost/phpmyadmin`).
-2.  Créez une nouvelle base de données nommée `evenementiel`.
+2.  Créez une nouvelle base de données nommée `gestion_events_etudiants`.
 3.  Importez le fichier `database.sql` situé à la racine du projet.
 
 ### 3. Configuration de l'Application
@@ -70,7 +70,4 @@ Le projet intègre plusieurs mesures de sécurité :
 
 ## 👥 Auteurs
 
-*   Titouan RICHARD CARRERE
-*   Marion GUERIN
-*   Emilie BAI
-*   Marilou BERNARD
+non divulgé
