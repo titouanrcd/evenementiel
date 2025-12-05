@@ -356,7 +356,6 @@ if (isset($_GET['edit'])) {
     <?php partial('footer'); ?>
 
     <script nonce="<?= $nonce ?>">
-        // ========== WIZARD LOGIC ==========
         let currentStep = 1;
         const totalSteps = 3;
 

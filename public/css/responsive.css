@@ -154,7 +154,6 @@
     height: auto;
   }
   
-  /* Correction Critique ici : Stacked Items */
   .stacked-items {
     flex-direction: column; /* 'row' cassait la mise en page sur petits écrans */
     height: auto; /* Laisse le contenu définir la hauteur */
@@ -294,8 +293,6 @@
     gap: 20px;
     padding: 0 15px;
   }
-  /* On remet les filtres au début ou on les gère via JS, 
-     mais ici on garde l'ordre logique du flux */
   .events-filters {
     order: 0; 
     padding: 20px;

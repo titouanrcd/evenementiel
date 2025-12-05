@@ -71,11 +71,10 @@ class OrganizerController extends Controller
         
         $errors = [];
         
-        // Validation
         $name = sanitizeString($_POST['name'] ?? '', 255);
         $description = sanitizeString($_POST['description'] ?? '', 5000);
         $eventDate = sanitizeDate($_POST['event_date'] ?? '');
-        $hour = $_POST['hour'] ?? '';
+        $hour = sanitizeTime($_POST['hour'] ?? '') ?? '';
         $lieu = sanitizeString($_POST['lieu'] ?? '', 255);
         $capacite = sanitizeInt($_POST['capacite'] ?? 0, 1, 100000);
         $prix = sanitizeInt($_POST['prix'] ?? 0, 0, 10000) ?? 0;
@@ -177,11 +176,10 @@ class OrganizerController extends Controller
             $this->redirect('/organisateur');
         }
         
-        // Validation
         $name = sanitizeString($_POST['name'] ?? '', 255);
         $description = sanitizeString($_POST['description'] ?? '', 5000);
         $eventDate = sanitizeDate($_POST['event_date'] ?? '');
-        $hour = $_POST['hour'] ?? '';
+        $hour = sanitizeTime($_POST['hour'] ?? '') ?? '';
         $lieu = sanitizeString($_POST['lieu'] ?? '', 255);
         $capacite = sanitizeInt($_POST['capacite'] ?? 0, 1, 100000);
         $prix = sanitizeInt($_POST['prix'] ?? 0, 0, 10000) ?? 0;

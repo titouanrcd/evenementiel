@@ -102,10 +102,8 @@ function redirect(string $url): void
         $url = '/';
     }
     
-    // Nettoyer l'URL
     $url = str_replace(["\r", "\n", "\0"], '', $url);
     
-    // Ajouter le BASE_PATH si nécessaire
     $basePath = defined('BASE_PATH') ? BASE_PATH : '';
     $fullUrl = rtrim($basePath, '/') . '/' . ltrim($url, '/');
     
@@ -161,6 +159,20 @@ function sanitizeDate(?string $date): ?string
     }
     $d = \DateTime::createFromFormat('Y-m-d', $date);
     return ($d && $d->format('Y-m-d') === $date) ? $date : null;
+}
+
+/**
+ * Valider une heure (format HH:MM)
+ */
+function sanitizeTime(?string $time): ?string
+{
+    if ($time === null || $time === '') {
+        return null;
+    }
+    if (preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', $time)) {
+        return $time;
+    }
+    return null;
 }
 
 /**

@@ -183,7 +183,6 @@
   filter: grayscale(100%);
 }
 
-/* Amélioration du survol artiste */
 .artist-card:hover .artist-img-container {
   box-shadow: 0 10px 30px rgba(255, 0, 204, 0.3);
 }

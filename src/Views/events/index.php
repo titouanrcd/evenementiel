@@ -32,7 +32,6 @@ $weatherApiKey = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : 'e9b37b9
     <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
     
     <style nonce="<?= $nonce ?>">
-        /* ===== HERO SECTION AMÉLIORÉ ===== */
         .events-hero {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 50%, rgba(255, 0, 150, 0.2) 100%), 
                         radial-gradient(ellipse at center, rgba(102, 126, 234, 0.15) 0%, transparent 70%),
@@ -81,7 +80,6 @@ $weatherApiKey = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : 'e9b37b9
             margin: 0 auto;
         }
 
-        /* ===== LOCATION LINK ===== */
         .location-link {
             color: inherit;
             text-decoration: none;
@@ -100,7 +98,6 @@ $weatherApiKey = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : 'e9b37b9
             stroke: #667eea;
         }
         
-        /* ===== WIDGET MÉTÉO VISIBLE ===== */
         .weather-badge {
             position: absolute;
             top: 12px;
@@ -257,7 +254,6 @@ $weatherApiKey = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : 'e9b37b9
         .event-tag-inline.tag-festival { background: #4caf50; color: #fff; }
         .event-tag-inline.tag-autre { background: #607d8b; color: #fff; }
 
-        /* ===== TRI RAPIDE ===== */
         .events-header-info {
             display: flex;
             justify-content: space-between;
@@ -294,7 +290,6 @@ $weatherApiKey = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : 'e9b37b9
             color: #fff;
         }
 
-        /* ===== AMÉLIORATION CARTES ===== */
         .event-info {
             padding: 20px !important;
         }
@@ -564,7 +559,6 @@ $weatherApiKey = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : 'e9b37b9
     <?php partial('footer'); ?>
 
     <script nonce="<?= $nonce ?>">
-        // Mise à jour du prix en temps réel
         const priceSlider = document.getElementById('priceRange');
         const priceDisplay = document.getElementById('priceDisplay');
         
@@ -576,7 +570,6 @@ $weatherApiKey = defined('OPENWEATHER_API_KEY') ? OPENWEATHER_API_KEY : 'e9b37b9
         }
     </script>
     
-    <!-- ===== API MÉTÉO OpenWeatherMap ===== -->
     <script nonce="<?= $nonce ?>">
         const WEATHER_API_KEY = '<?= e($weatherApiKey) ?>';
         const weatherCache = new Map();

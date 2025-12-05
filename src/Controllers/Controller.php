@@ -27,7 +27,6 @@ abstract class Controller
      */
     protected function render(string $view, array $data = []): void
     {
-        // Ajouter les données communes
         $data['isLoggedIn'] = Security::isLoggedIn();
         $data['userName'] = $_SESSION['user_name'] ?? '';
         $data['userRole'] = $_SESSION['user_role'] ?? 'user';

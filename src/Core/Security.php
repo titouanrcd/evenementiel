@@ -167,7 +167,6 @@ class Security
             $_GET = $this->sanitizeArray($_GET);
         }
         
-        // Supprimer $_REQUEST (potentiellement dangereux)
         $_REQUEST = [];
     }
     
