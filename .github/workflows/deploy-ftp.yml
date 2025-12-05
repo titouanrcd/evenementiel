@@ -1,0 +1,32 @@
+name: 📤 Deploy FTP
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # =========================================================================
+  # JOB: Déploiement FTP
+  # =========================================================================
+  deploy-ftp:
+    name: 🚀 Deploy to FTP
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 📤 Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          local-dir: ./
+          state-name: .ftp-deploy-sync-state.json
+          dangerous-clean-slate: false
+      
+      - name: ✅ Deployment completed
+        run: echo "✅ Déploiement FTP terminé avec succès!"
