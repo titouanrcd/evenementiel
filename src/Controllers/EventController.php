@@ -9,9 +9,11 @@ namespace App\Controllers;
 
 use App\Core\Database;
 use App\Core\Security;
+use App\Models\Event;
 
 class EventController extends Controller
 {
+    private Event $eventModel;
     private array $tags = [
         'sport' => 'Sport',
         'culture' => 'Culture',
@@ -20,6 +22,12 @@ class EventController extends Controller
         'festival' => 'Festival',
         'autre' => 'Autre'
     ];
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->eventModel = new Event();
+    }
     
     /**
      * Liste des événements
@@ -27,80 +35,25 @@ class EventController extends Controller
     public function index(): void
     {
         // Récupérer les filtres
-        $search = sanitizeString($_GET['search'] ?? '', 100);
-        $tag = isset($_GET['tag']) && array_key_exists($_GET['tag'], $this->tags) ? $_GET['tag'] : '';
-        $lieu = sanitizeString($_GET['lieu'] ?? '', 255);
-        $dateFrom = sanitizeDate($_GET['date_from'] ?? '');
-        $dateTo = sanitizeDate($_GET['date_to'] ?? '');
-        $prixMax = sanitizeInt($_GET['prix_max'] ?? 200, 0, 10000) ?? 200;
+        $filters = [
+            'search' => sanitizeString($_GET['search'] ?? '', 100),
+            'tag' => isset($_GET['tag']) && array_key_exists($_GET['tag'], $this->tags) ? $_GET['tag'] : '',
+            'lieu' => sanitizeString($_GET['lieu'] ?? '', 255),
+            'date_from' => sanitizeDate($_GET['date_from'] ?? ''),
+            'date_to' => sanitizeDate($_GET['date_to'] ?? ''),
+            'prix_max' => sanitizeInt($_GET['prix_max'] ?? 200, 0, 10000) ?? 200,
+            'sort' => $_GET['sort'] ?? 'date'
+        ];
         
-        // Construire la requête
-        $sql = "SELECT e.*, 
-                (SELECT COUNT(*) FROM inscriptions i WHERE i.id_event = e.id_event AND i.statut = 'confirmé') as nb_inscrits
-                FROM event e 
-                WHERE e.status = 'publié'";
-        $params = [];
-        
-        if (!empty($search)) {
-            $searchEscaped = Database::escapeLike($search);
-            $sql .= " AND (e.name LIKE ? OR e.description LIKE ? OR e.lieu LIKE ?)";
-            $searchParam = "%{$searchEscaped}%";
-            $params = array_merge($params, [$searchParam, $searchParam, $searchParam]);
-        }
-        
-        if (!empty($tag)) {
-            $sql .= " AND e.tag = ?";
-            $params[] = $tag;
-        }
-        
-        if (!empty($lieu)) {
-            $sql .= " AND e.lieu LIKE ?";
-            $params[] = "%" . Database::escapeLike($lieu) . "%";
-        }
-        
-        if ($dateFrom) {
-            $sql .= " AND e.event_date >= ?";
-            $params[] = $dateFrom;
-        }
-        
-        if ($dateTo) {
-            $sql .= " AND e.event_date <= ?";
-            $params[] = $dateTo;
-        }
-        
-        if ($prixMax < 200) {
-            $sql .= " AND e.prix <= ?";
-            $params[] = $prixMax;
-        }
-        
-        // Tri par prix ou date
-        $sort = $_GET['sort'] ?? 'date';
-        switch ($sort) {
-            case 'prix_asc':
-                $sql .= " ORDER BY e.prix ASC, e.event_date ASC";
-                break;
-            case 'prix_desc':
-                $sql .= " ORDER BY e.prix DESC, e.event_date ASC";
-                break;
-            default:
-                $sql .= " ORDER BY e.event_date ASC";
-        }
-        
-        $events = $this->db->fetchAll($sql, $params);
+        $events = $this->eventModel->findAllPublished($filters);
         
         // Récupérer les lieux pour le filtre
-        $lieux = $this->db->fetchAll(
-            "SELECT DISTINCT lieu FROM event WHERE status = 'publié' ORDER BY lieu"
-        );
+        $lieux = $this->eventModel->findDistinctLocations();
         
         // Vérifier les inscriptions de l'utilisateur
         $userRegistrations = [];
         if (Security::isLoggedIn()) {
-            $registrations = $this->db->fetchAll(
-                "SELECT id_event FROM inscriptions WHERE user_email = ? AND statut = 'confirmé'",
-                [$_SESSION['user_email']]
-            );
-            $userRegistrations = array_column($registrations, 'id_event');
+            $userRegistrations = $this->eventModel->findUserRegistrations($_SESSION['user_email']);
         }
         
         $this->render('events/index', [
@@ -108,15 +61,7 @@ class EventController extends Controller
             'tags' => $this->tags,
             'lieux' => array_column($lieux, 'lieu'),
             'userRegistrations' => $userRegistrations,
-            'filters' => [
-                'search' => $search,
-                'tag' => $tag,
-                'lieu' => $lieu,
-                'date_from' => $dateFrom,
-                'date_to' => $dateTo,
-                'prix_max' => $prixMax,
-                'sort' => $_GET['sort'] ?? 'date'
-            ],
+            'filters' => $filters,
             'flash' => $this->getFlash()
         ]);
     }
@@ -132,14 +77,7 @@ class EventController extends Controller
             $this->redirect('/evenements');
         }
         
-        $event = $this->db->fetch(
-            "SELECT e.*, u.user as owner_name,
-             (SELECT COUNT(*) FROM inscriptions i WHERE i.id_event = e.id_event AND i.statut = 'confirmé') as nb_inscrits
-             FROM event e 
-             LEFT JOIN users u ON e.owner_email = u.email
-             WHERE e.id_event = ? AND e.status = 'publié'",
-            [$eventId]
-        );
+        $event = $this->eventModel->findByIdWithDetails($eventId);
         
         if (!$event) {
             $this->redirect('/evenements');
@@ -148,12 +86,7 @@ class EventController extends Controller
         // Vérifier si l'utilisateur est inscrit
         $isRegistered = false;
         if (Security::isLoggedIn()) {
-            $registration = $this->db->fetch(
-                "SELECT id_inscription FROM inscriptions 
-                 WHERE user_email = ? AND id_event = ? AND statut = 'confirmé'",
-                [$_SESSION['user_email'], $eventId]
-            );
-            $isRegistered = (bool)$registration;
+            $isRegistered = $this->eventModel->isUserRegistered($_SESSION['user_email'], $eventId);
         }
         
         $this->render('events/show', [
@@ -182,26 +115,14 @@ class EventController extends Controller
         $userEmail = $_SESSION['user_email'];
         
         // Vérifier si déjà inscrit
-        $existing = $this->db->fetch(
-            "SELECT * FROM inscriptions WHERE user_email = ? AND id_event = ? AND statut = 'confirmé'",
-            [$userEmail, $eventId]
-        );
-        
-        if ($existing) {
+        if ($this->eventModel->isUserRegistered($userEmail, $eventId)) {
             $this->flash('error', 'Vous êtes déjà inscrit à cet événement.');
             $this->redirect('/evenements');
             return;
         }
         
         // Vérifier la capacité
-        $event = $this->db->fetch(
-            "SELECT e.capacite, COUNT(i.id_inscription) as inscrits 
-             FROM event e 
-             LEFT JOIN inscriptions i ON e.id_event = i.id_event AND i.statut = 'confirmé'
-             WHERE e.id_event = ?
-             GROUP BY e.id_event",
-            [$eventId]
-        );
+        $event = $this->eventModel->checkCapacity($eventId);
         
         if ($event && $event['inscrits'] >= $event['capacite']) {
             $this->flash('error', 'Désolé, cet événement est complet.');
@@ -209,19 +130,8 @@ class EventController extends Controller
             return;
         }
         
-        // Réactiver ou créer l'inscription
-        $reactivated = $this->db->execute(
-            "UPDATE inscriptions SET statut = 'confirmé', date_inscription = NOW() 
-             WHERE user_email = ? AND id_event = ?",
-            [$userEmail, $eventId]
-        );
-        
-        if ($reactivated === 0) {
-            $this->db->execute(
-                "INSERT INTO inscriptions (user_email, id_event, statut) VALUES (?, ?, 'confirmé')",
-                [$userEmail, $eventId]
-            );
-        }
+        // Inscrire l'utilisateur
+        $this->eventModel->registerUser($userEmail, $eventId);
         
         $this->flash('success', 'Inscription réussie !');
         $this->redirect('/profil');
@@ -242,11 +152,7 @@ class EventController extends Controller
             $this->redirect('/profil');
         }
         
-        $this->db->execute(
-            "UPDATE inscriptions SET statut = 'annulé' 
-             WHERE id_inscription = ? AND user_email = ?",
-            [$inscriptionId, $_SESSION['user_email']]
-        );
+        $this->eventModel->unregisterUser($inscriptionId, $_SESSION['user_email']);
         
         $this->flash('success', 'Inscription annulée.');
         $this->redirect('/profil');

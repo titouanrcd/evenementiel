@@ -8,9 +8,18 @@
 namespace App\Controllers;
 
 use App\Core\Security;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
+    private User $userModel;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userModel = new User();
+    }
+
     /**
      * Page de profil
      */
@@ -21,10 +30,7 @@ class ProfileController extends Controller
         $userEmail = $_SESSION['user_email'];
         
         // Récupérer les infos utilisateur
-        $user = $this->db->fetch(
-            "SELECT * FROM users WHERE email = ?",
-            [$userEmail]
-        );
+        $user = $this->userModel->findByEmail($userEmail);
         
         if (!$user) {
             Security::logout();
@@ -32,14 +38,7 @@ class ProfileController extends Controller
         }
         
         // Récupérer les inscriptions
-        $inscriptions = $this->db->fetchAll(
-            "SELECT i.*, e.name, e.event_date, e.hour, e.lieu, e.description, e.prix, e.capacite, e.status, e.image
-             FROM inscriptions i
-             JOIN event e ON i.id_event = e.id_event
-             WHERE i.user_email = ?
-             ORDER BY e.event_date DESC",
-            [$userEmail]
-        );
+        $inscriptions = $this->userModel->getInscriptions($userEmail);
         
         $this->render('profile/index', [
             'user' => $user,
@@ -67,10 +66,10 @@ class ProfileController extends Controller
             return;
         }
         
-        $this->db->execute(
-            "UPDATE users SET user = ?, number = ? WHERE email = ?",
-            [$newUser, $newNumber, $userEmail]
-        );
+        $this->userModel->update($userEmail, [
+            'user' => $newUser,
+            'number' => $newNumber
+        ]);
         
         $_SESSION['user_name'] = $newUser;
         

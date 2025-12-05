@@ -50,6 +50,7 @@ evenementiel/
 │   └── .htaccess     # Règles Apache
 ├── src/              # Code source (non accessible)
 │   ├── Controllers/  # Contrôleurs MVC
+│   ├── Models/       # Modèles (Accès BDD)
 │   ├── Core/         # Classes système
 │   └── Views/        # Vues (templates)
 ├── config/           # Configuration
@@ -272,16 +273,42 @@ $stmt->execute([$email]);
 $user = $stmt->fetch();
 ```
 
+### Couche Modèle (Models) :
+
+Les modèles encapsulent la logique d'accès aux données. Ils héritent de la classe de base `Model`.
+
+```php
+// src/Models/Event.php
+class Event extends Model
+{
+    public function findAllPublished(): array
+    {
+        return $this->db->fetchAll(
+            "SELECT * FROM event WHERE status = 'publié'"
+        );
+    }
+}
+```
+
 ### Exemple de Contrôleur :
+
+Le contrôleur utilise les modèles pour récupérer les données, sans écrire de SQL directement.
+
 ```php
 class EventController extends Controller
 {
+    private Event $eventModel;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->eventModel = new Event();
+    }
+
     public function index(): void
     {
-        // Récupérer les événements publiés
-        $events = $this->db->fetchAll(
-            "SELECT * FROM event WHERE status = 'publié'"
-        );
+        // Récupérer les événements via le modèle
+        $events = $this->eventModel->findAllPublished();
         
         // Afficher la vue avec les données
         $this->render('events/index', [

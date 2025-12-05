@@ -9,9 +9,11 @@ namespace App\Controllers;
 
 use App\Core\Security;
 use App\Core\FileUpload;
+use App\Models\Event;
 
 class OrganizerController extends Controller
 {
+    private Event $eventModel;
     private array $tags = [
         'sport' => 'Sport',
         'culture' => 'Culture',
@@ -20,6 +22,12 @@ class OrganizerController extends Controller
         'festival' => 'Festival',
         'autre' => 'Autre'
     ];
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->eventModel = new Event();
+    }
     
     /**
      * Dashboard organisateur
@@ -31,14 +39,7 @@ class OrganizerController extends Controller
         $userEmail = $_SESSION['user_email'];
         
         // Récupérer les événements de l'organisateur
-        $events = $this->db->fetchAll(
-            "SELECT e.*, 
-             (SELECT COUNT(*) FROM inscriptions i WHERE i.id_event = e.id_event AND i.statut = 'confirmé') as nb_inscrits
-             FROM event e 
-             WHERE e.owner_email = ?
-             ORDER BY e.event_date DESC",
-            [$userEmail]
-        );
+        $events = $this->eventModel->findByOwner($userEmail);
         
         $this->render('organizer/index', [
             'events' => $events,
@@ -110,11 +111,19 @@ class OrganizerController extends Controller
         }
         
         if (empty($errors)) {
-            $this->db->execute(
-                "INSERT INTO event (name, description, event_date, hour, lieu, capacite, prix, tag, image, owner_email, status) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'en attente')",
-                [$name, $description, $eventDate, $hour, $lieu, $capacite, $prix, $tag, $imageUrl, $_SESSION['user_email']]
-            );
+            $this->eventModel->create([
+                'name' => $name,
+                'description' => $description,
+                'event_date' => $eventDate,
+                'hour' => $hour,
+                'lieu' => $lieu,
+                'capacite' => $capacite,
+                'prix' => $prix,
+                'tag' => $tag,
+                'image' => $imageUrl,
+                'owner_email' => $_SESSION['user_email'],
+                'status' => 'en attente'
+            ]);
             
             $this->flash('success', 'Événement créé avec succès ! Il sera visible après validation.');
             $this->redirect('/organisateur');
@@ -136,13 +145,10 @@ class OrganizerController extends Controller
         
         $eventId = sanitizeInt($id);
         
-        $event = $this->db->fetch(
-            "SELECT * FROM event WHERE id_event = ? AND owner_email = ?",
-            [$eventId, $_SESSION['user_email']]
-        );
+        $event = $this->eventModel->findById($eventId);
         
-        if (!$event) {
-            $this->flash('error', 'Événement non trouvé.');
+        if (!$event || ($event['owner_email'] !== $_SESSION['user_email'] && $_SESSION['user_role'] !== 'admin')) {
+            $this->flash('error', 'Événement non trouvé ou accès refusé.');
             $this->redirect('/organisateur');
         }
         
@@ -166,13 +172,10 @@ class OrganizerController extends Controller
         $errors = [];
         
         // Vérifier que l'événement appartient à l'utilisateur
-        $currentEvent = $this->db->fetch(
-            "SELECT * FROM event WHERE id_event = ? AND owner_email = ?",
-            [$eventId, $_SESSION['user_email']]
-        );
+        $currentEvent = $this->eventModel->findById($eventId);
         
-        if (!$currentEvent) {
-            $this->flash('error', 'Événement non trouvé.');
+        if (!$currentEvent || ($currentEvent['owner_email'] !== $_SESSION['user_email'] && $_SESSION['user_role'] !== 'admin')) {
+            $this->flash('error', 'Événement non trouvé ou accès refusé.');
             $this->redirect('/organisateur');
         }
         
@@ -201,13 +204,17 @@ class OrganizerController extends Controller
         }
         
         if (empty($errors)) {
-            $this->db->execute(
-                "UPDATE event SET name = ?, description = ?, event_date = ?, hour = ?, lieu = ?, 
-                 capacite = ?, prix = ?, tag = ?, image = ? 
-                 WHERE id_event = ? AND owner_email = ?",
-                [$name, $description, $eventDate, $hour, $lieu, $capacite, $prix, $tag, $imageUrl, 
-                 $eventId, $_SESSION['user_email']]
-            );
+            $this->eventModel->update($eventId, [
+                'name' => $name,
+                'description' => $description,
+                'event_date' => $eventDate,
+                'hour' => $hour,
+                'lieu' => $lieu,
+                'capacite' => $capacite,
+                'prix' => $prix,
+                'tag' => $tag,
+                'image' => $imageUrl
+            ]);
             
             $this->flash('success', 'Événement modifié avec succès !');
             $this->redirect('/organisateur');
@@ -229,13 +236,13 @@ class OrganizerController extends Controller
         $this->verifyCsrf();
         
         $eventId = sanitizeInt($id);
+        $event = $this->eventModel->findById($eventId);
         
-        $this->db->execute(
-            "DELETE FROM event WHERE id_event = ? AND owner_email = ?",
-            [$eventId, $_SESSION['user_email']]
-        );
+        if ($event && ($event['owner_email'] === $_SESSION['user_email'] || $_SESSION['user_role'] === 'admin')) {
+            $this->eventModel->delete($eventId);
+            $this->flash('success', 'Événement supprimé.');
+        }
         
-        $this->flash('success', 'Événement supprimé.');
         $this->redirect('/organisateur');
     }
 }

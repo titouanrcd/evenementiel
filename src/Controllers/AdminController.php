@@ -8,9 +8,13 @@
 namespace App\Controllers;
 
 use App\Core\Security;
+use App\Models\User;
+use App\Models\Event;
 
 class AdminController extends Controller
 {
+    private User $userModel;
+    private Event $eventModel;
     private array $tags = [
         'sport' => 'Sport',
         'culture' => 'Culture',
@@ -19,6 +23,13 @@ class AdminController extends Controller
         'festival' => 'Festival',
         'autre' => 'Autre'
     ];
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userModel = new User();
+        $this->eventModel = new Event();
+    }
     
     /**
      * Dashboard admin
@@ -29,27 +40,18 @@ class AdminController extends Controller
         
         // Statistiques
         $stats = [
-            'users' => $this->db->fetch("SELECT COUNT(*) as count FROM users")['count'],
-            'events' => $this->db->fetch("SELECT COUNT(*) as count FROM event")['count'],
-            'events_published' => $this->db->fetch("SELECT COUNT(*) as count FROM event WHERE status = 'publié'")['count'],
-            'events_pending' => $this->db->fetch("SELECT COUNT(*) as count FROM event WHERE status = 'en attente'")['count'],
-            'inscriptions' => $this->db->fetch("SELECT COUNT(*) as count FROM inscriptions WHERE statut = 'confirmé'")['count']
+            'users' => $this->userModel->countAll(),
+            'events' => $this->eventModel->countAll(),
+            'events_published' => $this->eventModel->countByStatus('publié'),
+            'events_pending' => $this->eventModel->countByStatus('en attente'),
+            'inscriptions' => $this->eventModel->countTotalInscriptions()
         ];
         
         // Événements en attente
-        $pendingEvents = $this->db->fetchAll(
-            "SELECT e.*, u.user as owner_name 
-             FROM event e 
-             LEFT JOIN users u ON e.owner_email = u.email
-             WHERE e.status = 'en attente'
-             ORDER BY e.event_date DESC
-             LIMIT 5"
-        );
+        $pendingEvents = $this->eventModel->findPendingWithDetails(5);
         
         // Derniers utilisateurs
-        $recentUsers = $this->db->fetchAll(
-            "SELECT * FROM users ORDER BY created_at DESC LIMIT 5"
-        );
+        $recentUsers = $this->userModel->findRecent(5);
         
         $this->render('admin/index', [
             'stats' => $stats,
@@ -67,7 +69,7 @@ class AdminController extends Controller
     {
         $this->requireRole('admin');
         
-        $users = $this->db->fetchAll("SELECT * FROM users ORDER BY created_at DESC");
+        $users = $this->userModel->findAll();
         
         $this->render('admin/users', [
             'users' => $users,
@@ -83,21 +85,9 @@ class AdminController extends Controller
         $this->requireRole('admin');
         
         $status = $_GET['status'] ?? '';
+        $validStatus = in_array($status, ['publié', 'en attente']) ? $status : null;
         
-        $sql = "SELECT e.*, u.user as owner_name,
-                (SELECT COUNT(*) FROM inscriptions i WHERE i.id_event = e.id_event AND i.statut = 'confirmé') as nb_inscrits
-                FROM event e 
-                LEFT JOIN users u ON e.owner_email = u.email";
-        $params = [];
-        
-        if ($status && in_array($status, ['publié', 'en attente'])) {
-            $sql .= " WHERE e.status = ?";
-            $params[] = $status;
-        }
-        
-        $sql .= " ORDER BY e.event_date DESC";
-        
-        $events = $this->db->fetchAll($sql, $params);
+        $events = $this->eventModel->findAllWithDetails($validStatus);
         
         $this->render('admin/events', [
             'events' => $events,
@@ -126,10 +116,7 @@ class AdminController extends Controller
         }
         
         if ($targetEmail && in_array($newRole, ['user', 'organisateur', 'admin'])) {
-            $this->db->execute(
-                "UPDATE users SET role = ? WHERE email = ?",
-                [$newRole, $targetEmail]
-            );
+            $this->userModel->updateRole($targetEmail, $newRole);
             
             Security::logSecurityEvent('role_change', 'User role changed', [
                 'target' => $targetEmail,
@@ -163,7 +150,7 @@ class AdminController extends Controller
         }
         
         if ($targetEmail) {
-            $this->db->execute("DELETE FROM users WHERE email = ?", [$targetEmail]);
+            $this->userModel->delete($targetEmail);
             
             Security::logSecurityEvent('user_deleted', 'User deleted', [
                 'target' => $targetEmail,
@@ -188,10 +175,7 @@ class AdminController extends Controller
         $newStatus = $_POST['new_status'] ?? '';
         
         if ($eventId && in_array($newStatus, ['publié', 'en attente'])) {
-            $this->db->execute(
-                "UPDATE event SET status = ? WHERE id_event = ?",
-                [$newStatus, $eventId]
-            );
+            $this->eventModel->updateStatus($eventId, $newStatus);
             
             $this->flash('success', 'Statut de l\'événement mis à jour.');
         } else {
@@ -212,7 +196,7 @@ class AdminController extends Controller
         $eventId = sanitizeInt($_POST['id_event'] ?? 0);
         
         if ($eventId) {
-            $this->db->execute("DELETE FROM event WHERE id_event = ?", [$eventId]);
+            $this->eventModel->delete($eventId);
             $this->flash('success', 'Événement supprimé.');
         }
         

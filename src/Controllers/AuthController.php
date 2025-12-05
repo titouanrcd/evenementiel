@@ -8,9 +8,18 @@
 namespace App\Controllers;
 
 use App\Core\Security;
+use App\Models\User;
 
 class AuthController extends Controller
 {
+    private User $userModel;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userModel = new User();
+    }
+
     /**
      * Afficher la page de connexion
      */
@@ -55,10 +64,7 @@ class AuthController extends Controller
         if (empty($identifier) || empty($password)) {
             $errors[] = "Veuillez remplir tous les champs.";
         } else {
-            $user = $this->db->fetch(
-                "SELECT * FROM users WHERE email = ? OR user = ?",
-                [$identifier, $identifier]
-            );
+            $user = $this->userModel->findByIdentifier($identifier);
             
             if ($user && verifyPassword($password, $user['password'])) {
                 // Connexion réussie
@@ -67,7 +73,7 @@ class AuthController extends Controller
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_name'] = $user['user'];
                 $_SESSION['user_role'] = $user['role'] ?? 'user';
-                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_id'] = $user['id'] ?? 0; // id might not be in select * if not defined in schema but usually is
                 
                 // Nettoyer les tentatives
                 Security::cleanOldAttempts($pdo);
@@ -132,10 +138,7 @@ class AuthController extends Controller
         
         if (empty($errors)) {
             // Vérifier si l'email existe déjà
-            $existing = $this->db->fetch(
-                "SELECT email FROM users WHERE email = ?",
-                [$email]
-            );
+            $existing = $this->userModel->findByEmail($email);
             
             if ($existing) {
                 $errors[] = "Cet email est déjà utilisé.";
@@ -143,18 +146,21 @@ class AuthController extends Controller
                 // Créer l'utilisateur
                 $hash = hashPassword($password);
                 
-                $this->db->execute(
-                    "INSERT INTO users (user, email, date_of_birth, sexe, number, password, role) 
-                     VALUES (?, ?, ?, ?, ?, ?, 'user')",
-                    [$user, $email, $dateOfBirth, $sexe, $number ?: null, $hash]
-                );
+                $this->userModel->create([
+                    'user' => $user,
+                    'email' => $email,
+                    'date_of_birth' => $dateOfBirth,
+                    'sexe' => $sexe,
+                    'number' => $number,
+                    'password' => $hash
+                ]);
                 
                 // Connexion automatique
                 Security::regenerateSession();
                 $_SESSION['user_email'] = $email;
                 $_SESSION['user_name'] = $user;
                 $_SESSION['user_role'] = 'user';
-                $_SESSION['user_id'] = $this->db->lastInsertId();
+                $_SESSION['user_id'] = $this->userModel->getLastInsertId();
                 
                 $this->flash('success', 'Compte créé avec succès !');
                 $this->redirect('/');
