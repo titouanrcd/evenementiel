@@ -1,179 +1,449 @@
-# 🎉 NOVA Événements
+# 🎭 NOVA Événements
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=bugs)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel)
+**Plateforme de gestion d'événements étudiants** - Application web PHP moderne avec architecture MVC sécurisée.
 
-> Plateforme de gestion d'événements étudiants - Projet sécurisé avec CI/CD
+![PHP](https://img.shields.io/badge/PHP-8.0+-777BB4?logo=php&logoColor=white)
+![Security](https://img.shields.io/badge/Security-CSP%20Nonce-green)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
 ---
 
-## 📋 Description
+## 📋 Table des matières
 
-**NOVA Événements** est une application web de gestion d'événements destinée aux étudiants. Elle permet de :
-
-- 🎫 Créer et gérer des événements
-- 👥 Gérer les inscriptions des participants
-- 🎨 Présenter les artistes
-- 📸 Afficher une galerie photos
-- 👤 Gérer son profil utilisateur
-- 🔐 Administration sécurisée
-
----
-
-## 🛡️ Sécurité
-
-Ce projet implémente de nombreuses mesures de sécurité :
-
-| Mesure | Status |
-|--------|--------|
-| Protection CSRF | ✅ |
-| Sessions sécurisées | ✅ |
-| Protection XSS | ✅ |
-| Requêtes préparées (SQL Injection) | ✅ |
-| Hashage bcrypt | ✅ |
-| Headers de sécurité | ✅ |
-| Protection brute force | ✅ |
-| Upload sécurisé | ✅ |
-
-📄 Voir le [Rapport de Sécurité Détaillé](RAPPORT_SECURITE_DETAILLE.md)
+- [Présentation](#-présentation)
+- [Architecture](#-architecture)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Sécurité](#-sécurité)
+- [Fonctionnalités](#-fonctionnalités)
+- [API](#-api)
+- [Structure du projet](#-structure-du-projet)
+- [Utilisation](#-utilisation)
 
 ---
 
-## 🚀 CI/CD
+## 🎯 Présentation
 
-Le projet utilise une pipeline CI/CD complète :
+NOVA Événements est une plateforme complète de gestion d'événements permettant aux utilisateurs de :
 
-### Workflows GitHub Actions
+- **Découvrir** des événements par catégorie, lieu et date
+- **S'inscrire** aux événements de leur choix
+- **Organiser** leurs propres événements (rôle organisateur)
+- **Administrer** la plateforme (rôle admin)
 
-| Workflow | Description | Status |
-|----------|-------------|--------|
-| 🛡️ Security Check | Analyse de sécurité automatique | ![Security](https://github.com/titouanrcd/evenementiel/workflows/🛡️%20Security%20Check/badge.svg) |
-| 🔬 SonarCloud | Analyse qualité du code | [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=alert_status)](https://sonarcloud.io/dashboard?id=titouanrcd_evenementiel) |
-| 📊 Tests | Tests automatisés | ![Tests](https://github.com/titouanrcd/evenementiel/workflows/📊%20Tests/badge.svg) |
-| 🚀 Deploy | Déploiement automatique | ![Deploy](https://github.com/titouanrcd/evenementiel/workflows/🚀%20Deploy%20to%20Production/badge.svg) |
+### Types d'utilisateurs
 
-📄 Voir le [Guide CI/CD](CI_CD_GUIDE.md)
-
----
-
-## 🛠️ Technologies
-
-- **Backend:** PHP 8.x
-- **Base de données:** MySQL / MariaDB
-- **Frontend:** HTML5, CSS3, JavaScript
-- **Serveur:** Apache (XAMPP)
-- **CI/CD:** GitHub Actions
-- **Qualité:** SonarCloud
+| Rôle | Permissions |
+|------|------------|
+| **Visiteur** | Consultation des événements |
+| **Utilisateur** | Inscription aux événements, gestion du profil |
+| **Organisateur** | Création/gestion de ses événements |
+| **Admin** | Gestion complète (utilisateurs, événements, modération) |
 
 ---
 
-## 📦 Installation
+## 🏗 Architecture
+
+L'application suit le pattern **MVC (Model-View-Controller)** avec un **Front Controller** :
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        CLIENT (Browser)                      │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     public/index.php                        │
+│                     (Front Controller)                       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+        ┌──────────┐   ┌──────────┐   ┌──────────────┐
+        │ Bootstrap │   │  Router  │   │   Security   │
+        │ (autoload)│   │ (routes) │   │ (CSP, CSRF)  │
+        └──────────┘   └──────────┘   └──────────────┘
+                              │
+                              ▼
+        ┌─────────────────────────────────────────────┐
+        │              CONTROLLERS                     │
+        │  Home | Auth | Event | Profile | Admin | API │
+        └─────────────────────────────────────────────┘
+              │                               │
+              ▼                               ▼
+        ┌──────────┐                   ┌──────────┐
+        │ Database │                   │  Views   │
+        │  (PDO)   │                   │ (*.php)  │
+        └──────────┘                   └──────────┘
+```
+
+### Composants Core
+
+| Composant | Description |
+|-----------|-------------|
+| `Bootstrap.php` | Autoloading, chargement de la config |
+| `Application.php` | Enregistrement des routes, démarrage |
+| `Router.php` | Routing avec paramètres dynamiques |
+| `Database.php` | Singleton PDO avec prepared statements |
+| `Security.php` | CSP Nonce, CSRF, sessions sécurisées |
+| `Validator.php` | Validation des entrées utilisateur |
+| `FileUpload.php` | Upload sécurisé avec validation MIME |
+| `Helpers.php` | Fonctions globales (e(), asset(), etc.) |
+
+---
+
+## 🚀 Installation
 
 ### Prérequis
 
-- XAMPP (PHP 8.x + MySQL/MariaDB)
-- Git
+- PHP 8.0 ou supérieur
+- MySQL 5.7+ ou MariaDB 10.2+
+- Serveur Apache avec `mod_rewrite` activé
+- Extensions PHP : `pdo`, `pdo_mysql`, `mbstring`, `fileinfo`
 
 ### Étapes
 
+1. **Cloner le projet**
+   ```bash
+   git clone https://github.com/votre-repo/nova-evenements.git
+   cd nova-evenements
+   ```
+
+2. **Configurer la base de données**
+   ```sql
+   CREATE DATABASE gestion_events_etudiants CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+
+3. **Importer le schéma**
+   ```bash
+   mysql -u root -p gestion_events_etudiants < database/schema.sql
+   ```
+
+4. **Configurer Apache**
+   
+   Pointer le DocumentRoot vers le dossier `public/` :
+   ```apache
+   <VirtualHost *:80>
+       ServerName nova.local
+       DocumentRoot /path/to/nova-evenements/public
+       
+       <Directory /path/to/nova-evenements/public>
+           AllowOverride All
+           Require all granted
+       </Directory>
+   </VirtualHost>
+   ```
+
+5. **Configurer l'application**
+   
+   Copier et modifier le fichier de configuration :
+   ```bash
+   cp config/app.php.example config/app.php
+   ```
+
+---
+
+## ⚙️ Configuration
+
+### Variables d'environnement (Production)
+
 ```bash
-# 1. Cloner le projet
-git clone https://github.com/titouanrcd/evenementiel.git
+# Base de données
+export DB_HOST="localhost"
+export DB_NAME="gestion_events_etudiants"
+export DB_USER="nova_user"
+export DB_PASS="mot_de_passe_fort"
 
-# 2. Placer dans le dossier htdocs de XAMPP
-# Windows: C:\xampp\htdocs\evenementiel
-# Mac: /Applications/XAMPP/htdocs/evenementiel
+# Application
+export APP_ENV="production"
+export APP_SECRET_KEY="votre_cle_secrete_32_caracteres"
 
-# 3. Importer la base de données
-# Via phpMyAdmin, importer:
-# - gestion_events_etudiants.sql
-# - security_update.sql
+# APIs externes
+export OPENWEATHER_API_KEY="votre_cle_openweather"
+```
 
-# 4. Configurer la connexion
-# Modifier views/db.php si nécessaire
+### config/app.php
 
-# 5. Accéder au site
-# http://localhost/evenementiel/views/
+```php
+define('ENVIRONMENT', getenv('APP_ENV') ?: 'development');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'gestion_events_etudiants');
+// ...
 ```
 
 ---
 
-## 📁 Structure du Projet
+## 🔒 Sécurité
+
+L'application intègre plusieurs couches de sécurité :
+
+### 1. Content Security Policy (CSP) avec Nonce
+
+Chaque page génère un **nonce unique** pour autoriser uniquement les scripts légitimes :
+
+```php
+// Génération automatique
+$nonce = Security::generateNonce();
+
+// Dans les vues
+<script nonce="<?= $nonce ?>">
+    // Code JavaScript autorisé
+</script>
+```
+
+**En-tête CSP envoyé :**
+```
+Content-Security-Policy: 
+  default-src 'self'; 
+  script-src 'self' 'nonce-ABC123...'; 
+  style-src 'self' 'nonce-ABC123...' fonts.googleapis.com;
+  img-src 'self' data: https:;
+```
+
+### 2. Protection XSS
+
+Toutes les sorties sont échappées avec la fonction helper `e()` :
+
+```php
+// Échappe automatiquement le HTML
+<?= e($userInput) ?>
+
+// Pour JavaScript
+<script nonce="<?= $nonce ?>">
+    var data = <?= eJs($data) ?>;
+</script>
+```
+
+### 3. Protection CSRF
+
+Tokens CSRF générés pour chaque session :
+
+```php
+// Dans les formulaires
+<?= csrf_field() ?>
+
+// Vérification côté serveur
+Security::verifyCSRFToken($_POST['csrf_token']);
+```
+
+### 4. Sessions sécurisées
+
+- **Fingerprinting** : Validation User-Agent + IP
+- **Régénération** : ID de session régénéré périodiquement
+- **Cookies sécurisés** : `HttpOnly`, `SameSite=Strict`, `Secure` (HTTPS)
+
+### 5. Upload sécurisé
+
+```php
+// Validation du type MIME réel (pas l'extension)
+$upload = new FileUpload($_FILES['image']);
+$result = $upload
+    ->allowedTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+    ->maxSize(5 * 1024 * 1024) // 5 Mo
+    ->isImage(true)
+    ->save('uploads/events/');
+```
+
+### 6. Protection base de données
+
+- **Prepared Statements** : Toutes les requêtes utilisent PDO avec paramètres liés
+- **ATTR_EMULATE_PREPARES = false** : Vrais prepared statements côté serveur
+
+```php
+$stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+$stmt->execute(['email' => $email]);
+```
+
+### 7. Rate Limiting & Brute Force
+
+```php
+// Limitation de tentatives de connexion
+if (Security::isRateLimited($email, 5, 15)) {
+    // Compte bloqué pendant 15 minutes après 5 échecs
+}
+```
+
+---
+
+## ✨ Fonctionnalités
+
+### Visiteurs
+- 📅 Consulter la liste des événements
+- 🔍 Filtrer par catégorie, lieu, date
+- ℹ️ Voir les détails d'un événement
+
+### Utilisateurs connectés
+- 📝 S'inscrire aux événements
+- 👤 Gérer son profil
+- 📋 Voir ses inscriptions
+- ❌ Annuler une inscription
+
+### Organisateurs
+- ➕ Créer des événements
+- ✏️ Modifier ses événements
+- 🗑️ Supprimer ses événements
+- 📊 Voir les statistiques
+
+### Administrateurs
+- 👥 Gérer tous les utilisateurs
+- 🎫 Modérer tous les événements
+- ✅ Approuver/refuser les événements
+- 📈 Dashboard avec statistiques
+
+---
+
+## 🔌 API
+
+### Météo (OpenWeatherMap)
+
+```http
+GET /api/meteo?ville=Paris
+```
+
+**Réponse :**
+```json
+{
+  "success": true,
+  "data": {
+    "temperature": 18.5,
+    "description": "Partiellement nuageux",
+    "humidity": 65,
+    "icon": "02d"
+  }
+}
+```
+
+### Événements à venir
+
+```http
+GET /api/evenements?limit=5
+```
+
+---
+
+## 📁 Structure du projet
 
 ```
 evenementiel/
-├── .github/
-│   └── workflows/          # Pipelines CI/CD
-│       ├── security.yml    # Vérifications sécurité
-│       ├── sonarcloud.yml  # Analyse SonarCloud
-│       ├── tests.yml       # Tests automatisés
-│       └── deploy.yml      # Déploiement
-├── css/
-│   ├── base/               # Reset, variables
-│   ├── components/         # Éléments UI
-│   ├── layout/             # Navigation, footer
-│   ├── sections/           # Styles par page
-│   ├── style.css           # Style principal
-│   └── responsive.css      # Responsive design
-├── js/
-│   ├── app.js              # JavaScript principal
-│   └── navbar.js           # Navigation
-├── views/
-│   ├── security.php        # Module de sécurité
-│   ├── db.php              # Connexion BDD
-│   ├── index.php           # Page d'accueil
-│   ├── connexion.php       # Login/Register
-│   ├── evenement.php       # Liste événements
-│   ├── profil.php          # Profil utilisateur
-│   ├── admin.php           # Administration
-│   ├── organisateur.php    # Gestion événements
-│   └── navbar.php          # Barre de navigation
-├── uploads/                # Fichiers uploadés
-├── logs/                   # Logs d'erreurs
-├── img/                    # Images statiques
-├── .htaccess               # Configuration Apache
-├── sonar-project.properties # Config SonarCloud
-└── README.md
+├── config/
+│   └── app.php                 # Configuration centrale
+├── logs/                       # Fichiers de logs
+├── public/                     # DocumentRoot Apache
+│   ├── index.php              # Front Controller (point d'entrée)
+│   ├── .htaccess              # Réécriture URL + sécurité
+│   ├── css/                   # Feuilles de style
+│   │   ├── style.css
+│   │   ├── responsive.css
+│   │   ├── base/
+│   │   ├── components/
+│   │   ├── layout/
+│   │   └── sections/
+│   ├── js/                    # Scripts JavaScript
+│   │   ├── app.js
+│   │   └── navbar.js
+│   ├── img/                   # Images statiques
+│   └── uploads/               # Fichiers uploadés
+├── src/
+│   ├── Core/                  # Classes du framework
+│   │   ├── Application.php
+│   │   ├── Bootstrap.php
+│   │   ├── Database.php
+│   │   ├── FileUpload.php
+│   │   ├── Helpers.php
+│   │   ├── Router.php
+│   │   ├── Security.php
+│   │   └── Validator.php
+│   ├── Controllers/           # Contrôleurs
+│   │   ├── Controller.php     # Contrôleur de base
+│   │   ├── AdminController.php
+│   │   ├── ApiController.php
+│   │   ├── AuthController.php
+│   │   ├── EventController.php
+│   │   ├── HomeController.php
+│   │   ├── OrganizerController.php
+│   │   └── ProfileController.php
+│   └── Views/                 # Templates PHP
+│       ├── layouts/
+│       │   └── main.php
+│       ├── partials/
+│       │   ├── header.php
+│       │   └── footer.php
+│       ├── admin/
+│       ├── auth/
+│       ├── errors/
+│       ├── events/
+│       ├── home/
+│       ├── organizer/
+│       └── profile/
+├── uploads/                   # Dossier uploads legacy
+└── README.md                  # Ce fichier
 ```
 
 ---
 
-## 👥 Rôles Utilisateurs
+## 📖 Utilisation
 
-| Rôle | Permissions |
-|------|-------------|
-| **Visiteur** | Voir événements, galerie |
-| **Étudiant** | S'inscrire aux événements, profil |
-| **Organisateur** | Créer/gérer ses événements |
-| **Admin** | Gestion complète du site |
+### Routes principales
 
----
+| URL | Méthode | Description |
+|-----|---------|-------------|
+| `/` | GET | Page d'accueil |
+| `/evenements` | GET | Liste des événements |
+| `/connexion` | GET/POST | Connexion / Inscription |
+| `/deconnexion` | GET | Déconnexion |
+| `/profil` | GET | Profil utilisateur |
+| `/organisateur` | GET | Panel organisateur |
+| `/organisateur/creer` | GET/POST | Créer un événement |
+| `/admin` | GET | Dashboard admin |
+| `/admin/utilisateurs` | GET | Gestion utilisateurs |
+| `/admin/evenements` | GET | Gestion événements |
+| `/api/meteo` | GET | API météo |
 
-## 📊 Métriques SonarCloud
+### Démarrage en développement
 
-| Métrique | Description |
-|----------|-------------|
-| [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel) | Fiabilité |
-| [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel) | Maintenabilité |
-| [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=titouanrcd_evenementiel&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=titouanrcd_evenementiel) | Sécurité |
+```bash
+cd public
+php -S localhost:8000
+```
 
----
-
-## 📝 Licence
-
-Projet étudiant - Usage éducatif uniquement.
-
----
-
-## 👤 Auteur
-
-**Titouan Richard-Carrere**
-
-- GitHub: [@titouanrcd](https://github.com/titouanrcd)
+Accéder à : http://localhost:8000
 
 ---
 
-*Fait avec ❤️ pour un projet scolaire - 2024/2025*
+## 🧪 Tests
+
+```bash
+# Lancer les tests unitaires
+./vendor/bin/phpunit
+
+# Avec couverture
+./vendor/bin/phpunit --coverage-html coverage/
+```
+
+---
+
+## 🤝 Contribution
+
+1. Forker le projet
+2. Créer une branche (`git checkout -b feature/nouvelle-fonctionnalite`)
+3. Commiter les changements (`git commit -am 'Ajout nouvelle fonctionnalité'`)
+4. Pusher la branche (`git push origin feature/nouvelle-fonctionnalite`)
+5. Ouvrir une Pull Request
+
+---
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+---
+
+## 👥 Auteurs
+
+- **Équipe NOVA** - Développement initial
+
+---
+
+<p align="center">
+  <strong>🎭 NOVA Événements</strong> - Créez, découvrez et participez !
+</p>

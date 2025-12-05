@@ -1,0 +1,48 @@
+/* --- 2. VARIABLES COULEURS --- */
+:root {
+  --gradient-primary: linear-gradient(
+    135deg,
+    #ff9a9e 0%,
+    #fecfef 99%,
+    #f68084 100%
+  );
+  --gradient-orange-purple: linear-gradient(to bottom right, #ff6b6b, #5f27cd);
+  --gradient-warm: linear-gradient(90deg, #ff9966, #ff5e62);
+  --gradient-glow: radial-gradient(
+    circle,
+    rgba(113, 88, 226, 0.4) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  /* Variables principales */
+  --nova-gradient: linear-gradient(135deg, #ff00cc 0%, #ff9900 100%);
+  --nova-pink: #ff00cc;
+  --nova-orange: #ff9900;
+  --card-bg: #121212;
+  --border-color: #333;
+  --text-gray: #b0b0b0;
+}
+
+/* Animations globales */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
