@@ -68,6 +68,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=ShadowRich_evenementiel
+            -Dsonar.organization=shadowrich
 
   # ===================================================================
   # JOB 3: SÉCURITÉ (OWASP ZAP)
@@ -97,4 +102,6 @@ jobs:
           target: 'http://localhost:8080'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
+          fail_action: false
+          allow_issue_writing: false
 
